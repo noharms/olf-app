@@ -7,17 +7,20 @@
     align-items: center;
     font-size: 16px;
     font-weight: bold;
-}
+    margin: 5px;
+    /* Add margin around card */
 
-.front {
-    background-color: #fff;
-    color: #000;
-}
+    &.face-up .front {
+        display: flex;
+    }
 
-.back {
-    background-color: #ccc;
-}
+    .front {
+        display: none;
+        background-color: #fff;
+        color: #000;
+    }
 
-.face-up {
-    //transform: rotateY(180deg);
+    .back {
+        background-color: #0c0b0b;
+    }
 }
