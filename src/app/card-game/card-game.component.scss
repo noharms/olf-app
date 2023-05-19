@@ -1,0 +1,22 @@
+.card-game {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  
+    .custom-button {
+      padding: 1.5rem 3rem;
+      font-size: 1.5rem;
+      background-color: #eaeaea;
+      color: #555555;
+      border: none;
+      border-radius: 0.3rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #dddddd;
+      }
+    }
+  }
+  

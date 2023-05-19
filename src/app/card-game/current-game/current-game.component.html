@@ -1,0 +1,15 @@
+<div class="current-game">
+    <div class="computer-cards">
+        <div class="card" *ngFor="let card of computerCards">
+            <app-card [card]="card"></app-card>
+        </div>
+    </div>
+
+    <div class="stack-of-cards"></div>
+
+    <div class="player-cards">
+        <div class="card" *ngFor="let card of playerCards">
+            <app-card [card]="card"></app-card>
+        </div>
+    </div>
+</div>

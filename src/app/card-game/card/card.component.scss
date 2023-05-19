@@ -1,0 +1,23 @@
+.card {
+    width: 100px;
+    height: 150px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.front {
+    background-color: #fff;
+    color: #000;
+}
+
+.back {
+    background-color: #ccc;
+}
+
+.face-up {
+    //transform: rotateY(180deg);
+}

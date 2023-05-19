@@ -1,0 +1,29 @@
+.current-game {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+
+    .computer-cards,
+    .player-cards {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .card {
+            width: 50px;
+            height: 80px;
+            margin: 0 5px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+        }
+    }
+
+    .stack-of-cards {
+        width: 80px;
+        height: 120px;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+    }
+}
