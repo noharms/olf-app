@@ -5,5 +5,4 @@ export interface Card {
     id: number;
     rank: Rank;
     suit: Suit;
-    faceUp: boolean;
 }

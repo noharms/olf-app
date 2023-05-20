@@ -10,12 +10,8 @@
     margin: 2px;
     /* Add margin around card */
 
-    &.face-up .front {
-        display: flex;
-    }
-
     .front {
-        display: none;
+        // display: none; // to show nothing
         background-color: #fff;
         color: #000;
     }

@@ -14,17 +14,14 @@
         margin: 10px;
         /* Add margin for spacing */
 
-        // this can be used to have the cards overlap a bit
-        // .card {
-        //     width: 80px;
-        //     /* Adjust the width as needed */
-        //     height: 120px;
-        //     /* Adjust the height as needed */
-        //     margin: 0 5px;
-        //     background-color: #f2f2f2;
-        //     border: 1px solid #ccc;
-        // }
-        
+        .card-container {
+          
+            &.highlight {
+                outline: 2px solid red;
+            }
+        }
+
+
         & .highlight {
             box-shadow: 0 0 5px 3px #ffbf00;
             /* Add highlight effect */

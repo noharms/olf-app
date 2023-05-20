@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Card } from '../card/card.model';
 import { RANKS_2_TO_10, Rank } from '../card/rank.model';
 import { Suit } from '../card/suit.model';
+import { StyledCard } from '../card/styled-card.model';
 
 @Component({
   selector: 'app-current-game',
@@ -10,14 +11,14 @@ import { Suit } from '../card/suit.model';
 })
 export class CurrentGameComponent implements OnInit {
 
-  initialCardList: Card[] = [];
-  playerCards: Card[] = [];
-  computerCards: Card[] = [];
-  discardPile: Card[] = [];
+  initialCardList: StyledCard[] = [];
+  playerCards: StyledCard[] = [];
+  computerCards: StyledCard[] = [];
+  discardPile: StyledCard[] = [];
 
-  
+
   // Optional: Add a highlighted card functionality if needed
-  highlightedCard: Card | null = null;
+  highlightedCard: StyledCard | null = null;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -33,13 +34,17 @@ export class CurrentGameComponent implements OnInit {
     const ranks = RANKS_2_TO_10;
     for (const suit of suits) {
       for (const rank of ranks) {
-        this.initialCardList.push({ id: id, rank: rank, suit: suit, faceUp: false });
+        const newCard = { id: id, rank: rank, suit: suit };
+        const newStyledCard = { card: newCard, faceUp: true };
+        this.initialCardList.push(newStyledCard);
         ++id;
       }
     }
-    const colorlessCards: Card[] = [];
+    const colorlessCards: StyledCard[] = [];
     for (let i = 0; i < 4; i++) {
-      colorlessCards.push({ id: id + i, rank: Rank.One, suit: Suit.Colorless, faceUp: false });
+      const newCard = { id: id + i, rank: Rank.One, suit: Suit.Colorless };
+      const newStyledCard = { card: newCard, faceUp: true};
+      colorlessCards.push(newStyledCard);
     }
     this.initialCardList.push(...colorlessCards);
     this.shuffleCards(this.initialCardList);
@@ -48,18 +53,9 @@ export class CurrentGameComponent implements OnInit {
   distributeInitialCards(): void {
     this.playerCards = this.initialCardList.splice(0, 13);
     this.computerCards = this.initialCardList.splice(0, 13);
-    this.revealCards(this.playerCards);
-    this.revealCards(this.computerCards);
   }
 
-  revealCards(cards: Card[]) {
-    cards.forEach(card => {
-      card.faceUp = true;
-      return;
-    });
-  }
-
-  shuffleCards(cards: Card[]): void {
+  shuffleCards(cards: StyledCard[]): void {
     // Shuffle the cards using Fisher-Yates algorithm
     let currentIndex = cards.length;
     let temporaryValue;
@@ -75,35 +71,38 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  
-  playCard(card: Card): void {
+
+  playCard(styledCard: StyledCard): void {
     // Remove the clicked card from the player's hand
-    this.playerCards = this.playerCards.filter((c) => c !== card);
+    this.playerCards = this.playerCards.filter((c) => c !== styledCard);
 
     // Add the card to the top of the discard pile
-    this.discardPile.push(card);
+    this.discardPile.push(styledCard);
 
     // Optionally, you can implement additional logic here, such as checking game conditions
 
     // Clear any highlighted card
     this.clearHighlightedCard();
-    
-  // Manually trigger change detection
+
+    // Manually trigger change detection
     this.cdr.detectChanges();
   }
 
-  toggleCardFaceUp(card: Card): void {
+  toggleCardFaceUp(styledCard: StyledCard): void {
     // Toggle the faceUp state of the clicked card
-    card.faceUp = !card.faceUp;
+    const cardElement = document.getElementById(`card-${styledCard.card.id}`);
+    if (cardElement) {
+      cardElement.classList.toggle('face-down');
+    }
   }
 
-  isHighlighted(card: Card): boolean {
+  isHighlighted(styledCard: StyledCard): boolean {
     // Check if the card is the highlighted card
-    return card === this.highlightedCard;
+    return styledCard === this.highlightedCard;
   }
 
-  setHighlightedCard(card: Card | null): void {
-    this.highlightedCard = card;
+  setHighlightedCard(styledCard: StyledCard | null): void {
+    this.highlightedCard = styledCard;
   }
 
   clearHighlightedCard(): void {
