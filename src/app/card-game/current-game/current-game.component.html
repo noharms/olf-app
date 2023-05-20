@@ -10,10 +10,12 @@
     </div>
 
     <div class="player-cards">
-        <div class="card" *ngFor="let card of playerCards" (click)="playCard(card)"
+        <div class="card" *ngFor="let card of playerCards" 
             [class.highlight]="isHighlighted(card)"
+            (click)="playCard(card)"
             (mouseenter)="setHighlightedCard(card)"
-      (mouseleave)="setHighlightedCard(null)">
+            (mouseleave)="setHighlightedCard(null)"
+        >
             <app-card [card]="card"></app-card>
         </div>
     </div>

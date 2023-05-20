@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Card } from '../card/card.model';
 import { RANKS_2_TO_10, Rank } from '../card/rank.model';
 import { Suit } from '../card/suit.model';
@@ -19,7 +19,7 @@ export class CurrentGameComponent implements OnInit {
   // Optional: Add a highlighted card functionality if needed
   highlightedCard: Card | null = null;
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.createGame();
@@ -28,18 +28,19 @@ export class CurrentGameComponent implements OnInit {
 
   createGame(): void {
     // Create cards for the initial game stack
+    let id = 0;
     const suits = [Suit.Blue, Suit.Green, Suit.Colorless];
     const ranks = RANKS_2_TO_10;
     for (const suit of suits) {
       for (const rank of ranks) {
-        this.initialCardList.push({ rank: rank, suit: suit, faceUp: false });
+        this.initialCardList.push({ id: id, rank: rank, suit: suit, faceUp: false });
+        ++id;
       }
     }
-    const colorlessCards: Card[] = Array.from(
-      { length: 4 },
-      //() => (new CardImpl(Rank.One, Suit.Colorless ))
-      () => ({ rank: Rank.One, suit: Suit.Colorless, faceUp: false})
-    );
+    const colorlessCards: Card[] = [];
+    for (let i = 0; i < 4; i++) {
+      colorlessCards.push({ id: id + i, rank: Rank.One, suit: Suit.Colorless, faceUp: false });
+    }
     this.initialCardList.push(...colorlessCards);
     this.shuffleCards(this.initialCardList);
   }
@@ -77,10 +78,7 @@ export class CurrentGameComponent implements OnInit {
   
   playCard(card: Card): void {
     // Remove the clicked card from the player's hand
-    const cardIndex = this.playerCards.indexOf(card);
-    if (cardIndex !== -1) {
-      this.playerCards.splice(cardIndex, 1);
-    }
+    this.playerCards = this.playerCards.filter((c) => c !== card);
 
     // Add the card to the top of the discard pile
     this.discardPile.push(card);
@@ -89,6 +87,9 @@ export class CurrentGameComponent implements OnInit {
 
     // Clear any highlighted card
     this.clearHighlightedCard();
+    
+  // Manually trigger change detection
+    this.cdr.detectChanges();
   }
 
   toggleCardFaceUp(card: Card): void {
