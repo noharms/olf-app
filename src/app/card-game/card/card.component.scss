@@ -28,6 +28,8 @@
         transform: translateY(-5px);
         /* Lift up the card on hover */
         transition: transform 0.2s ease;
+        outline: 2px solid red;
+        box-shadow: 0 0 5px 3px #ffbf00;
     }
 
 }

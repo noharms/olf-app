@@ -14,18 +14,18 @@
         margin: 10px;
         /* Add margin for spacing */
 
-        .card-container {
+        // .card-container {
           
-            &.highlight {
-                outline: 2px solid red;
-            }
-        }
+        //     &.highlight {
+        //         outline: 2px solid red;
+        //     }
+        // }
 
 
-        & .highlight {
-            box-shadow: 0 0 5px 3px #ffbf00;
-            /* Add highlight effect */
-        }
+        // & .highlight {
+        //     box-shadow: 0 0 5px 3px #ffbf00;
+        //     /* Add highlight effect */
+        // }
     }
 
     .discard-stack {
