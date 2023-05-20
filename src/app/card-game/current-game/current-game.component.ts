@@ -14,6 +14,11 @@ export class CurrentGameComponent implements OnInit {
   initialCardList: Card[] = [];
   playerCards: Card[] = [];
   computerCards: Card[] = [];
+  discardPile: Card[] = [];
+
+  
+  // Optional: Add a highlighted card functionality if needed
+  highlightedCard: Card | null = null;
 
   constructor() { }
 
@@ -68,5 +73,40 @@ export class CurrentGameComponent implements OnInit {
       cards[currentIndex] = cards[randomIndex];
       cards[randomIndex] = temporaryValue;
     }
+  }
+
+  
+  playCard(card: Card): void {
+    // Remove the clicked card from the player's hand
+    const cardIndex = this.playerCards.indexOf(card);
+    if (cardIndex !== -1) {
+      this.playerCards.splice(cardIndex, 1);
+    }
+
+    // Add the card to the top of the discard pile
+    this.discardPile.push(card);
+
+    // Optionally, you can implement additional logic here, such as checking game conditions
+
+    // Clear any highlighted card
+    this.clearHighlightedCard();
+  }
+
+  toggleCardFaceUp(card: Card): void {
+    // Toggle the faceUp state of the clicked card
+    card.faceUp = !card.faceUp;
+  }
+
+  isHighlighted(card: Card): boolean {
+    // Check if the card is the highlighted card
+    return card === this.highlightedCard;
+  }
+
+  setHighlightedCard(card: Card | null): void {
+    this.highlightedCard = card;
+  }
+
+  clearHighlightedCard(): void {
+    this.highlightedCard = null;
   }
 }
