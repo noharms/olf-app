@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Card } from '../card/card.model';
 import { RANKS_2_TO_10, Rank } from '../card/rank.model';
 import { Suit } from '../card/suit.model';
-import { CardImpl } from '../card/card-impl.model';
 
 @Component({
   selector: 'app-current-game',
