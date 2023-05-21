@@ -1,5 +1,5 @@
-import { Rank } from "./rank.model";
-import { Suit } from "./suit.model";
+import { Rank } from "./rank";
+import { Suit } from "./suit";
 
 export interface Card {
     id: number;

@@ -1,4 +1,4 @@
-import { Card } from "./card.model";
+import { Card } from "./card";
 
 export interface StyledCard {
     card: Card,

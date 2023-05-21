@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Card } from '../card/card.model';
-import { RANKS_2_TO_10, Rank } from '../card/rank.model';
-import { Suit } from '../card/suit.model';
-import { StyledCard } from '../card/styled-card.model';
+import { Card } from '../card/model/card';
+import { RANKS_2_TO_10, Rank } from '../card/model/rank';
+import { Suit } from '../card/model/suit';
+import { StyledCard } from '../card/model/styled-card';
 
 @Component({
   selector: 'app-current-game',
