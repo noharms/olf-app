@@ -24,12 +24,20 @@
     cursor: pointer;
     /* Add cursor pointer to indicate clickable */
 
-    &:hover {
-        transform: translateY(-5px);
-        /* Lift up the card on hover */
-        transition: transform 0.2s ease;
-        outline: 2px solid red;
-        box-shadow: 0 0 5px 3px #ffbf00;
+    &.lift-on-hover {
+        &:hover {
+            transform: translateY(-7px);
+            /* Lift up the card on hover */
+            transition: transform 0.2s ease;
+            outline: 2px solid red;
+            box-shadow: 0 0 5px 3px #ffbf00;
+        }
     }
+
+    &.staged {
+        transform: translateY(-15px);
+        box-shadow: 0 0 5px 2px #e2e1dc;
+    }
+
 
 }

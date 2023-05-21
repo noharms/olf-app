@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" [class.staged]="decoratedCard.staged" [class.lift-on-hover]="!decoratedCard.staged">
     <div class="front" *ngIf="decoratedCard?.faceUp">
         <span>{{ decoratedCard.card.rank }}</span>
         <span>{{ decoratedCard.card.suit }}</span>
