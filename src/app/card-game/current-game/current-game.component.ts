@@ -34,16 +34,16 @@ export class CurrentGameComponent implements OnInit {
     for (const suit of suits) {
       for (const rank of ranks) {
         const newCard = { id: id, rank: rank, suit: suit };
-        const newStyledCard = { card: newCard, faceUp: true };
-        this.initialCardList.push(newStyledCard);
+        const newDecoratedCard = { card: newCard, faceUp: true, staged: false };
+        this.initialCardList.push(newDecoratedCard);
         ++id;
       }
     }
     const colorlessCards: DecoratedCard[] = [];
     for (let i = 0; i < 4; i++) {
       const newCard = { id: id + i, rank: Rank.One, suit: Suit.Colorless };
-      const newStyledCard = { card: newCard, faceUp: true};
-      colorlessCards.push(newStyledCard);
+      const newDecoratedCard = { card: newCard, faceUp: true, staged: false};
+      colorlessCards.push(newDecoratedCard);
     }
     this.initialCardList.push(...colorlessCards);
     this.shuffleCards(this.initialCardList);
@@ -80,9 +80,13 @@ export class CurrentGameComponent implements OnInit {
 
   stageCard(styledCard: DecoratedCard) {
     // Remove the clicked card from the player's hand
-    this.playerCards = this.playerCards.filter((c) => c !== styledCard);
-
-    this.stagedCards.push(styledCard);
+    let stagedCard = this.playerCards.find((c) => c === styledCard);
+    if (stagedCard === undefined) {
+      throw "card not found"
+    } else {
+      stagedCard.staged = true;
+      this.stagedCards.push(stagedCard);
+    }
 
     // Optionally, you can implement additional logic here, such as checking game conditions
 
@@ -91,7 +95,12 @@ export class CurrentGameComponent implements OnInit {
   }
 
   playStagedCards() {
-    this.discardPile.push(...this.stagedCards);
+    // this.discardPile = [...this.discardPile, ...this.stagedCards];
+    this.playerCards = this.playerCards.filter(c => !c.staged);
+    for (const card of this.stagedCards) {
+      this.discardPile.push(card);
+      card.staged = false;
+    }
     this.stagedCards = []
   }
 }
