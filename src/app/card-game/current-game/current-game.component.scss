@@ -7,25 +7,14 @@
     /* Subtract the header and footer height */
 
     .computer-cards,
-    .player-cards {
+    .player-cards,
+    .discard-stack {
         display: flex;
         justify-content: center;
         align-items: center;
         margin: 10px;
         /* Add margin for spacing */
 
-        // .card-container {
-          
-        //     &.highlight {
-        //         outline: 2px solid red;
-        //     }
-        // }
-
-
-        // & .highlight {
-        //     box-shadow: 0 0 5px 3px #ffbf00;
-        //     /* Add highlight effect */
-        // }
     }
 
     .discard-stack {
@@ -33,6 +22,13 @@
         height: 120px;
         background-color: #f2f2f2;
         border: 1px solid #ccc;
+    }
+
+    .play-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
     }
 
 }

@@ -16,11 +16,10 @@ export class CurrentGameComponent implements OnInit {
   computerCards: StyledCard[] = [];
   discardPile: StyledCard[] = [];
 
+  stagedCards: StyledCard[] = [];
 
-  // Optional: Add a highlighted card functionality if needed
-  highlightedCard: StyledCard | null = null;
-
-  constructor(private cdr: ChangeDetectorRef) { }
+  //constructor(private cdr: ChangeDetectorRef) { }  
+  constructor() { }
 
   ngOnInit(): void {
     this.createGame();
@@ -71,23 +70,6 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-
-  playCard(styledCard: StyledCard): void {
-    // Remove the clicked card from the player's hand
-    this.playerCards = this.playerCards.filter((c) => c !== styledCard);
-
-    // Add the card to the top of the discard pile
-    this.discardPile.push(styledCard);
-
-    // Optionally, you can implement additional logic here, such as checking game conditions
-
-    // Clear any highlighted card
-    this.clearHighlightedCard();
-
-    // Manually trigger change detection
-    this.cdr.detectChanges();
-  }
-
   toggleCardFaceUp(styledCard: StyledCard): void {
     // Toggle the faceUp state of the clicked card
     const cardElement = document.getElementById(`card-${styledCard.card.id}`);
@@ -96,16 +78,20 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  isHighlighted(styledCard: StyledCard): boolean {
-    // Check if the card is the highlighted card
-    return styledCard === this.highlightedCard;
+  stageCard(styledCard: StyledCard) {
+    // Remove the clicked card from the player's hand
+    this.playerCards = this.playerCards.filter((c) => c !== styledCard);
+
+    this.stagedCards.push(styledCard);
+
+    // Optionally, you can implement additional logic here, such as checking game conditions
+
+    // Manually trigger change detection
+    //this.cdr.detectChanges();
   }
 
-  setHighlightedCard(styledCard: StyledCard | null): void {
-    this.highlightedCard = styledCard;
-  }
-
-  clearHighlightedCard(): void {
-    this.highlightedCard = null;
+  playStagedCards() {
+    this.discardPile.push(...this.stagedCards);
+    this.stagedCards = []
   }
 }
