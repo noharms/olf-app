@@ -1,9 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Card } from '../card/model/card';
-import { RANKS_2_TO_10, Rank } from '../card/model/rank';
-import { Suit } from '../card/model/suit';
-import { DecoratedCard, fromCards } from '../card/model/decorated-card';
-import { Game } from '../model/game';
+import { DecoratedCard, fromCards, toCards } from '../card/model/decorated-card';
+import { Game, topOfDiscardPile } from '../model/game';
 import { createGame } from '../model/game-factory';
 
 @Component({
@@ -13,7 +11,7 @@ import { createGame } from '../model/game-factory';
 })
 export class CurrentGameComponent implements OnInit {
 
-  game: Game | undefined; 
+  game!: Game;
   playerCards: DecoratedCard[] = [];
   computerCards: DecoratedCard[] = [];
   discardPile: DecoratedCard[] = [];
@@ -25,11 +23,21 @@ export class CurrentGameComponent implements OnInit {
 
   ngOnInit(): void {
     this.game = createGame();
+    this.transferStatesFromGame();
+  }
 
+  private transferStatesFromGame() {
     this.playerCards = fromCards(this.game.cardsPerPlayer[0], true);
     this.computerCards = fromCards(this.game.cardsPerPlayer[1], true);
     this.discardPile = fromCards(this.game.discardPile, true);
-        
+  }
+
+  // this or the "playStagedCards()" will later be a call to the server
+  // and the server will check if it accepts the move
+  private transferStatesToGame() {
+    this.game.cardsPerPlayer[0] = toCards(this.playerCards);
+    this.game.cardsPerPlayer[1] = toCards(this.computerCards);
+    this.game.discardPile = toCards(this.discardPile);
   }
 
   toggleCardFaceUp(styledCard: DecoratedCard): void {
@@ -58,11 +66,49 @@ export class CurrentGameComponent implements OnInit {
 
   playStagedCards() {
     // this.discardPile = [...this.discardPile, ...this.stagedCards];
-    this.playerCards = this.playerCards.filter(c => !c.staged);
+    this.removeStagedCardsFromPlayer();
+    this.pushStagedCardsToDiscardPile();
+    this.transferStatesToGame();
+    this.game.turnCount++;
+    this.makeComputerTurn();
+    this.transferStatesFromGame();
+  }
+
+  private pushStagedCardsToDiscardPile() {
     for (const card of this.stagedCards) {
       this.discardPile.push(card);
       card.staged = false;
     }
     this.stagedCards = []
+  }
+
+  private removeStagedCardsFromPlayer() {
+    this.playerCards = this.playerCards.filter(c => !c.staged);
+  }
+
+  // needs to be enhanced - currently using cardsPerPlayer[1]
+  makeComputerTurn() {
+    let topCard: Card = topOfDiscardPile(this.game);
+    let playCard: Card | undefined = this.nextHigherCardFromComputer(topCard);
+    if (playCard === undefined) {
+      this.makeComputerPass();
+    } else {
+      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => c !== playCard);
+      this.game.discardPile.push(playCard);
+    }
+  }
+
+  makeComputerPass() {
+    // throw new Error('Method not implemented.');
+    alert("Computer passes");
+  }
+
+  private nextHigherCardFromComputer(topCard: Card): Card | undefined {
+    for (const card of this.game.cardsPerPlayer[1]) {
+      if (card.rank > topCard.rank) {
+        return card;
+      }
+    }
+    return undefined;
   }
 }

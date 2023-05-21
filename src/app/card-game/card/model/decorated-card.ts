@@ -11,3 +11,9 @@ export function fromCards(cards: Card[], faceUp: boolean): DecoratedCard[] {
         c => ({ card: c, faceUp: faceUp, staged: false })
     );
 }
+
+export function toCards(decoratedCards: DecoratedCard[]) {
+    return decoratedCards.map(
+        decoratedCard => decoratedCard.card
+    );
+}
