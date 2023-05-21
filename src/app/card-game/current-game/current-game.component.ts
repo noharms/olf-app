@@ -40,17 +40,19 @@ export class CurrentGameComponent implements OnInit {
     this.game.discardPile = toCards(this.discardPile);
   }
 
-  toggleCardFaceUp(styledCard: DecoratedCard): void {
+  toggleCardFaceUp(decoratedCard: DecoratedCard): void {
     // Toggle the faceUp state of the clicked card
-    const cardElement = document.getElementById(`card-${styledCard.card.id}`);
+    const cardElement = document.getElementById(`card-${decoratedCard.card.id}`);
     if (cardElement) {
       cardElement.classList.toggle('face-down');
     }
   }
 
-  stageCard(styledCard: DecoratedCard) {
+  stageCard(decoratedCard: DecoratedCard) {
+    // check if the clicked card can be staged
+
     // Remove the clicked card from the player's hand
-    let stagedCard = this.playerCards.find((c) => c === styledCard);
+    let stagedCard = this.playerCards.find((c) => c === decoratedCard);
     if (stagedCard === undefined) {
       throw "card not found"
     } else {
@@ -83,6 +85,9 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private removeStagedCardsFromPlayer() {
+    // when this will be done on the server, we need to check against
+    // the discard pile if the staged cards can really be played
+    // (to prevent corrupting the game state)
     this.playerCards = this.playerCards.filter(c => !c.staged);
   }
 

@@ -4,6 +4,7 @@ export interface DecoratedCard {
     card: Card,
     faceUp: boolean,
     staged: boolean
+    // canBeClicked: boolean
 }
 
 export function fromCards(cards: Card[], faceUp: boolean): DecoratedCard[] {
