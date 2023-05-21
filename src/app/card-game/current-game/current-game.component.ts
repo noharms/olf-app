@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Card } from '../card/model/card';
 import { RANKS_2_TO_10, Rank } from '../card/model/rank';
 import { Suit } from '../card/model/suit';
-import { DecoratedCard } from '../card/model/decorated-card';
+import { DecoratedCard, fromCards } from '../card/model/decorated-card';
+import { Game } from '../model/game';
+import { createGame } from '../model/game-factory';
 
 @Component({
   selector: 'app-current-game',
@@ -11,7 +13,7 @@ import { DecoratedCard } from '../card/model/decorated-card';
 })
 export class CurrentGameComponent implements OnInit {
 
-  initialCardList: DecoratedCard[] = [];
+  game: Game | undefined; 
   playerCards: DecoratedCard[] = [];
   computerCards: DecoratedCard[] = [];
   discardPile: DecoratedCard[] = [];
@@ -22,52 +24,12 @@ export class CurrentGameComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.createGame();
-    this.distributeInitialCards();
-  }
+    this.game = createGame();
 
-  createGame(): void {
-    // Create cards for the initial game stack
-    let id = 0;
-    const suits = [Suit.Blue, Suit.Green, Suit.Colorless];
-    const ranks = RANKS_2_TO_10;
-    for (const suit of suits) {
-      for (const rank of ranks) {
-        const newCard = { id: id, rank: rank, suit: suit };
-        const newDecoratedCard = { card: newCard, faceUp: true, staged: false };
-        this.initialCardList.push(newDecoratedCard);
-        ++id;
-      }
-    }
-    const colorlessCards: DecoratedCard[] = [];
-    for (let i = 0; i < 4; i++) {
-      const newCard = { id: id + i, rank: Rank.One, suit: Suit.Colorless };
-      const newDecoratedCard = { card: newCard, faceUp: true, staged: false};
-      colorlessCards.push(newDecoratedCard);
-    }
-    this.initialCardList.push(...colorlessCards);
-    this.shuffleCards(this.initialCardList);
-  }
-
-  distributeInitialCards(): void {
-    this.playerCards = this.initialCardList.splice(0, 13);
-    this.computerCards = this.initialCardList.splice(0, 13);
-  }
-
-  shuffleCards(cards: DecoratedCard[]): void {
-    // Shuffle the cards using Fisher-Yates algorithm
-    let currentIndex = cards.length;
-    let temporaryValue;
-    let randomIndex;
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      temporaryValue = cards[currentIndex];
-      cards[currentIndex] = cards[randomIndex];
-      cards[randomIndex] = temporaryValue;
-    }
+    this.playerCards = fromCards(this.game.cardsPerPlayer[0], true);
+    this.computerCards = fromCards(this.game.cardsPerPlayer[1], true);
+    this.discardPile = fromCards(this.game.discardPile, true);
+        
   }
 
   toggleCardFaceUp(styledCard: DecoratedCard): void {
