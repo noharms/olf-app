@@ -1,9 +1,9 @@
 <div class="card">
-    <div class="front" *ngIf="styledCard?.faceUp">
-        <span>{{ styledCard.card.rank }}</span>
-        <span>{{ styledCard.card.suit }}</span>
+    <div class="front" *ngIf="decoratedCard?.faceUp">
+        <span>{{ decoratedCard.card.rank }}</span>
+        <span>{{ decoratedCard.card.suit }}</span>
     </div>
-    <div class="back" *ngIf="!styledCard?.faceUp">
+    <div class="back" *ngIf="!decoratedCard?.faceUp">
         Olf
     </div>
 </div>

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Card } from '../card/model/card';
 import { RANKS_2_TO_10, Rank } from '../card/model/rank';
 import { Suit } from '../card/model/suit';
-import { StyledCard } from '../card/model/styled-card';
+import { DecoratedCard } from '../card/model/decorated-card';
 
 @Component({
   selector: 'app-current-game',
@@ -11,12 +11,12 @@ import { StyledCard } from '../card/model/styled-card';
 })
 export class CurrentGameComponent implements OnInit {
 
-  initialCardList: StyledCard[] = [];
-  playerCards: StyledCard[] = [];
-  computerCards: StyledCard[] = [];
-  discardPile: StyledCard[] = [];
+  initialCardList: DecoratedCard[] = [];
+  playerCards: DecoratedCard[] = [];
+  computerCards: DecoratedCard[] = [];
+  discardPile: DecoratedCard[] = [];
 
-  stagedCards: StyledCard[] = [];
+  stagedCards: DecoratedCard[] = [];
 
   //constructor(private cdr: ChangeDetectorRef) { }  
   constructor() { }
@@ -39,7 +39,7 @@ export class CurrentGameComponent implements OnInit {
         ++id;
       }
     }
-    const colorlessCards: StyledCard[] = [];
+    const colorlessCards: DecoratedCard[] = [];
     for (let i = 0; i < 4; i++) {
       const newCard = { id: id + i, rank: Rank.One, suit: Suit.Colorless };
       const newStyledCard = { card: newCard, faceUp: true};
@@ -54,7 +54,7 @@ export class CurrentGameComponent implements OnInit {
     this.computerCards = this.initialCardList.splice(0, 13);
   }
 
-  shuffleCards(cards: StyledCard[]): void {
+  shuffleCards(cards: DecoratedCard[]): void {
     // Shuffle the cards using Fisher-Yates algorithm
     let currentIndex = cards.length;
     let temporaryValue;
@@ -70,7 +70,7 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  toggleCardFaceUp(styledCard: StyledCard): void {
+  toggleCardFaceUp(styledCard: DecoratedCard): void {
     // Toggle the faceUp state of the clicked card
     const cardElement = document.getElementById(`card-${styledCard.card.id}`);
     if (cardElement) {
@@ -78,7 +78,7 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  stageCard(styledCard: StyledCard) {
+  stageCard(styledCard: DecoratedCard) {
     // Remove the clicked card from the player's hand
     this.playerCards = this.playerCards.filter((c) => c !== styledCard);
 

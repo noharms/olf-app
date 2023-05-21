@@ -1,6 +1,6 @@
 import { Card } from "./card";
 
-export interface StyledCard {
+export interface DecoratedCard {
     card: Card,
     faceUp: boolean
 }
