@@ -1,11 +1,12 @@
 <div class="current-game">
-    <div class="computer-cards">
+    <div class="computer-cards cards-container">
         <div class="card-container" *ngFor="let card of computerCards" (click)="toggleCardFaceUp(card)">
             <app-card [decoratedCard]="card"></app-card>
         </div>
     </div>
 
-    <div class="discard-stack">
+    <div class="discard-stack cards-container">
+
         <div class="card-container" *ngFor="let card of discardPile" (click)="stageCard(card)">
             <!-- <app-card [styledCard]="discardPile[discardPile.length - 1]"></app-card> -->
             <app-card [decoratedCard]="card"></app-card>
@@ -14,9 +15,10 @@
 
     <div class="play-button">
         <button class="btn btn-primary" (click)="playStagedCards()">Play cards</button>
+        <button class="btn btn-primary" (click)="playStagedCards()">Pass</button>
     </div>
 
-    <div class="player-cards">
+    <div class="player-cards cards-container">
         <div class="card-container" *ngFor="let card of playerCards" (click)="stageCard(card)">
             <app-card [decoratedCard]="card"></app-card>
         </div>
