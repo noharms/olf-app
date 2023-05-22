@@ -3,6 +3,8 @@ import { Card } from '../card/model/card';
 import { DecoratedCard, fromCards, toCards } from '../card/model/decorated-card';
 import { Game, topOfDiscardPile } from '../model/game';
 import { createGame } from '../model/game-factory';
+import { Rank } from '../card/model/rank';
+import { Suit } from '../card/model/suit';
 
 @Component({
   selector: 'app-current-game',
@@ -27,9 +29,9 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private transferStatesFromGame() {
-    this.playerCards = fromCards(this.game.cardsPerPlayer[0], true);
-    this.computerCards = fromCards(this.game.cardsPerPlayer[1], true);
-    this.discardPile = fromCards(this.game.discardPile, true);
+    this.playerCards = fromCards(this.game.cardsPerPlayer[0], true, true);
+    this.computerCards = fromCards(this.game.cardsPerPlayer[1], true, false);
+    this.discardPile = fromCards(this.game.discardPile, true, false);
   }
 
   // this or the "playStagedCards()" will later be a call to the server
@@ -57,6 +59,7 @@ export class CurrentGameComponent implements OnInit {
       throw "card not found"
     } else {
       stagedCard.staged = true;
+      stagedCard.canBePlayed = false;
       this.stagedCards.push(stagedCard);
     }
 
@@ -74,6 +77,13 @@ export class CurrentGameComponent implements OnInit {
     this.game.turnCount++;
     this.makeComputerTurn();
     this.transferStatesFromGame();
+    this.updatePlayersOptions();
+  }
+
+  updatePlayersOptions() {
+    for (const decoratedCard of this.playerCards) {
+      decoratedCard.canBePlayed = decoratedCard.card.rank > topOfDiscardPile(this.game).rank;
+    }
   }
 
   private pushStagedCardsToDiscardPile() {
@@ -102,9 +112,14 @@ export class CurrentGameComponent implements OnInit {
       this.game.discardPile.push(playCard);
     }
   }
-
+  
   makeComputerPass() {
-    // throw new Error('Method not implemented.');
+    let computerPassesPlaceholder: Card = {
+      id: -1,
+      rank: Rank.Passing,
+      suit: Suit.Colorless
+    }
+    this.game.discardPile.push(computerPassesPlaceholder);
     alert("Computer passes");
   }
 

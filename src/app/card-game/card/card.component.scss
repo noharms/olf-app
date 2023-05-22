@@ -7,7 +7,7 @@
     align-items: center;
     font-size: 16px;
     font-weight: bold;
-    margin: 2px;
+    margin: 7px;
     /* Add margin around card */
 
     .front {
@@ -23,6 +23,35 @@
 
     cursor: pointer;
     /* Add cursor pointer to indicate clickable */
+
+    // &.highlight-playable {        
+    //     outline: 2px solid rgb(217, 255, 0);
+    //     box-shadow: 0 0 5px 3px #00ff2a;
+    // }
+
+    &.highlight-playable {
+        animation: pulsate-border 4s infinite;
+    }
+
+    @keyframes pulsate-border {
+        0% {
+            outline-width: 0;
+            box-shadow: none;
+        }
+
+        50% {
+            outline-width: 2px;
+            // Outline doesn't affect the size or position of the element.
+            // It is drawn on top of the element's content, padding, and border. 
+            // outline: 2px solid rgb(0, 255, 42);
+            box-shadow: 0 0 5px 3px #00ff2a;
+        }
+
+        100% {
+            outline-width: 0;
+            box-shadow: none;
+        }
+    }
 
     &.lift-on-hover {
         &:hover {
