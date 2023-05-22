@@ -4,8 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CardGameComponent } from './card-game/card-game.component';
-import { CurrentGameComponent } from './card-game/current-game/current-game.component';
-import { CardComponent } from './card-game/card/card.component';
+import { CurrentGameComponent } from './current-game/current-game.component';
+import { CardComponent } from './card/card.component';
 
 @NgModule({
   declarations: [

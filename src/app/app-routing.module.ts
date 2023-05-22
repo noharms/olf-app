@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CardGameComponent } from './card-game/card-game.component';
-import { CurrentGameComponent } from './card-game/current-game/current-game.component';
+import { CurrentGameComponent } from './current-game/current-game.component';
 
 const routes: Routes = [
   { path: 'olf/cardgame', component: CardGameComponent },
