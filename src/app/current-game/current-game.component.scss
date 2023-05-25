@@ -14,9 +14,18 @@
         align-items: center;
         margin: 10px;
         /* Add margin for spacing */
-
+        border: solid 1px;   
+        width: 100%
     }
 
+    // note that we assume player-cards to be a flexbox container
+    // and "card-container" a flexbox item of this container
+    // (meaning it must be on a direct child element)
+    .player-cards > .card-container {
+        flex-basis: 7%; // maximum is 13 cards, 100%/13 ~ 7.7%
+        border: solid 1px
+    }
+    
     .discard-stack {
         width: 80px;
         height: 120px;
@@ -25,9 +34,6 @@
     }
 
     .play-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         margin-bottom: 10px;
     }
 

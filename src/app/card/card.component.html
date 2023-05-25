@@ -4,7 +4,7 @@
     [class.highlight-playable]="decoratedCard.canBePlayed">
     <div class="front" *ngIf="decoratedCard?.faceUp">
         <span>{{ decoratedCard.card.rank }}</span>
-        <span>{{ decoratedCard.card.suit }}</span>
+        <span>{{ decoratedCard.card.suit[0] }}</span>
     </div>
     <div class="back" *ngIf="!decoratedCard?.faceUp">
         Olf
