@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CardGameComponent } from './card-game/card-game.component';
 import { CurrentGameComponent } from './current-game/current-game.component';
-import { CardComponent } from './card/card.component';
+import { CardComponent } from './current-game/card/card.component';
 
 @NgModule({
   declarations: [

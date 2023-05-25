@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../card/model/card';
-import { DecoratedCard, fromCards, toCards } from '../card/model/decorated-card';
-import { Game, topOfDiscardPile } from '../model/game';
-import { createGame } from '../model/game-factory';
-import { Rank } from '../card/model/rank';
-import { Suit } from '../card/model/suit';
+import { Card } from '../../model/card';
+import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
+import { Game, topOfDiscardPile } from '../../model/game';
+import { createGame } from '../../model/game-factory';
+import { Rank } from '../../model/rank';
+import { Suit } from '../../model/suit';
 
 @Component({
   selector: 'app-current-game',
