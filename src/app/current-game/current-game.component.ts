@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Card } from '../../model/card';
+import { Card, TURN_PASSED_PLACEHOLDER_CARD } from '../../model/card';
 import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
 import { Game, topOfDiscardPile } from '../../model/game';
 import { createGame } from '../../model/game-factory';
@@ -58,9 +58,11 @@ export class CurrentGameComponent implements OnInit {
     if (stagedCard === undefined) {
       throw "card not found"
     } else {
-      stagedCard.staged = true;
-      stagedCard.canBePlayed = false;
-      this.stagedCards.push(stagedCard);
+      if (stagedCard.staged === false) {
+        stagedCard.staged = true;
+        stagedCard.canBePlayed = false;
+        this.stagedCards.push(stagedCard);
+      }
     }
 
     // Optionally, you can implement additional logic here, such as checking game conditions
@@ -80,10 +82,11 @@ export class CurrentGameComponent implements OnInit {
     this.updatePlayersOptions();
   }
 
-  updatePlayersOptions() {
-    for (const decoratedCard of this.playerCards) {
-      decoratedCard.canBePlayed = decoratedCard.card.rank > topOfDiscardPile(this.game).rank;
-    }
+  private removeStagedCardsFromPlayer() {
+    // when this will be done on the server, we need to check against
+    // the discard pile if the staged cards can really be played
+    // (to prevent corrupting the game state)
+    this.playerCards = this.playerCards.filter(c => !c.staged);
   }
 
   private pushStagedCardsToDiscardPile() {
@@ -94,15 +97,8 @@ export class CurrentGameComponent implements OnInit {
     this.stagedCards = []
   }
 
-  private removeStagedCardsFromPlayer() {
-    // when this will be done on the server, we need to check against
-    // the discard pile if the staged cards can really be played
-    // (to prevent corrupting the game state)
-    this.playerCards = this.playerCards.filter(c => !c.staged);
-  }
-
   // needs to be enhanced - currently using cardsPerPlayer[1]
-  makeComputerTurn() {
+  private makeComputerTurn() {
     let topCard: Card = topOfDiscardPile(this.game);
     let playCard: Card | undefined = this.nextHigherCardFromComputer(topCard);
     if (playCard === undefined) {
@@ -113,16 +109,6 @@ export class CurrentGameComponent implements OnInit {
     }
   }
   
-  makeComputerPass() {
-    let computerPassesPlaceholder: Card = {
-      id: -1,
-      rank: Rank.Passing,
-      suit: Suit.Colorless
-    }
-    this.game.discardPile.push(computerPassesPlaceholder);
-    alert("Computer passes");
-  }
-
   private nextHigherCardFromComputer(topCard: Card): Card | undefined {
     for (const card of this.game.cardsPerPlayer[1]) {
       if (card.rank > topCard.rank) {
@@ -131,4 +117,25 @@ export class CurrentGameComponent implements OnInit {
     }
     return undefined;
   }
+  
+  private makeComputerPass() {
+    this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
+    alert("Computer passes");
+  }
+
+  private updatePlayersOptions() {
+    for (const decoratedCard of this.playerCards) {
+      decoratedCard.canBePlayed = decoratedCard.card.rank > topOfDiscardPile(this.game).rank;
+    }
+  }
+
+  pass() {    
+    this.stagedCards = [];
+    this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
+    this.game.turnCount++;
+    this.makeComputerTurn();
+    this.transferStatesFromGame();
+    this.updatePlayersOptions();
+  }
+  
 }
