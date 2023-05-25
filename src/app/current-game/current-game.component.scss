@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    // height: calc(100vh - 40px);
+    height: calc(100vh - 200px);
     /* Subtract the header and footer height */
 
     .computer-cards,
@@ -12,18 +12,21 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-grow: 1;
+        
         margin: 10px;
         /* Add margin for spacing */
         border: solid 1px #c12baa;   
-        width: 100%
+        width: 100%;
     }
 
     // note that we assume player-cards to be a flexbox container
     // and "card-container" a flexbox item of this container
     // (meaning it must be on a direct child element)
-    .player-cards > .card-container {
+    .player-cards .card-container {
+        align-self: stretch;
         flex-basis: 7%; // maximum is 13 cards, 100%/13 ~ 7.7%
-        border: solid 1px
+        border: solid 1px #c12baa
     }
     
     .discard-stack {
