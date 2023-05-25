@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+
+#holygrail {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    text-align: center;
+    min-height: 100vh;
+    border: 3px solid #b71313;
+}
+
+// for debugging
+* {
+    outline: 1px solid red;
+}
