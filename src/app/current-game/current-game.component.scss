@@ -14,7 +14,7 @@
         align-items: center;
         margin: 10px;
         /* Add margin for spacing */
-        border: solid 1px;   
+        border: solid 1px #c12baa;   
         width: 100%
     }
 
@@ -30,11 +30,11 @@
         width: 80px;
         height: 120px;
         background-color: #f2f2f2;
-        border: 1px solid #ccc;
     }
 
-    .play-button {
-        margin-bottom: 10px;
+    .action-button {
+        margin: 10px;
+        min-width: 100px;
     }
 
 }
