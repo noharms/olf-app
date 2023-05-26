@@ -60,7 +60,13 @@ export class CurrentGameComponent implements OnInit {
     if (stagedCard === undefined) {
       throw "card not found"
     } else {
-      if (stagedCard.staged === false) {
+      if (stagedCard.staged === false) {        
+        if (this.stagedCards.length !== 0) {
+          const previouslyStagedCard = this.stagedCards[0];
+          previouslyStagedCard.staged = false;
+          this.stagedCards = [];
+          this.updatePlayersOptions();
+        }
         stagedCard.staged = true;
         stagedCard.canBePlayed = false;
         this.stagedCards.push(stagedCard);
@@ -137,7 +143,8 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private updatePlayersOptions() {
-    for (const decoratedCard of this.playerCards.filter(c => !c.staged)) {
+    const unstagedPlayerCards = this.playerCards.filter(c => !c.staged);
+    for (const decoratedCard of unstagedPlayerCards) {
       const cardToBeat = topOfDiscardPile(this.game);
       decoratedCard.canBePlayed = decoratedCard.card.rank > cardToBeat.rank;
     }

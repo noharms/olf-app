@@ -4,7 +4,7 @@ import { Suit } from "./suit";
 import { Game } from "./game";
 import { COMPUTER_PLAYER, PLAYER1, Player } from "./player";
 
-const CARDS_PER_PLAYER = 13;
+const CARDS_PER_PLAYER = 3; // reduced for testing
 const ONES_PER_PLAYER_COUNT = 4;
 
 export function createGame(): Game {
