@@ -6,6 +6,7 @@ import { createGame } from '../../model/game-factory';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameOverModalComponent } from './game-over-modal/game-over-modal.component';
 
+const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
 @Component({
   selector: 'app-current-game',
   templateUrl: './current-game.component.html',
@@ -17,10 +18,10 @@ export class CurrentGameComponent implements OnInit {
   playerCards: DecoratedCard[] = [];
   computerCards: DecoratedCard[] = [];
   discardPile: DecoratedCard[] = [];
-
   stagedCards: DecoratedCard[] = [];
 
-  //constructor(private cdr: ChangeDetectorRef) { }  
+  isComputersTurn: boolean  = false;
+
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -95,10 +96,15 @@ export class CurrentGameComponent implements OnInit {
     if (this.playerCards.length == 0) {
       this.openGameVictoryModal();
     } else {
+      this.disablePlayerButtons();
       this.makeComputerTurn();
       this.transferStatesFromGame();
       this.updatePlayersOptions();
     }
+  }
+  private disablePlayerButtons() {
+    this.isComputersTurn = true;
+    setTimeout(() => this.isComputersTurn = false, COMPUTER_TURN_TIME_IN_MILLISECONDS);
   }
 
   private removeStagedCardsFromPlayer() {
