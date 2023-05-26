@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-const NEW_GAME_KEY = 'new-game';
-const REDIRECT_TO_STATS_KEY = 'my-stats';
+export const NEW_GAME_KEY = 'new-game';
+export const REDIRECT_TO_STATS_KEY = 'my-stats';
 
 @Component({
   selector: 'app-game-over-modal',
