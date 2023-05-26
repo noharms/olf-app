@@ -51,7 +51,9 @@ export class CurrentGameComponent implements OnInit {
   }
 
   stageCard(decoratedCard: DecoratedCard) {
-    // check if the clicked card can be staged
+    if (!decoratedCard.canBePlayed) {
+      return; // the click will have no effect
+    }
 
     // Remove the clicked card from the player's hand
     let stagedCard = this.playerCards.find((c) => c === decoratedCard);
@@ -77,6 +79,9 @@ export class CurrentGameComponent implements OnInit {
 
   playStagedCards() {
     // this.discardPile = [...this.discardPile, ...this.stagedCards];
+    if (this.stagedCards.length == 0) {
+      return;
+    }
     this.removeStagedCardsFromPlayer();
     this.pushStagedCardsToDiscardPile();
     this.transferStatesToGame();

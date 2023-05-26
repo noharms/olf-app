@@ -14,7 +14,7 @@
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" (click)="playStagedCards()">Play cards</button>
+        <button class="btn btn-primary action-button" [disabled]="(stagedCards.length === 0)"  (click)="playStagedCards()">Play</button>
         <button class="btn btn-primary action-button" (click)="pass()">Pass</button>
     </div>
 
