@@ -51,7 +51,7 @@ function createAllCardsForGame(): Card[] {
     }
     for (let i = 0; i < ONES_PER_PLAYER_COUNT; i++) {
         const newCard = { id: cardId + i, rank: Rank.One, suit: Suit.Colorless };
-        allCardsInGame.push();
+        allCardsInGame.push(newCard);
     }
     return allCardsInGame;
 }
