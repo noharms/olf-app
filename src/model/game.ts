@@ -1,7 +1,5 @@
-import { Card } from "./card";
-import { RANKS_2_TO_10, Rank } from "./rank";
-import { Suit } from "./suit";
-import { COMPUTER_PLAYER, PLAYER1, Player } from "./player";
+import { Card, TURN_PASSED_PLACEHOLDER_CARD } from "./card";
+import { Player } from "./player";
 
 export interface Game {
     id: number,
@@ -20,6 +18,9 @@ export function getPlayerOnTurn(game: Game) {
 }
 
 export function topOfDiscardPile(game: Game): Card {
-    return game.discardPile[game.discardPile.length - 1];
+    if (game.discardPile.length === 0) {
+        return TURN_PASSED_PLACEHOLDER_CARD;
+    } else {
+        return game.discardPile[game.discardPile.length - 1];
+    }
 }
-  

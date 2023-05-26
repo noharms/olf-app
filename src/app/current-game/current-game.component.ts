@@ -62,6 +62,10 @@ export class CurrentGameComponent implements OnInit {
         stagedCard.staged = true;
         stagedCard.canBePlayed = false;
         this.stagedCards.push(stagedCard);
+      } else {
+        stagedCard.staged = false;
+        this.stagedCards = this.stagedCards.filter(c => c !== decoratedCard);
+        this.updatePlayersOptions();
       }
     }
 
@@ -124,8 +128,9 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private updatePlayersOptions() {
-    for (const decoratedCard of this.playerCards) {
-      decoratedCard.canBePlayed = decoratedCard.card.rank > topOfDiscardPile(this.game).rank;
+    for (const decoratedCard of this.playerCards.filter(c => !c.staged)) {
+      const cardToBeat = topOfDiscardPile(this.game);
+      decoratedCard.canBePlayed = decoratedCard.card.rank > cardToBeat.rank;
     }
   }
 
