@@ -1,1 +1,28 @@
-<p>home works!</p>
+<div class="home-container">
+    <h2>Welcome, {{ userName }}!</h2>
+
+    <table class="user-info">
+        <tr>
+            <th>Email:</th>
+            <td>{{ userEmail }}</td>
+        </tr>
+        <tr>
+            <th>Registration Date:</th>
+            <td>{{ registrationDate | date }}</td>
+        </tr>
+        <tr>
+            <th>Total Games Played:</th>
+            <td>{{ totalGamesPlayed }}</td>
+        </tr>
+        <tr>
+            <th>Wins:</th>
+            <td>{{ numberOfWins }}</td>
+        </tr>
+        <tr>
+            <th>Losses:</th>
+            <td>{{ numberOfLosses }}</td>
+        </tr>
+    </table>
+
+    <button class="btn btn-primary" (click)="startNewGame()">New Game</button>
+</div>
