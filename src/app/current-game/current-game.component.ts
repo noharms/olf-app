@@ -4,7 +4,7 @@ import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
 import { Game, topOfDiscardPile } from '../../model/game';
 import { createGame } from '../../model/game-factory';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GameOverModalComponent } from './game-over-modal/game-over-modal.component';
+import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
 @Component({
@@ -174,11 +174,9 @@ export class CurrentGameComponent implements OnInit {
 
     modalRef.result.then(
       (result) => {
-        if (result === 'new-game') {
-          // Handle "New Game" button click
+        if (result === NEW_GAME_KEY) {
           this.ngOnInit();
-        } else if (result === 'my-stats') {
-          // Handle "My Stats" button click
+        } else if (result === REDIRECT_TO_STATS_KEY) {
           this.navigateToStats();
         }
       },
