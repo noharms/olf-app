@@ -14,7 +14,8 @@
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" [disabled]="(stagedCards.length === 0)"  (click)="playStagedCards()">Play</button>
+        <button class="btn btn-primary action-button" [disabled]="(stagedCards.length === 0)"
+            (click)="playStagedCards()">Play</button>
         <button class="btn btn-primary action-button" (click)="pass()">Pass</button>
     </div>
 
@@ -24,3 +25,26 @@
         </div>
     </div>
 </div>
+
+
+<!-- THIS IS ANOTHER WAY TO CREATE THE MODAL: IN THE TYPESCRIPT FILE, THE ID 
+     #modalContent IS REFERENCED BY A VARIABLE THAT IS THEN PASSED TO THE SERVICE -->
+
+<!-- <ng-template #modalContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Congratulations! You won the game!</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('dismiss')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>You won the game!</p>
+        <button class="btn btn-primary">New Game</button>
+        <button class="btn btn-secondary">My Stats</button>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.close('newGame')">New Game</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close('myStats')">My Stats</button>
+    </div>
+</ng-template> -->

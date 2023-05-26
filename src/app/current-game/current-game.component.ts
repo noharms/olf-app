@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Card, TURN_PASSED_PLACEHOLDER_CARD } from '../../model/card';
 import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
 import { Game, topOfDiscardPile } from '../../model/game';
 import { createGame } from '../../model/game-factory';
-import { Rank } from '../../model/rank';
-import { Suit } from '../../model/suit';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { GameOverModalComponent } from './game-over-modal/game-over-modal.component';
 
 @Component({
   selector: 'app-current-game',
@@ -12,6 +12,13 @@ import { Suit } from '../../model/suit';
   styleUrls: ['./current-game.component.scss']
 })
 export class CurrentGameComponent implements OnInit {
+
+  // 2nd method to get a modal:
+  // instead of having a separate component that we pass to the modalService
+  // we can also pass this modalContent reference which refers
+  // to some html defined with the ng-template directive and the id #modalContent
+  // in the html. committing just to remember it but will be outcommented and deleted
+  //@ViewChild('modalContent', { static: false }) modalContent!: any;
 
   game!: Game;
   playerCards: DecoratedCard[] = [];
@@ -21,7 +28,7 @@ export class CurrentGameComponent implements OnInit {
   stagedCards: DecoratedCard[] = [];
 
   //constructor(private cdr: ChangeDetectorRef) { }  
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.game = createGame();
@@ -86,9 +93,13 @@ export class CurrentGameComponent implements OnInit {
     this.pushStagedCardsToDiscardPile();
     this.transferStatesToGame();
     this.game.turnCount++;
-    this.makeComputerTurn();
-    this.transferStatesFromGame();
-    this.updatePlayersOptions();
+    if (this.playerCards.length == 0) {
+      this.openGameVictoryModal();
+    } else {
+      this.makeComputerTurn();
+      this.transferStatesFromGame();
+      this.updatePlayersOptions();
+    }
   }
 
   private removeStagedCardsFromPlayer() {
@@ -117,7 +128,7 @@ export class CurrentGameComponent implements OnInit {
       this.game.discardPile.push(playCard);
     }
   }
-  
+
   private nextHigherCardFromComputer(topCard: Card): Card | undefined {
     for (const card of this.game.cardsPerPlayer[1]) {
       if (card.rank > topCard.rank) {
@@ -126,7 +137,7 @@ export class CurrentGameComponent implements OnInit {
     }
     return undefined;
   }
-  
+
   private makeComputerPass() {
     this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
     alert("Computer passes");
@@ -139,7 +150,7 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  pass() {    
+  pass() {
     this.stagedCards = [];
     this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
     this.game.turnCount++;
@@ -147,5 +158,33 @@ export class CurrentGameComponent implements OnInit {
     this.transferStatesFromGame();
     this.updatePlayersOptions();
   }
-  
+
+  private openGameVictoryModal() {
+    const modalRef = this.modalService.open(
+      //this.modalContent,  // see ViewChild modalContent; not used now
+      GameOverModalComponent,
+      { backdrop: 'static', keyboard: false }
+    );
+    modalRef.componentInstance.message = 'Congratulations! You won the game!';
+
+    modalRef.result.then(
+      (result) => {
+        if (result === 'new-game') {
+          // Handle "New Game" button click
+          this.ngOnInit();
+        } else if (result === 'my-stats') {
+          // Handle "My Stats" button click
+          this.navigateToStats();
+        }
+      },
+      (dismissReason) => {
+        // Handle modal dismiss
+      }
+    );
+  }
+
+  private navigateToStats() {
+
+  }
+
 }
