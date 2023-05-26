@@ -13,13 +13,6 @@ import { GameOverModalComponent } from './game-over-modal/game-over-modal.compon
 })
 export class CurrentGameComponent implements OnInit {
 
-  // 2nd method to get a modal:
-  // instead of having a separate component that we pass to the modalService
-  // we can also pass this modalContent reference which refers
-  // to some html defined with the ng-template directive and the id #modalContent
-  // in the html. committing just to remember it but will be outcommented and deleted
-  //@ViewChild('modalContent', { static: false }) modalContent!: any;
-
   game!: Game;
   playerCards: DecoratedCard[] = [];
   computerCards: DecoratedCard[] = [];
@@ -161,7 +154,6 @@ export class CurrentGameComponent implements OnInit {
 
   private openGameVictoryModal() {
     const modalRef = this.modalService.open(
-      //this.modalContent,  // see ViewChild modalContent; not used now
       GameOverModalComponent,
       { backdrop: 'static', keyboard: false }
     );
