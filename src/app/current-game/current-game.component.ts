@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card, TURN_PASSED_PLACEHOLDER_CARD } from '../../model/card';
 import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
@@ -22,7 +23,7 @@ export class CurrentGameComponent implements OnInit {
 
   isComputersTurn: boolean = false;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private router: Router, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.game = createGame();
@@ -209,7 +210,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private navigateToStats() {
-
+    this.router.navigate(['/olf/home']);
   }
 
   stagedCards(): DecoratedCard[] {
