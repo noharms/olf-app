@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card, TURN_PASSED_PLACEHOLDER_CARD } from '../../model/card';
 import { DecoratedCard, fromCards, toCards } from '../../model/decorated-card';
 import { Game, topOfDiscardPile } from '../../model/game';
 import { createGame } from '../../model/game-factory';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
@@ -15,22 +15,25 @@ const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
 export class CurrentGameComponent implements OnInit {
 
   game!: Game;
+  // TODO: remove these references and use game.x fields directly? check out "transferStates" methods below. also, can we do this in the html?
   playerCards: DecoratedCard[] = [];
   computerCards: DecoratedCard[] = [];
   discardPile: DecoratedCard[] = [];
-  stagedCards: DecoratedCard[] = [];
 
-  isComputersTurn: boolean  = false;
+  isComputersTurn: boolean = false;
 
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.game = createGame();
     this.transferStatesFromGame();
+    // this sets properties on the cards that control visual effects like pulsation of cards that can be staged
+    // -> consider making that static methods instead of state on the cards
+    this.updatePlayerCardsCanBeStaged();
   }
 
   private transferStatesFromGame() {
-    this.playerCards = fromCards(this.game.cardsPerPlayer[0], true, true);
+    this.playerCards = fromCards(this.game.cardsPerPlayer[0], true, false);
     this.computerCards = fromCards(this.game.cardsPerPlayer[1], true, false);
     this.discardPile = fromCards(this.game.discardPile, true, false);
   }
@@ -51,32 +54,13 @@ export class CurrentGameComponent implements OnInit {
     }
   }
 
-  stageCard(decoratedCard: DecoratedCard) {
-    if (!decoratedCard.canBePlayed) {
-      return; // the click will have no effect
-    }
-
-    // Remove the clicked card from the player's hand
-    let stagedCard = this.playerCards.find((c) => c === decoratedCard);
-    if (stagedCard === undefined) {
-      throw "card not found"
+  toggleStagedProperty(decoratedCard: DecoratedCard) {
+    if (decoratedCard.staged) {
+      this.unstage(decoratedCard);
     } else {
-      if (stagedCard.staged === false) {        
-        if (this.stagedCards.length !== 0) {
-          const previouslyStagedCard = this.stagedCards[0];
-          previouslyStagedCard.staged = false;
-          this.stagedCards = [];
-          this.updatePlayersOptions();
-        }
-        stagedCard.staged = true;
-        stagedCard.canBePlayed = false;
-        this.stagedCards.push(stagedCard);
-      } else {
-        stagedCard.staged = false;
-        this.stagedCards = this.stagedCards.filter(c => c !== decoratedCard);
-        this.updatePlayersOptions();
-      }
+      this.tryStaging(decoratedCard);
     }
+    this.updatePlayerCardsCanBeStaged();
 
     // Optionally, you can implement additional logic here, such as checking game conditions
 
@@ -84,53 +68,80 @@ export class CurrentGameComponent implements OnInit {
     //this.cdr.detectChanges();
   }
 
+  private unstage(decoratedCard: DecoratedCard) {
+    decoratedCard.staged = false;
+  }
+
+  private tryStaging(clickedCard: DecoratedCard) {
+    if (!clickedCard.canBeStaged) {
+      // TODO: side vibration
+      return; // the click will have no effect
+    } else {
+      this.stageCard(clickedCard);
+    }
+  }
+
+  private stageCard(clickedCard: DecoratedCard) {
+    const stagedCards: DecoratedCard[] = this.stagedCards();
+    if (stagedCards.length !== 0) {
+      // there can be always only one card staged at the moment
+      this.unstage(stagedCards[0]);
+    }
+    clickedCard.staged = true;
+  }
+
   playStagedCards() {
+    const stagedCards: DecoratedCard[] = this.stagedCards();
     // this.discardPile = [...this.discardPile, ...this.stagedCards];
-    if (this.stagedCards.length == 0) {
+    if (stagedCards.length == 0) {
       return;
     }
-    this.removeStagedCardsFromPlayer();
-    this.pushStagedCardsToDiscardPile();
+    this.pushToDiscardPile(stagedCards);
+    this.removeFromPlayer(stagedCards);
     this.transferStatesToGame();
     this.game.turnCount++;
-    if (this.playerCards.length == 0) {
-      this.openGameVictoryModal();
+    if (this.playerCards.length === 0) {
+      this.openGameVictoryModal(true);
     } else {
       this.disablePlayerButtons();
       this.makeComputerTurn();
       this.transferStatesFromGame();
-      this.updatePlayersOptions();
+      if (this.computerCards.length === 0) {
+        this.openGameVictoryModal(false);
+      } else {
+        this.updatePlayerCardsCanBeStaged();
+      }
     }
   }
-  private disablePlayerButtons() {
+
+  private disablePlayerButtons(): void {
     this.isComputersTurn = true;
     setTimeout(() => this.isComputersTurn = false, COMPUTER_TURN_TIME_IN_MILLISECONDS);
   }
 
-  private removeStagedCardsFromPlayer() {
+  private removeFromPlayer(cardsToRemove: DecoratedCard[]): void {
     // when this will be done on the server, we need to check against
     // the discard pile if the staged cards can really be played
     // (to prevent corrupting the game state)
-    this.playerCards = this.playerCards.filter(c => !c.staged);
+    this.playerCards = this.playerCards.filter(playerCard => !cardsToRemove.includes(playerCard));
   }
 
-  private pushStagedCardsToDiscardPile() {
-    for (const card of this.stagedCards) {
+  private pushToDiscardPile(cardsToDiscard: DecoratedCard[]): void {
+    for (const card of cardsToDiscard) {
       this.discardPile.push(card);
-      card.staged = false;
+      this.unstage(card);
     }
-    this.stagedCards = []
   }
 
   // needs to be enhanced - currently using cardsPerPlayer[1]
-  private makeComputerTurn() {
-    let topCard: Card = topOfDiscardPile(this.game);
-    let playCard: Card | undefined = this.nextHigherCardFromComputer(topCard);
-    if (playCard === undefined) {
+  private makeComputerTurn(): void {
+    let cardToBeat: Card = topOfDiscardPile(this.game);
+    let cardToPlay: Card | undefined = this.nextHigherCardFromComputer(cardToBeat);
+    if (cardToPlay === undefined) {
       this.makeComputerPass();
     } else {
-      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => c !== playCard);
-      this.game.discardPile.push(playCard);
+      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => c !== cardToPlay);
+      this.game.discardPile.push(cardToPlay);
     }
   }
 
@@ -143,34 +154,45 @@ export class CurrentGameComponent implements OnInit {
     return undefined;
   }
 
-  private makeComputerPass() {
+  private makeComputerPass(): void {
     this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
     alert("Computer passes");
   }
 
-  private updatePlayersOptions() {
-    const unstagedPlayerCards = this.playerCards.filter(c => !c.staged);
-    for (const decoratedCard of unstagedPlayerCards) {
-      const cardToBeat = topOfDiscardPile(this.game);
-      decoratedCard.canBePlayed = decoratedCard.card.rank > cardToBeat.rank;
+  private updatePlayerCardsCanBeStaged(): void {
+    for (const playerCard of this.playerCards) {
+      playerCard.canBeStaged = this.isHigherThanTopOfDiscardPile(playerCard) && this.isCompatibleWithStage(playerCard);
     }
   }
 
-  pass() {
-    this.stagedCards = [];
+  private isHigherThanTopOfDiscardPile(playerCard: DecoratedCard): boolean {
+    const cardToBeat = topOfDiscardPile(this.game);
+    return playerCard.card.rank > cardToBeat.rank;
+  }
+
+  private isCompatibleWithStage(playerCard: DecoratedCard): boolean {
+    // TODO handle more than single cards: for now, we simply allow staging, if nothing else was staged yet
+    return this.stagedCards().length === 0;
+  }
+
+  pass(): void {
     this.game.discardPile.push(TURN_PASSED_PLACEHOLDER_CARD);
     this.game.turnCount++;
     this.makeComputerTurn();
     this.transferStatesFromGame();
-    this.updatePlayersOptions();
+    if (this.computerCards.length === 0) {
+      this.openGameVictoryModal(false);
+    } else {
+      this.updatePlayerCardsCanBeStaged();
+    }
   }
 
-  private openGameVictoryModal() {
+  private openGameVictoryModal(hasPlayerWon: boolean): void {
     const modalRef = this.modalService.open(
       GameOverModalComponent,
       { backdrop: 'static', keyboard: false }
     );
-    modalRef.componentInstance.message = 'Congratulations! You won the game!';
+    modalRef.componentInstance.message = hasPlayerWon ? 'Congratulations! You won the game!' : 'You have lost this game.';
 
     modalRef.result.then(
       (result) => {
@@ -190,4 +212,9 @@ export class CurrentGameComponent implements OnInit {
 
   }
 
+  stagedCards(): DecoratedCard[] {
+    return this.playerCards.filter(card => card.staged);
+  }
+
 }
+

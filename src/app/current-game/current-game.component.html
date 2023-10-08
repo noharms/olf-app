@@ -6,21 +6,20 @@
     </div>
 
     <div class="discard-stack">
-
-        <div class="card-container" *ngFor="let card of discardPile" (click)="stageCard(card)">
+        <div class="card-container" *ngFor="let card of discardPile">
             <!-- <app-card [styledCard]="discardPile[discardPile.length - 1]"></app-card> -->
             <app-card [decoratedCard]="card"></app-card>
         </div>
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" [disabled]="isComputersTurn || (stagedCards.length === 0)"
+        <button class="btn btn-primary action-button" [disabled]="isComputersTurn || (stagedCards().length === 0)"
             (click)="playStagedCards()">Play</button>
         <button class="btn btn-primary action-button" [disabled]="isComputersTurn" (click)="pass()">Pass</button>
     </div>
 
     <div class="player-cards">
-        <div class="card-container" *ngFor="let card of playerCards" (click)="stageCard(card)">
+        <div class="card-container" *ngFor="let card of playerCards" (click)="toggleStagedProperty(card)">
             <app-card [decoratedCard]="card"></app-card>
         </div>
     </div>

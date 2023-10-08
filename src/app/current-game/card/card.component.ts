@@ -23,15 +23,15 @@ export class CardComponent implements OnInit {
     // asynchronous pulsations of the cards
     // => therefore, we have to check for updates on the decoratedCard.canBePlayed
     //    manually in periodic intervals
-    const checkUpdateInterval = 1000;
+    const checkIsUpdateNecessaryInterval = 1000;
     setInterval(() => {
       this.updateIsHighlightPlayable();
-    }, checkUpdateInterval);
+    }, checkIsUpdateNecessaryInterval);
   }
 
 
   private updateIsHighlightPlayable() {
-    if (this.decoratedCard.canBePlayed) {
+    if (this.decoratedCard.canBeStaged) {
       this.activatePulsation();
     } else {
       this.isHighlightPlayable = false;
