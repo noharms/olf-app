@@ -1,6 +1,8 @@
 <div class="card" 
     [class.staged]="decoratedCard.staged" 
-    [class.lift-on-hover]="!decoratedCard.staged && decoratedCard.canBeStaged" 
+    [@combinedAnimation]="animationState"
+    (mouseover)="onHover()"
+    (mouseout)="onHoverOut()"
     [class.highlight-playable]="isHighlightPlayable">
     <div class="front" *ngIf="decoratedCard?.faceUp">
         <span>{{ decoratedCard.card.rank }}</span>
