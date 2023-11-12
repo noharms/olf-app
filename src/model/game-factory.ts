@@ -1,10 +1,10 @@
 import { Card } from "./card";
-import { RANKS_2_TO_10, Rank } from "./rank";
-import { Suit } from "./suit";
 import { Game } from "./game";
 import { COMPUTER_PLAYER, PLAYER1, Player } from "./player";
+import { RANKS_2_TO_10, Rank } from "./rank";
+import { Suit } from "./suit";
 
-const CARDS_PER_PLAYER = 3; // reduced for testing
+const CARDS_PER_PLAYER = 10; // reduced for testing
 const ONES_PER_PLAYER_COUNT = 4;
 
 export function createGame(): Game {
@@ -39,13 +39,13 @@ function createAllCardsForGame(): Card[] {
     const ranks = RANKS_2_TO_10;
     for (const suit of suits) {
         for (const rank of ranks) {
-            const newCard = { id: cardId, rank: rank, suit: suit };
+            const newCard = new Card(cardId, rank, suit );
             allCardsInGame.push(newCard);
             ++cardId;
         }
     }
     for (let i = 0; i < ONES_PER_PLAYER_COUNT; i++) {
-        const newCard = { id: cardId + i, rank: Rank.One, suit: Suit.Colorless };
+        const newCard = new Card(cardId + i, Rank.One, Suit.Colorless);
         allCardsInGame.push(newCard);
     }
     return allCardsInGame;

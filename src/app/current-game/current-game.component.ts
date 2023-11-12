@@ -6,7 +6,7 @@ import { CardCombination } from 'src/model/card-combination';
 import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardCombinations, toCardViewCombinations, toCardViews, toCards } from 'src/model/model-view-conversions';
-import { Card } from '../../model/card';
+import { Card, allSameRank } from '../../model/card';
 import { Game } from '../../model/game';
 import { createGame } from '../../model/game-factory';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
@@ -88,11 +88,6 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private stageCard(clickedCard: CardView) {
-    const stagedCards: CardView[] = this.stagedCards();
-    if (stagedCards.length !== 0) {
-      // there can be always only one card staged at the moment
-      this.unstage(stagedCards[0]);
-    }
     clickedCard.staged = true;
   }
 
@@ -190,14 +185,19 @@ export class CurrentGameComponent implements OnInit {
 
   private isCompatibleWithDiscardPile(playerCard: CardView): boolean {
     const combinationToBeat: CardCombination = this.game.topOfDiscardPile();
-    return playerCard.isHigherThan(combinationToBeat);
+    return playerCard.isRankHigherThan(combinationToBeat);
   }
 
-  private isCompatibleWithStage(playerCard: CardView): boolean {
+  private isCompatibleWithStage(cardView: CardView): boolean {
     // TODO handle more than single cards: for now, we simply allow staging, if nothing else was staged yet
     // logic:
     // if player starts a new round (last played cards were "pass" by all predecessors)
     // or if the new combination are all of the same rank 
+    return this.isStageEmpty() ||
+           allSameRank(...toCards(this.stagedCards()), cardView.card);
+  }
+
+  private isStageEmpty(): boolean {
     return this.stagedCards().length === 0;
   }
 

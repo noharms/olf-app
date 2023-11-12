@@ -1,4 +1,4 @@
-import { Card, TURN_PASSED_PLACEHOLDER_CARD } from "./card";
+import { Card } from "./card";
 import { CardViewCombination } from "./card-combination-view";
 import { CardView } from "./card-view";
 import { Rank } from "./rank";
@@ -7,7 +7,9 @@ import { Rank } from "./rank";
 export class CardCombination {
 
     public static readonly AMBIGUOUS_RANKS: number = -1;
-    public static readonly TURN_PASSED_PLACEHOLDER: CardCombination = new CardCombination([TURN_PASSED_PLACEHOLDER_CARD]);
+    public static readonly TURN_PASSED_PLACEHOLDER: CardCombination = new CardCombination(
+        [Card.TURN_PASSED_PLACEHOLDER_CARD]
+    );
 
     constructor(public cards: Card[]) { }
 

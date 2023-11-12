@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { CardViewCombination } from 'src/model/card-combination-view';
-import { CardView } from 'src/model/card-view';
 
 @Component({
   selector: 'app-card-combination',
