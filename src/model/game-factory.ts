@@ -13,13 +13,8 @@ export function createGame(): Game {
     let allCards: Card[] = createAllCardsForGame();
     shuffleCards(allCards);
     let cardsPerPlayer: Card[][] = distributeCards(players, allCards);
-    return {
-        id: 0,
-        players: players,
-        cardsPerPlayer: cardsPerPlayer,
-        discardPile: [],
-        turnCount: 0
-    };
+    // TODO get id from server
+    return new Game(0, players, cardsPerPlayer, [], 0);
 }
 
 function distributeCards(players: Player[], allCards: Card[]) {

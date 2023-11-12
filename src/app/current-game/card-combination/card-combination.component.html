@@ -1,0 +1,11 @@
+<div class="card-combination">
+    <div *ngFor="let cardView of cardViewCombination.cardViews">
+        <div class="front" *ngIf="cardView?.faceUp">
+            <span>{{ cardView.card.rank }}</span>
+            <span>{{ cardView.card.suit[0] }}</span>
+        </div>
+        <div class="back" *ngIf="!cardView?.faceUp">
+            Olf
+        </div>
+    </div>
+</div>

@@ -1,26 +1,53 @@
-import { Card, TURN_PASSED_PLACEHOLDER_CARD } from "./card";
+import { Card } from "./card";
+import { CardCombination } from "./card-combination";
 import { Player } from "./player";
 
-export interface Game {
-    id: number,
-    players: Player[],
-    cardsPerPlayer: Card[][],
-    discardPile: Card[],
-    turnCount: number;
+export class Game {
+        
     // stagedCards should also be stored on server
     // history of turns also
-}
+    constructor(
+        private id: number,
+        private players: Player[],
+        private _cardsPerPlayer: Card[][],
+        private _discardPile: CardCombination[],
+        private _turnCount: number
+    ) { };
 
-// create GameImpl class for these methods
-// and use GameImpl instead of anonymous instances
-export function getPlayerOnTurn(game: Game) {
-    return game.turnCount % game.players.length;
-}
-
-export function topOfDiscardPile(game: Game): Card {
-    if (game.discardPile.length === 0) {
-        return TURN_PASSED_PLACEHOLDER_CARD;
-    } else {
-        return game.discardPile[game.discardPile.length - 1];
+    public get cardsPerPlayer(): Card[][] {
+        return this._cardsPerPlayer;
     }
+
+    public get discardPile(): CardCombination[] {
+        return this._discardPile;
+    }
+
+    public set discardPile(value: CardCombination[]) {
+        this._discardPile = value;
+    }
+
+    public get turnCount(): number {
+        return this._turnCount;
+    }
+
+    public set turnCount(value: number) {
+        this._turnCount = value;
+    }
+    
+
+    // create GameImpl class for these methods
+    // and use GameImpl instead of anonymous instances
+    getCurrentTurnsPlayer() {
+        return this.turnCount % this.players.length;
+    }
+
+    topOfDiscardPile(): CardCombination {
+        if (this.discardPile.length === 0) {
+            return CardCombination.TURN_PASSED_PLACEHOLDER;
+        } else {
+            const combinationOnTop = this.discardPile[this.discardPile.length - 1];
+            return combinationOnTop;
+        }
+    }
+
 }

@@ -1,14 +1,14 @@
 <div class="card" 
-    [class.staged]="decoratedCard.staged" 
+    [class.staged]="cardView.staged" 
     [@combinedAnimation]="animationState"
     (mouseover)="onHover()"
     (mouseout)="onHoverOut()"
     [class.highlight-playable]="isHighlightPlayable">
-    <div class="front" *ngIf="decoratedCard?.faceUp">
-        <span>{{ decoratedCard.card.rank }}</span>
-        <span>{{ decoratedCard.card.suit[0] }}</span>
+    <div class="front" *ngIf="cardView?.faceUp">
+        <span>{{ cardView.card.rank }}</span>
+        <span>{{ cardView.card.suit[0] }}</span>
     </div>
-    <div class="back" *ngIf="!decoratedCard?.faceUp">
+    <div class="back" *ngIf="!cardView?.faceUp">
         Olf
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { DecoratedCard } from '../../../model/decorated-card';
+import { CardView } from '../../../model/card-view';
 import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
 
 
@@ -41,7 +41,7 @@ const PULSATION_PERIOD_IN_MILLISECONDS = 4000; // cf. with scss to align
 })
 export class CardComponent implements OnInit {
 
-  @Input() decoratedCard!: DecoratedCard;
+  @Input() cardView!: CardView;
 
   isHighlightPlayable: boolean = false;
   animationState: string = '';
@@ -49,10 +49,10 @@ export class CardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // We cannot directly bind decoratedCard.canBePlayed to the setting
+    // We cannot directly bind cardView.canBePlayed to the setting
     // of the CSS class "highlight-playable" because that would lead to
     // asynchronous pulsations of the cards
-    // => therefore, we have to check for updates on the decoratedCard.canBePlayed
+    // => therefore, we have to check for updates on the cardView.canBePlayed
     //    manually in periodic intervals
     const checkIsUpdateNecessaryInterval = 1000;
     setInterval(() => {
@@ -62,7 +62,7 @@ export class CardComponent implements OnInit {
 
 
   private updateIsHighlightPlayable() {
-    if (this.decoratedCard.canBeStaged) {
+    if (this.cardView.canBeStaged) {
       this.activatePulsation();
     } else {
       this.isHighlightPlayable = false;
@@ -82,10 +82,10 @@ export class CardComponent implements OnInit {
   }
   
   onHover() {
-    if (this.decoratedCard.staged) {
+    if (this.cardView.staged) {
       // do nothing
     } else {
-      if (this.decoratedCard.canBeStaged) {
+      if (this.cardView.canBeStaged) {
         this.animationState = 'lift';
       } else {
         this.animationState = 'wobble';

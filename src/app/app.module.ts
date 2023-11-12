@@ -8,6 +8,7 @@ import { CardComponent } from './current-game/card/card.component';
 import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
 import { HomeComponent } from './home/home.component';
+import { CardCombinationComponent } from './current-game/card-combination/card-combination.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { HomeComponent } from './home/home.component';
     CurrentGameComponent,
     CardComponent,
     GameOverModalComponent,
-    HomeComponent
+    HomeComponent,
+    CardCombinationComponent
   ],
   imports: [
     BrowserModule,
