@@ -145,28 +145,47 @@ export class CurrentGameComponent implements OnInit {
   // needs to be enhanced - currently using cardsPerPlayer[1]
   private makeComputerTurn(): void {
     let cardCombinationToBeat: CardCombination = this.game.topOfDiscardPile();
-    let cardCombinationToPlay: CardCombination | undefined = this.nextHigherCardFromComputer(cardCombinationToBeat);
-    if (cardCombinationToPlay === undefined) {
+    let cardCombination: CardCombination | undefined = this.cardCombinationFromComputer(cardCombinationToBeat);
+    if (cardCombination === undefined) {
       this.makeComputerPass();
     } else {
-      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => !lodash.includes(cardCombinationToPlay?.cards, c));
-      this.game.discardPile.push(cardCombinationToPlay);
+      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => !lodash.includes(cardCombination?.cards, c));
+      this.game.discardPile.push(cardCombination);
     }
   }
 
   // TODO: not return undefined but a special CardCombination object?
-  private nextHigherCardFromComputer(cardCombination: CardCombination): CardCombination | undefined {
-    const computerCards: Card[] = this.game.cardsPerPlayer[1];
+  private cardCombinationFromComputer(cardCombination: CardCombination): CardCombination | undefined {
     // for now, let the computer always pass if the player played a combination instead of a single card
-    if (cardCombination.cards.length > 1) {
-      return undefined;
-    } else {
+    const multiplicity: number = cardCombination.multiplicity();
+    if (multiplicity === 1) {
       const cardToBeat: Card = cardCombination.cards[0];
       // for now, simply take the first encountered card that is higher than the card to beat
-      for (const card of computerCards) {
-        if (card.rank > cardToBeat.rank) {
-          return new CardCombination([card]);
-        }
+      return this.singleCardFromComputer(cardToBeat);
+    } else {
+      // introduce a Player object and instance methods
+      return this.nLingFromComputer(cardCombination);
+    }
+  }
+
+  private singleCardFromComputer(cardToBeat: Card): CardCombination | undefined {
+    const computerCards: Card[] = this.game.cardsPerPlayer[1];
+    for (const card of computerCards) {
+      if (card.rank > cardToBeat.rank) {
+        return new CardCombination([card]);
+      }
+    }
+    return undefined;
+  }
+
+  private nLingFromComputer(cardCombination: CardCombination): CardCombination | undefined {
+    // TODO improve
+    const computerCards: Card[] = this.game.cardsPerPlayer[1];
+    const groupedByRank = lodash.groupBy(computerCards, '_rank');
+    for (const card of computerCards) {
+      const nLing: Card[] = groupedByRank[card.rank];
+      if (card.rank > cardCombination.getUniqueRank() && nLing.length === cardCombination.multiplicity()) {
+        return new CardCombination(nLing);
       }
     }
     return undefined;
@@ -194,7 +213,7 @@ export class CurrentGameComponent implements OnInit {
     // if player starts a new round (last played cards were "pass" by all predecessors)
     // or if the new combination are all of the same rank 
     return this.isStageEmpty() ||
-           allSameRank(...toCards(this.stagedCards()), cardView.card);
+      allSameRank(...toCards(this.stagedCards()), cardView.card);
   }
 
   private isStageEmpty(): boolean {

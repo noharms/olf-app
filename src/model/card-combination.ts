@@ -26,6 +26,10 @@ export class CardCombination {
         const hasAllTheSameRanks = this.cards.every(card => card.rank === uniqueRank);
         return hasAllTheSameRanks;
     }
+    
+    multiplicity(): number {
+        return this.cards.length;
+    }
 
     toView(faceUp: boolean, canBeStaged: boolean): CardViewCombination {
         const views: CardView[] = this.cards.map(card => new CardView(card, faceUp, false, canBeStaged));
