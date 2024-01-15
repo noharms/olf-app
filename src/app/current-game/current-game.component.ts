@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import * as lodash from 'lodash';
 import { CardCombination } from 'src/model/card-combination';
 import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardCombinations, toCardViewCombinations, toCardViews, toCards } from 'src/model/model-view-conversions';
-import { Card, allSameRank } from '../../model/card';
+import { Rank } from 'src/model/rank';
+import { Card, allSameRank, groupByRank } from '../../model/card';
 import { Game } from '../../model/game';
 import { createGame } from '../../model/game-factory';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
@@ -144,27 +144,27 @@ export class CurrentGameComponent implements OnInit {
 
   // needs to be enhanced - currently using cardsPerPlayer[1]
   private makeComputerTurn(): void {
-    let cardCombinationToBeat: CardCombination = this.game.topOfDiscardPile();
-    let cardCombination: CardCombination | undefined = this.cardCombinationFromComputer(cardCombinationToBeat);
-    if (cardCombination === undefined) {
+    let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
+    let cardCombiComputer: CardCombination | undefined = this.cardCombinationFromComputer(cardCombiToBeat);
+    if (cardCombiComputer === undefined) {
       this.makeComputerPass();
     } else {
-      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => !lodash.includes(cardCombination?.cards, c));
-      this.game.discardPile.push(cardCombination);
+      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => !cardCombiComputer?.cards.includes(c));
+      this.game.discardPile.push(cardCombiComputer);
     }
   }
 
   // TODO: not return undefined but a special CardCombination object?
-  private cardCombinationFromComputer(cardCombination: CardCombination): CardCombination | undefined {
+  private cardCombinationFromComputer(cardCombiToBeat: CardCombination): CardCombination | undefined {
     // for now, let the computer always pass if the player played a combination instead of a single card
-    const multiplicity: number = cardCombination.multiplicity();
+    const multiplicity: number = cardCombiToBeat.multiplicity();
     if (multiplicity === 1) {
-      const cardToBeat: Card = cardCombination.cards[0];
+      const cardToBeat: Card = cardCombiToBeat.cards[0];
       // for now, simply take the first encountered card that is higher than the card to beat
       return this.singleCardFromComputer(cardToBeat);
     } else {
       // introduce a Player object and instance methods
-      return this.nLingFromComputer(cardCombination);
+      return this.nLingFromComputer(cardCombiToBeat);
     }
   }
 
@@ -178,14 +178,16 @@ export class CurrentGameComponent implements OnInit {
     return undefined;
   }
 
-  private nLingFromComputer(cardCombination: CardCombination): CardCombination | undefined {
+  private nLingFromComputer(cardCombiToBeat: CardCombination): CardCombination | undefined {
     // TODO improve
     const computerCards: Card[] = this.game.cardsPerPlayer[1];
-    const groupedByRank = lodash.groupBy(computerCards, '_rank');
+    const groupedByRank: { [key in Rank]?: Card[] } = groupByRank(...computerCards);
     for (const card of computerCards) {
-      const nLing: Card[] = groupedByRank[card.rank];
-      if (card.rank > cardCombination.getUniqueRank() && nLing.length === cardCombination.multiplicity()) {
-        return new CardCombination(nLing);
+      const potentialNLing: Card[] | undefined = groupedByRank[card.rank];
+      if (potentialNLing
+        && potentialNLing.length === cardCombiToBeat.multiplicity()
+        && card.rank > cardCombiToBeat.getUniqueRank()) {
+        return new CardCombination(potentialNLing);
       }
     }
     return undefined;
@@ -194,6 +196,18 @@ export class CurrentGameComponent implements OnInit {
   private makeComputerPass(): void {
     this.game.discardPile.push(CardCombination.TURN_PASSED_PLACEHOLDER);
     alert("Computer passes");
+  }
+
+  canPlayStagedCards(): boolean {
+    let cardCombi: CardCombination = new CardCombination(this.stagedCards().map(cardView => cardView.card));
+    let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
+    return this.game.discardPile.length === 0 || cardCombiToBeat === CardCombination.TURN_PASSED_PLACEHOLDER || cardCombi.canBeat(cardCombiToBeat);
+  }
+
+
+  private isHigher(cardCombiToBeat: CardCombination): boolean {
+    const stagedCards = this.stagedCards();
+    return stagedCards.length === cardCombiToBeat.multiplicity() && stagedCards.map(cardView => cardView.card).every(c => c.rank > cardCombiToBeat.cards[0].rank);
   }
 
   private updatePlayerCardsCanBeStaged(): void {

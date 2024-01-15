@@ -26,6 +26,10 @@ export class CardCombination {
         const hasAllTheSameRanks = this.cards.every(card => card.rank === uniqueRank);
         return hasAllTheSameRanks;
     }
+
+    canBeat(other: CardCombination): boolean {
+        return this.multiplicity() === other.multiplicity() && this.cards.every(c => c.rank > other.getUniqueRank());
+    }
     
     multiplicity(): number {
         return this.cards.length;

@@ -32,7 +32,7 @@ export class Card {
 
 }
 
-export function allSameRank(...cards: Card[]) {
+export function allSameRank(...cards: Card[]): boolean {
     if (cards.length === 0) {
         return true;
     } else {
@@ -40,4 +40,18 @@ export function allSameRank(...cards: Card[]) {
         const cardsWithSameRank = cards.filter(c => c.rank === firstCard.rank);
         return cardsWithSameRank.length === cards.length;
     }
+}
+
+export function groupByRank(...cards: Card[]): { [key in Rank]?: Card[] } {
+    let rankToCards: { [key in Rank]?: Card[] } = {};
+    cards.forEach(
+        card => {
+            const rank = card.rank;
+            if (!rankToCards[rank]) {
+                rankToCards[rank] = [];
+            }
+            rankToCards[rank]!.push(card);
+        }
+    )
+    return rankToCards;
 }

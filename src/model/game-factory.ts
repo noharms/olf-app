@@ -36,7 +36,7 @@ function createPlayers(): Player[] {
 function createAllCardsForGame(): Card[] {
     let allCardsInGame: Card[] = [];
     let cardId = 0;
-    const suits = [Suit.Blue, Suit.Green, Suit.Colorless];
+    const suits: Suit[] = Object.values(Suit);
     for (const suit of suits) {
         const allRanks: Card[] = createAllCardsForSuit(suit, cardId);
         allCardsInGame.push(...allRanks);
