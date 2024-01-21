@@ -10,6 +10,7 @@ import { Card, allSameRank, groupByRank } from '../../model/card';
 import { Game } from '../../model/game';
 import { createGame } from '../../model/game-factory';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
+import { GameService } from '../game.service';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
 @Component({
@@ -19,7 +20,6 @@ const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
 })
 export class CurrentGameComponent implements OnInit {
 
-  game!: Game;
   // TODO: remove these references and use game.x fields directly? check out "transferStates" methods below. also, can we do this in the html?
   // alternatively: create GameBackend and GameRepresentation classes, where the representation has the cardView
   playerCards: CardView[] = [];
@@ -28,28 +28,35 @@ export class CurrentGameComponent implements OnInit {
 
   isComputersTurn: boolean = false;
 
-  constructor(private router: Router, private modalService: NgbModal) { }
+  constructor(
+    private router: Router,
+    private modalService: NgbModal,
+    private gameService: GameService
+  ) { }
 
   ngOnInit(): void {
-    this.game = createGame();
     this.transferStatesFromGame();
     // this sets properties on the cards that control visual effects like pulsation of cards that can be staged
     // -> consider making that static methods instead of state on the cards
     this.updatePlayerCardsCanBeStaged();
   }
 
+  private game(): Game {
+    return this.gameService.getGame();
+  }
+
   private transferStatesFromGame() {
-    this.playerCards = toCardViews(this.game.cardsPerPlayer[0], true, false);
-    this.computerCards = toCardViews(this.game.cardsPerPlayer[1], true, false);
-    this.discardPile = toCardViewCombinations(this.game.discardPile, true, false);
+    this.playerCards = toCardViews(this.game().cardsPerPlayer[0], true, false);
+    this.computerCards = toCardViews(this.game().cardsPerPlayer[1], true, false);
+    this.discardPile = toCardViewCombinations(this.game().discardPile, true, false);
   }
 
   // this or the "playStagedCards()" will later be a call to the server
   // and the server will check if it accepts the move
   private transferStatesToGame() {
-    this.game.cardsPerPlayer[0] = toCards(this.playerCards);
-    this.game.cardsPerPlayer[1] = toCards(this.computerCards);
-    this.game.discardPile = toCardCombinations(this.discardPile);
+    this.game().cardsPerPlayer[0] = toCards(this.playerCards);
+    this.game().cardsPerPlayer[1] = toCards(this.computerCards);
+    this.game().discardPile = toCardCombinations(this.discardPile);
   }
 
   toggleCardFaceUp(cardView: CardView): void {
@@ -99,7 +106,7 @@ export class CurrentGameComponent implements OnInit {
     this.addToDiscardPile(cardViewCombination);
     this.removeFromPlayer(stagedCards);
     this.transferStatesToGame();
-    this.game.turnCount++;
+    this.game().turnCount++;
     this.doAfterPlayersTurn();
   }
 
@@ -144,13 +151,13 @@ export class CurrentGameComponent implements OnInit {
 
   // needs to be enhanced - currently using cardsPerPlayer[1]
   private makeComputerTurn(): void {
-    let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
+    let cardCombiToBeat: CardCombination = this.game().topOfDiscardPile();
     let cardCombiComputer: CardCombination | undefined = this.cardCombinationFromComputer(cardCombiToBeat);
     if (cardCombiComputer === undefined) {
       this.makeComputerPass();
     } else {
-      this.game.cardsPerPlayer[1] = this.game.cardsPerPlayer[1].filter(c => !cardCombiComputer?.cards.includes(c));
-      this.game.discardPile.push(cardCombiComputer);
+      this.game().cardsPerPlayer[1] = this.game().cardsPerPlayer[1].filter(c => !cardCombiComputer?.cards.includes(c));
+      this.game().discardPile.push(cardCombiComputer);
     }
   }
 
@@ -169,7 +176,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private singleCardFromComputer(cardToBeat: Card): CardCombination | undefined {
-    const computerCards: Card[] = this.game.cardsPerPlayer[1];
+    const computerCards: Card[] = this.game().cardsPerPlayer[1];
     for (const card of computerCards) {
       if (card.rank > cardToBeat.rank) {
         return new CardCombination([card]);
@@ -180,7 +187,7 @@ export class CurrentGameComponent implements OnInit {
 
   private nLingFromComputer(cardCombiToBeat: CardCombination): CardCombination | undefined {
     // TODO improve
-    const computerCards: Card[] = this.game.cardsPerPlayer[1];
+    const computerCards: Card[] = this.game().cardsPerPlayer[1];
     const groupedByRank: { [key in Rank]?: Card[] } = groupByRank(...computerCards);
     for (const card of computerCards) {
       const potentialNLing: Card[] | undefined = groupedByRank[card.rank];
@@ -194,14 +201,14 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private makeComputerPass(): void {
-    this.game.discardPile.push(CardCombination.TURN_PASSED_PLACEHOLDER);
+    this.game().discardPile.push(CardCombination.TURN_PASSED_PLACEHOLDER);
     alert("Computer passes");
   }
 
   canPlayStagedCards(): boolean {
     let cardCombi: CardCombination = new CardCombination(this.stagedCards().map(cardView => cardView.card));
-    let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
-    return this.game.discardPile.length === 0 || cardCombiToBeat === CardCombination.TURN_PASSED_PLACEHOLDER || cardCombi.canBeat(cardCombiToBeat);
+    let cardCombiToBeat: CardCombination = this.game().topOfDiscardPile();
+    return this.game().discardPile.length === 0 || cardCombiToBeat === CardCombination.TURN_PASSED_PLACEHOLDER || cardCombi.canBeat(cardCombiToBeat);
   }
 
 
@@ -217,7 +224,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private isCompatibleWithDiscardPile(playerCard: CardView): boolean {
-    const combinationToBeat: CardCombination = this.game.topOfDiscardPile();
+    const combinationToBeat: CardCombination = this.game().topOfDiscardPile();
     return playerCard.isRankHigherThan(combinationToBeat);
   }
 
@@ -235,8 +242,8 @@ export class CurrentGameComponent implements OnInit {
   }
 
   pass(): void {
-    this.game.discardPile.push(CardCombination.TURN_PASSED_PLACEHOLDER);
-    this.game.turnCount++;
+    this.game().discardPile.push(CardCombination.TURN_PASSED_PLACEHOLDER);
+    this.game().turnCount++;
     this.makeComputerTurn();
     this.transferStatesFromGame();
     if (this.computerCards.length === 0) {
