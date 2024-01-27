@@ -3,7 +3,7 @@ import { CardCombination } from "./card-combination";
 import { Player } from "./player";
 
 export class Game {
-        
+
     // stagedCards should also be stored on server
     // history of turns also
     constructor(
@@ -22,22 +22,13 @@ export class Game {
         return this._discardPile;
     }
 
-    public set discardPile(value: CardCombination[]) {
-        this._discardPile = value;
-    }
-
     public get turnCount(): number {
         return this._turnCount;
     }
 
-    public set turnCount(value: number) {
-        this._turnCount = value;
-    }
-    
-
     // create GameImpl class for these methods
     // and use GameImpl instead of anonymous instances
-    getCurrentTurnsPlayer() {
+    currentPlayerIndex(): number {
         return this.turnCount % this.players.length;
     }
 
@@ -48,6 +39,24 @@ export class Game {
             const combinationOnTop = this.discardPile[this.discardPile.length - 1];
             return combinationOnTop;
         }
+    }
+
+    play(cardCombination: CardCombination): void {
+        this.addToDiscardPile(cardCombination);
+        this.removeFromCurrentPlayer(cardCombination);
+        this._turnCount++;
+    }
+
+    private addToDiscardPile(cardCombination: CardCombination): void {
+        this.discardPile.push(cardCombination);
+    }
+
+    private removeFromCurrentPlayer(cardCombination: CardCombination): void {
+        const i: number = this.currentPlayerIndex();
+        // TODO: we need to check against
+        // the discard pile if the staged cards can really be played
+        // (to prevent corrupting the game state)
+        this.cardsPerPlayer[i] = this.cardsPerPlayer[i].filter(c => !cardCombination.cards.includes(c));
     }
 
 }
