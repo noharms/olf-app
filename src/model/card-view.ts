@@ -8,6 +8,7 @@ export class CardView {
     // with the already staged cards can be played
     constructor(public card: Card, public faceUp: boolean, public staged: boolean, public canBeStaged: boolean) { }
 
+    // TODO remove from here! this belongs to the model only
     isRankHigherThan(combinationToBeat: CardCombination): boolean {
         // TODO simple implemetnation for now; fill for more than 1 card
         const rankToBeat: number = combinationToBeat.cards[0].rank;

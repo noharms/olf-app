@@ -11,7 +11,7 @@ export class ComputerAiService {
   constructor() { }
   
   // TODO: not return undefined but a special CardCombination object?
-  cardCombinationFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination | undefined {
+  cardCombinationFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination {
     // for now, let the computer always pass if the player played a combination instead of a single card
     const multiplicity: number = cardCombiToBeat.multiplicity();
     if (multiplicity === 1) {
@@ -24,16 +24,16 @@ export class ComputerAiService {
     }
   }
 
-  private singleCardFromComputer(computerCards: Card[], cardToBeat: Card): CardCombination | undefined {
+  private singleCardFromComputer(computerCards: Card[], cardToBeat: Card): CardCombination {
     for (const card of computerCards) {
       if (card.rank > cardToBeat.rank) {
         return new CardCombination([card]);
       }
     }
-    return undefined;
+    return CardCombination.TURN_PASSED_PLACEHOLDER;
   }
 
-  private nLingFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination | undefined {
+  private nLingFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination {
     // TODO improve
     const groupedByRank: { [key in Rank]?: Card[] } = groupByRank(...computerCards);
     for (const card of computerCards) {
@@ -44,6 +44,6 @@ export class ComputerAiService {
         return new CardCombination(potentialNLing);
       }
     }
-    return undefined;
+    return CardCombination.TURN_PASSED_PLACEHOLDER;
   }
 }

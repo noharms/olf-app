@@ -26,19 +26,24 @@ export class Game {
         return this._turnCount;
     }
 
+    playerCount(): number {
+        return this.players.length;
+    }
+
     // create GameImpl class for these methods
     // and use GameImpl instead of anonymous instances
     currentPlayerIndex(): number {
-        return this.turnCount % this.players.length;
+        return this.turnCount % this.playerCount();
+    }
+
+    currentPlayerCards(): Card[] {
+        return this.cardsPerPlayer[this.currentPlayerIndex()];
     }
 
     topOfDiscardPile(): CardCombination {
-        if (this.discardPile.length === 0) {
-            return CardCombination.TURN_PASSED_PLACEHOLDER;
-        } else {
-            const combinationOnTop = this.discardPile[this.discardPile.length - 1];
-            return combinationOnTop;
-        }
+        return this.discardPile.length === 0
+            ? CardCombination.TURN_PASSED_PLACEHOLDER
+            : this.discardPile[this.discardPile.length - 1];
     }
 
     play(cardCombination: CardCombination): void {

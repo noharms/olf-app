@@ -1,3 +1,4 @@
+import { CardCombination } from "./card-combination";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
 
@@ -26,8 +27,14 @@ export class Card {
     public get suit(): Suit {
         return this._suit;
     }
+
     public set suit(value: Suit) {
         this._suit = value;
+    }
+    
+    isRankHigherThan(combinationToBeat: CardCombination): boolean {
+        const rankToBeat: number = combinationToBeat.cards[0].rank;
+        return this.rank > rankToBeat;
     }
 
 }
