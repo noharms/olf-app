@@ -33,27 +33,28 @@ export class CurrentGameComponent implements OnInit {
 
   ngOnInit(): void {
     this.stage = Stage.empty(this.game().currentPlayerCards())
-    this.updateCardViewsFromGame();
+    this.cardViews = this.createCardViews();
   }
 
   private game(): Game {
     return this.gameService.getGame();
   }
 
-  // this creates "CardView" objects from the current game, which have a notion of "staged" or not that impacts their representation
+  // this creates "CardView" objects from the current game and stage;
+  // the "CardView"s have a notion of "staged" that impacts their representation
   // --> whenever the game or the stage changes, this needs to be called to get an updated view
-  updateCardViewsFromGame(): void {
+  private createCardViews(): CardView[][] {
     const cardViews: CardView[][] = new Array(this.game().playerCount());
     for (let i = 0; i < this.game().playerCount(); ++i) {
       cardViews[i] = this.game().cardsPerPlayer[i].map(
         c => {
           const isAlreadyStaged: boolean = this.stage.contains(c);
           const canBeStaged: boolean = this.stage.canStage(c, this.game().topOfDiscardPile());
-          return new CardView(c, true, isAlreadyStaged, canBeStaged)
+          return new CardView(c, true, isAlreadyStaged, canBeStaged);
         }
       );
     }
-    this.cardViews = cardViews;
+    return cardViews;
   }
 
   toggleCardFaceUp(cardView: CardView): void {
@@ -66,7 +67,7 @@ export class CurrentGameComponent implements OnInit {
     } else {
       this.tryStaging(cardView);
     }
-    this.updateCardViewsFromGame();
+    this.cardViews = this.createCardViews();
 
     // Optionally, you can implement additional logic here, such as checking game conditions
 
@@ -120,8 +121,8 @@ export class CurrentGameComponent implements OnInit {
       if (computerCards.length === 0) {
         this.openGameVictoryModal(false);
       }
-    }
-    this.updateCardViewsFromGame();
+    }    
+    this.cardViews = this.createCardViews();
   }
 
   private disablePlayerButtons(): void {
