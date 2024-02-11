@@ -3,29 +3,36 @@ import { CardCombination } from "./card-combination";
 import { Move } from "./move";
 import { Player } from "./player";
 
-export class Game {
-
+export class Game {    
+        
     // stagedCards should also be stored on server
     // history of turns also
     constructor(
-        private id: number,
-        private players: Player[],
+        private _id: number,
+        private _players: Player[],
         private _cardsPerPlayer: Card[][],
         private _discardPile: CardCombination[],
         private _turnCount: number,
-        private history: Move[]
+        private _history: Move[]
     ) { };
 
+    public get id(): number {
+        return this._id;
+    }
+    public get players(): Player[] {
+        return this._players;
+    }
     public get cardsPerPlayer(): Card[][] {
         return this._cardsPerPlayer;
     }
-
     public get discardPile(): CardCombination[] {
         return this._discardPile;
     }
-
     public get turnCount(): number {
         return this._turnCount;
+    }
+    public get history(): Move[] {
+        return this._history;
     }
 
     playerCount(): number {
@@ -38,6 +45,10 @@ export class Game {
         return this.turnCount % this.playerCount();
     }
 
+    currentPlayer(): Player {
+        return this.players[this.currentPlayerIndex()];
+    }
+
     currentPlayerCards(): Card[] {
         return this.cardsPerPlayer[this.currentPlayerIndex()];
     }
@@ -46,30 +57,6 @@ export class Game {
         return this.discardPile.length === 0
             ? CardCombination.TURN_PASSED_PLACEHOLDER
             : this.discardPile[this.discardPile.length - 1];
-    }
-
-    // TODO once we have a backend, this should be done in the backend
-    play(cardCombination: CardCombination): void {
-        this.addToDiscardPile(cardCombination);
-        this.removeFromCurrentPlayer(cardCombination);
-        this.addToHistory(cardCombination);
-        this._turnCount++; // this should be at the end because other methods might use it before
-    }
-    
-    private addToDiscardPile(cardCombination: CardCombination): void {
-        this.discardPile.push(cardCombination);
-    }
-
-    private removeFromCurrentPlayer(cardCombination: CardCombination): void {
-        const i: number = this.currentPlayerIndex();
-        // TODO: we need to check against
-        // the discard pile if the staged cards can really be played
-        // (to prevent corrupting the game state)
-        this.cardsPerPlayer[i] = this.cardsPerPlayer[i].filter(c => !cardCombination.cards.includes(c));
-    }
-    
-    private addToHistory(cardCombination: CardCombination): void {
-        this.history.push(new Move(this.players[this.currentPlayerIndex()], cardCombination));
     }
 
 }

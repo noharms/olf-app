@@ -5,15 +5,15 @@ import { Player } from "./player";
 export class Move {
     
     constructor(
-        private _playerId: Player,
+        private _player: Player,
         private _cardCombi: CardCombination  
     ) {}
 
     public get cardCombi(): CardCombination {
         return this._cardCombi;
     }
-    public get playerId(): Player {
-        return this._playerId;
+    public get player(): Player {
+        return this._player;
     }
 
 }

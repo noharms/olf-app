@@ -1,28 +1,34 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
 import { createGame } from 'src/model/game-factory';
+import { GAMES, updateBackendGame } from './mock-game-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
   
-  game: Game;
-  
-  constructor() {
-    // TODO: currently, whenever the service is injected, this creates a new game; instead it needs to return the one for a given a gameId from the backend
-    this.game = createGame();
+  constructor(
+    private http: HttpClient
+  ) {
   }
   
-  // TODO: replace by game from backend (or cache, if backend was already called once)
-  // TODO: use game id, if multiple games can run side by side on a server
-  public getGame(): Game {
-    return this.game;
+  // TODO: replace by game from backend (or cache, if backend was already called once)    
+  public getGame(gameId: number): Observable<Game> {
+    // const url = 'dummy'; //`${this.apiUrl}/${gameId}`;
+    // return this.http.get<Game>(url);
+    const game: Game = GAMES.find(g => g.id === gameId)!;
+    return of(game);
   }
-  
-  handlePlayedCards(cardCombination: CardCombination) {
-    this.game.play(cardCombination);
+
+  /**
+   * @returns an observable for the updated game
+   */
+  commitStagedCards(gameId: number, cardCombination: CardCombination): Observable<Game> {
+    return updateBackendGame(gameId, cardCombination);
   }
   
 }

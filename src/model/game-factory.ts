@@ -1,6 +1,6 @@
 import { Card } from "./card";
 import { Game } from "./game";
-import { COMPUTER_PLAYER, PLAYER1, Player } from "./player";
+import { Player } from "./player";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
 
@@ -8,14 +8,12 @@ const CARDS_PER_PLAYER = 10; // reduced for testing
 const ONES_PER_PLAYER_COUNT = 8;
 const RANKS_IN_GAME = [Rank.Two, Rank.Three, Rank.Four, Rank.Five]; //RANKS_2_TO_10;
 
-export function createGame(): Game {
-
-    let players: Player[] = createPlayers();
+export function createGame(gameId: number, players: Player[]): Game {
     let allCards: Card[] = createAllCardsForGame();
     shuffleCards(allCards);
     let cardsPerPlayer: Card[][] = distributeCards(players, allCards);
     // TODO get id from server
-    return new Game(0, players, cardsPerPlayer, [], 0, []);
+    return new Game(gameId, players, cardsPerPlayer, [], 0, []);
 }
 
 function distributeCards(players: Player[], allCards: Card[]) {
@@ -24,13 +22,6 @@ function distributeCards(players: Player[], allCards: Card[]) {
         cardsPerPlayer[i] = allCards.splice(0, CARDS_PER_PLAYER);
     }
     return cardsPerPlayer;
-}
-
-function createPlayers(): Player[] {
-    return [
-        PLAYER1,
-        COMPUTER_PLAYER
-    ];
 }
 
 function createAllCardsForGame(): Card[] {

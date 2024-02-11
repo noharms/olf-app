@@ -9,6 +9,7 @@ import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
 import { HomeComponent } from './home/home.component';
 import { CardCombinationComponent } from './current-game/card-combination/card-combination.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CardCombinationComponent } from './current-game/card-combination/card-c
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
