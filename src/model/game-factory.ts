@@ -15,7 +15,7 @@ export function createGame(): Game {
     shuffleCards(allCards);
     let cardsPerPlayer: Card[][] = distributeCards(players, allCards);
     // TODO get id from server
-    return new Game(0, players, cardsPerPlayer, [], 0);
+    return new Game(0, players, cardsPerPlayer, [], 0, []);
 }
 
 function distributeCards(players: Player[], allCards: Card[]) {

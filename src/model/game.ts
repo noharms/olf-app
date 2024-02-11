@@ -1,5 +1,6 @@
 import { Card } from "./card";
 import { CardCombination } from "./card-combination";
+import { Move } from "./move";
 import { Player } from "./player";
 
 export class Game {
@@ -11,7 +12,8 @@ export class Game {
         private players: Player[],
         private _cardsPerPlayer: Card[][],
         private _discardPile: CardCombination[],
-        private _turnCount: number
+        private _turnCount: number,
+        private history: Move[]
     ) { };
 
     public get cardsPerPlayer(): Card[][] {
@@ -46,12 +48,14 @@ export class Game {
             : this.discardPile[this.discardPile.length - 1];
     }
 
+    // TODO once we have a backend, this should be done in the backend
     play(cardCombination: CardCombination): void {
         this.addToDiscardPile(cardCombination);
         this.removeFromCurrentPlayer(cardCombination);
-        this._turnCount++;
+        this.addToHistory(cardCombination);
+        this._turnCount++; // this should be at the end because other methods might use it before
     }
-
+    
     private addToDiscardPile(cardCombination: CardCombination): void {
         this.discardPile.push(cardCombination);
     }
@@ -62,6 +66,10 @@ export class Game {
         // the discard pile if the staged cards can really be played
         // (to prevent corrupting the game state)
         this.cardsPerPlayer[i] = this.cardsPerPlayer[i].filter(c => !cardCombination.cards.includes(c));
+    }
+    
+    private addToHistory(cardCombination: CardCombination): void {
+        this.history.push(new Move(this.players[this.currentPlayerIndex()], cardCombination));
     }
 
 }
