@@ -1,25 +1,29 @@
 import { Card } from "./card";
 import { CardCombination } from "./card-combination";
 import { Move } from "./move";
-import { Player } from "./player";
+import { User } from "./user";
 
-export class Game {    
-        
+export class Game {
+
     // stagedCards should also be stored on server
     // history of turns also
     constructor(
         private _id: number,
-        private _players: Player[],
+        private _players: User[],
         private _cardsPerPlayer: Card[][],
         private _discardPile: CardCombination[],
         private _turnCount: number,
         private _history: Move[]
-    ) { };
+    ) {
+        if (this.players.length != this.cardsPerPlayer.length) {
+            throw new Error("Invalid arguments to Game class.");
+        }
+    };
 
     public get id(): number {
         return this._id;
     }
-    public get players(): Player[] {
+    public get players(): User[] {
         return this._players;
     }
     public get cardsPerPlayer(): Card[][] {
@@ -45,7 +49,7 @@ export class Game {
         return this.turnCount % this.playerCount();
     }
 
-    currentPlayer(): Player {
+    currentPlayer(): User {
         return this.players[this.currentPlayerIndex()];
     }
 
@@ -57,6 +61,52 @@ export class Game {
         return this.discardPile.length === 0
             ? CardCombination.TURN_PASSED_PLACEHOLDER
             : this.discardPile[this.discardPile.length - 1];
+    }
+
+    participatingUserIds(): number[] {
+        return this.players.map(p => p.id);
+    }
+
+    isFinished(): boolean {
+        return this.cardsPerPlayer.map(cards => cards.length).includes(0);
+    }
+
+    getWinner(): User | undefined {
+        for (let i = 0; i < this.playerCount(); ++i) {
+            if (this.cardsPerPlayer[i].length === 0) {
+                return this.players[i];
+            }
+        }
+        return undefined;
+    }
+
+    getHistoryString(): string {
+        return this
+            .history
+            .map(move => move.player.name + " " + move.cardCombi.toUIString())
+            .join(", ");
+    }
+
+    getUpdatedCards(currentPlayerMove: CardCombination): Card[][] {
+        const iPlayer: number = this.currentPlayerIndex();
+        let updatedCards: Card[][] = [[]];
+        for (let i = 0; i < this.playerCount(); ++i) {
+            updatedCards[i] = i === iPlayer
+                ? this.cardsPerPlayer[i].filter(c => !currentPlayerMove.cards.includes(c))
+                : Array.from(this.cardsPerPlayer[i]);
+        }
+        return updatedCards;
+    }
+
+    getUpdatedDiscardPile(currentPlayerMove: CardCombination): CardCombination[] {
+        const oldDiscardPile: CardCombination[] = this.discardPile;
+        const newDiscardPile: CardCombination[] = [...oldDiscardPile];
+        newDiscardPile.push(currentPlayerMove);
+        return newDiscardPile;
+    }
+
+    getUpdatedHistory(currentPlayerMove: CardCombination): Move[] {
+        return this.history.concat(new Move(this.currentPlayer(), currentPlayerMove));
     }
 
 }

@@ -30,7 +30,7 @@ export class CardCombination {
     canBeat(other: CardCombination): boolean {
         return this.multiplicity() === other.multiplicity() && this.cards.every(c => c.rank > other.getUniqueRank());
     }
-    
+
     multiplicity(): number {
         return this.cards.length;
     }
@@ -38,5 +38,9 @@ export class CardCombination {
     toView(faceUp: boolean, canBeStaged: boolean): CardViewCombination {
         const views: CardView[] = this.cards.map(card => new CardView(card, faceUp, false, canBeStaged));
         return new CardViewCombination(views);
+    }
+
+    toUIString() {
+        return this.cards.map(c => c.rank + c.suit[0]).join();
     }
 }

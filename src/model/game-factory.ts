@@ -1,34 +1,52 @@
+import { ComputerAiService } from "src/app/computer-ai.service";
 import { Card } from "./card";
+import { CardCombination } from "./card-combination";
 import { Game } from "./game";
-import { Player } from "./player";
+import { Move } from "./move";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
+import { User } from "./user";
 
-const CARDS_PER_PLAYER = 10; // reduced for testing
-const ONES_PER_PLAYER_COUNT = 8;
+const COUNT_ONES_PER_PLAYER = 8;
 const RANKS_IN_GAME = [Rank.Two, Rank.Three, Rank.Four, Rank.Five]; //RANKS_2_TO_10;
 
-export function createGame(gameId: number, players: Player[]): Game {
-    let allCards: Card[] = createAllCardsForGame();
+export function createGame(gameId: number, players: User[]): Game {
+    const playerCount = players.length;
+    let allCards: Card[] = createAllCardsForGame(playerCount);
     shuffleCards(allCards);
-    let cardsPerPlayer: Card[][] = distributeCards(players, allCards);
+    let cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
     // TODO get id from server
     return new Game(gameId, players, cardsPerPlayer, [], 0, []);
 }
 
-function distributeCards(players: Player[], allCards: Card[]) {
+function distributeCards(playerCount: number, allCards: Card[]) {
+    const totalCardCount: number = allCards.length;
+    const initialHandSize = (totalCardCount - 2) / playerCount;
     let cardsPerPlayer: Card[][] = [[]];
-    for (let i = 0; i < players.length; ++i) {
-        cardsPerPlayer[i] = allCards.splice(0, CARDS_PER_PLAYER);
+    for (let i = 0; i < playerCount; ++i) {
+        cardsPerPlayer[i] = allCards.splice(0, initialHandSize);
+        if (cardsPerPlayer[i].length < initialHandSize) {
+            throw new Error(
+                `Not enough cards in game (only ${totalCardCount}) for ${playerCount} players.`
+            );
+        }
     }
+    const remainingCards: Card[] = allCards;
+    console.log(`Cards in the pot ${remainingCards}`);
     return cardsPerPlayer;
 }
 
-function createAllCardsForGame(): Card[] {
+function createAllCardsForGame(playerCount: number): Card[] {
     let allCardsInGame: Card[] = [];
     let cardId = 0;
     const suits: Suit[] = Object.values(Suit);
-    for (const suit of suits) {
+    if (playerCount > suits.length) {
+        throw new Error(
+            `Not enough suits (only ${suits.length} but need ${playerCount} for ${playerCount} players).`
+        );
+    }
+    for (let i = 0; i < playerCount; ++i) {
+        const suit: Suit = suits[i];
         const allRanks: Card[] = createAllCardsForSuit(suit, cardId);
         allCardsInGame.push(...allRanks);
         cardId += allRanks.length;
@@ -50,7 +68,7 @@ function createAllCardsForSuit(suit: Suit, startId: number): Card[] {
 
 function createAllOnes(startId: number): Card[] {
     const allOnes: Card[] = []
-    for (let i = 0; i < ONES_PER_PLAYER_COUNT; i++) {
+    for (let i = 0; i < COUNT_ONES_PER_PLAYER; i++) {
         const newCard = new Card(startId++, Rank.One, Suit.Colorless);
         allOnes.push(newCard);
     }
@@ -71,4 +89,26 @@ function shuffleCards(cards: Card[]): void {
         cards[currentIndex] = cards[randomIndex];
         cards[randomIndex] = temporaryValue;
     }
+}
+
+export function createFinishedGame(gameId: number, players: User[]): Game {
+    let gameToPlay: Game = createGame(gameId, players);
+    while (!gameToPlay.isFinished()) {
+        const currentPlayerIndex: number = gameToPlay.currentPlayerIndex();
+        const cardsInHand: Card[] = gameToPlay.cardsPerPlayer[currentPlayerIndex];
+        const cardsToBeat: CardCombination = gameToPlay.topOfDiscardPile();
+        const cardsToPlay: CardCombination = ComputerAiService.chooseCards(cardsInHand, cardsToBeat);
+        const updatedCards: Card[][] = gameToPlay.getUpdatedCards(cardsToPlay);
+        const updatedDiscardPile: CardCombination[] = gameToPlay.getUpdatedDiscardPile(cardsToPlay);
+        const updatedHistory: Move[] = gameToPlay.getUpdatedHistory(cardsToPlay);
+        gameToPlay = new Game(
+            gameToPlay.id,
+            gameToPlay.players,
+            updatedCards,
+            updatedDiscardPile,
+            gameToPlay.turnCount + 1,
+            updatedHistory
+        );
+    }
+    return gameToPlay;
 }

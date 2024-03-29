@@ -33,18 +33,9 @@
       <th>Game ID</th>
       <th>Moves</th>
     </tr>
-    <tr>
-      <td>xy7z4w</td>
-      <td>some text</td>
+    <tr *ngFor="let game of this.finishedGames">
+      <td>{{ game.id }}</td>
+      <td>{{ game.getHistoryString() }}</td>
     </tr>
-    <tr>
-      <td>a4ATcd</td>
-      <td>other text</td>
-    </tr>
-    <tr>
-      <td>432a6lc</td>
-      <td>more</td>
-    </tr>
-    <!-- Repeat the row structure as needed -->
   </table>
 </div>

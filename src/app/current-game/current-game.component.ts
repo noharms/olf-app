@@ -28,8 +28,7 @@ export class CurrentGameComponent implements OnInit {
   constructor(
     private router: Router,
     private modalService: NgbModal,
-    private gameService: GameService,
-    private aiService: ComputerAiService
+    private gameService: GameService
   ) {
   }
 
@@ -118,7 +117,7 @@ export class CurrentGameComponent implements OnInit {
     this.disablePlayerButtons();
     const playerCards: Card[] = this.game.cardsPerPlayer[0];
     if (playerCards.length === 0) {
-        this.openGameVictoryModal(true);
+      this.openGameVictoryModal(true);
     } else {
       this.makeComputerTurn();
       const computerCards: Card[] = this.game.cardsPerPlayer[1];
@@ -143,7 +142,10 @@ export class CurrentGameComponent implements OnInit {
 
   private pickCardsComputer(): CardCombination {
     let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
-    let cardCombiComputer: CardCombination = this.aiService.cardCombinationFromComputer(this.game.cardsPerPlayer[1], cardCombiToBeat);
+    let cardCombiComputer: CardCombination = ComputerAiService.chooseCards(
+      this.game.cardsPerPlayer[1],
+      cardCombiToBeat
+    );
     if (cardCombiComputer === CardCombination.TURN_PASSED_PLACEHOLDER) {
       alert("Computer passes");
     }

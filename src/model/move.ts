@@ -1,18 +1,18 @@
 import { CardCombination } from "./card-combination";
-import { Player } from "./player";
+import { User } from "./user";
 
 
 export class Move {
-    
+
     constructor(
-        private _player: Player,
-        private _cardCombi: CardCombination  
-    ) {}
+        private _player: User,
+        private _cardCombi: CardCombination
+    ) { }
 
     public get cardCombi(): CardCombination {
         return this._cardCombi;
     }
-    public get player(): Player {
+    public get player(): User {
         return this._player;
     }
 

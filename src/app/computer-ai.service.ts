@@ -6,25 +6,27 @@ import { Rank } from 'src/model/rank';
 @Injectable({
   providedIn: 'root'
 })
-export class ComputerAiService {
+export class ComputerAiService { // TODO this should not be a service but a utility
 
-  constructor() { }
-  
+  private constructor() {
+    // static utility
+  }
+
   // TODO: not return undefined but a special CardCombination object?
-  cardCombinationFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination {
+  static chooseCards(cardsInHand: Card[], cardCombiToBeat: CardCombination): CardCombination {
     // for now, let the computer always pass if the player played a combination instead of a single card
     const multiplicity: number = cardCombiToBeat.multiplicity();
     if (multiplicity === 1) {
       const cardToBeat: Card = cardCombiToBeat.cards[0];
       // for now, simply take the first encountered card that is higher than the card to beat
-      return this.singleCardFromComputer(computerCards, cardToBeat);
+      return this.singleCardFromComputer(cardsInHand, cardToBeat);
     } else {
       // introduce a Player object and instance methods
-      return this.nLingFromComputer(computerCards, cardCombiToBeat);
+      return this.nLingFromComputer(cardsInHand, cardCombiToBeat);
     }
   }
 
-  private singleCardFromComputer(computerCards: Card[], cardToBeat: Card): CardCombination {
+  private static singleCardFromComputer(computerCards: Card[], cardToBeat: Card): CardCombination {
     for (const card of computerCards) {
       if (card.rank > cardToBeat.rank) {
         return new CardCombination([card]);
@@ -33,7 +35,7 @@ export class ComputerAiService {
     return CardCombination.TURN_PASSED_PLACEHOLDER;
   }
 
-  private nLingFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination {
+  private static nLingFromComputer(computerCards: Card[], cardCombiToBeat: CardCombination): CardCombination {
     // TODO improve
     const groupedByRank: { [key in Rank]?: Card[] } = groupByRank(...computerCards);
     for (const card of computerCards) {

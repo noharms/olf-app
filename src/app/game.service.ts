@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
-import { GAMES, updateBackendGame } from './mock-game-data';
+import { GAMES, updateBackendGame } from '../mocks/mock-game-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-  
+
   constructor(
     private http: HttpClient
   ) {
   }
-  
+
   // TODO: replace by game from backend (or cache, if backend was already called once)    
   public getGame(gameId: number): Observable<Game> {
     // const url = 'dummy'; //`${this.apiUrl}/${gameId}`;
@@ -29,10 +29,10 @@ export class GameService {
   commitStagedCards(gameId: number, cardCombination: CardCombination): Observable<Game> {
     return updateBackendGame(gameId, cardCombination);
   }
-  
+
   public getAllGames(userId: number): Observable<Game[]> {
-    const games: Game[] = GAMES.filter(g => g.players.map(p => p.userId).find(id => id === userId) !== undefined);
-    return of (games);
+    const games: Game[] = GAMES.filter(g => g.participatingUserIds().includes(userId));
+    return of(games);
   }
 
 }

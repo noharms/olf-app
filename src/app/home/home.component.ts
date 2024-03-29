@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Game } from 'src/model/game';
 import { EMPTY_USER, User } from 'src/model/user';
-import { EMPTY_USER_STATISTICS, IUserGameStatistics } from 'src/model/user-game-statistics';
+import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
 
@@ -14,7 +14,7 @@ import { UserService } from '../user.service';
 export class HomeComponent {
   user: User = EMPTY_USER;
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
-  games: Game[] = [];
+  finishedGames: Game[] = [];
 
   constructor(
     private router: Router,
@@ -31,7 +31,8 @@ export class HomeComponent {
     );
     this.gameService.getAllGames(userId).subscribe(
       games => {
-        this.games = games;
+        this.finishedGames = games.filter(g => g.isFinished());
+        this.userGameStatistics = UserGameStatistics.from(games, userId);
       }
     )
   }
