@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
-import { createGame } from 'src/model/game-factory';
 import { GAMES, updateBackendGame } from './mock-game-data';
 
 @Injectable({
@@ -31,4 +30,9 @@ export class GameService {
     return updateBackendGame(gameId, cardCombination);
   }
   
+  public getAllGames(userId: number): Observable<Game[]> {
+    const games: Game[] = GAMES.filter(g => g.players.map(p => p.userId).find(id => id === userId) !== undefined);
+    return of (games);
+  }
+
 }

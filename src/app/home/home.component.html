@@ -1,28 +1,50 @@
 <div class="home-container">
-    <h2>Welcome, {{ userName }}!</h2>
+  <h2>Welcome, {{ user.name }}!</h2>
 
-    <table class="user-info">
-        <tr>
-            <th>Email:</th>
-            <td>{{ userEmail }}</td>
-        </tr>
-        <tr>
-            <th>Registration Date:</th>
-            <td>{{ registrationDate | date }}</td>
-        </tr>
-        <tr>
-            <th>Total Games Played:</th>
-            <td>{{ totalGamesPlayed }}</td>
-        </tr>
-        <tr>
-            <th>Wins:</th>
-            <td>{{ numberOfWins }}</td>
-        </tr>
-        <tr>
-            <th>Losses:</th>
-            <td>{{ numberOfLosses }}</td>
-        </tr>
-    </table>
+  <table class="user-info">
+    <tr>
+      <th>Email:</th>
+      <td>{{ user.email }}</td>
+    </tr>
+    <tr>
+      <th>Registration Date:</th>
+      <td>{{ user.registrationDate | date }}</td>
+    </tr>
+    <tr>
+      <th>Total Games Played:</th>
+      <td>{{ userGameStatistics.totalGamesPlayed }}</td>
+    </tr>
+    <tr>
+      <th>Wins:</th>
+      <td>{{ userGameStatistics.numberOfWins }}</td>
+    </tr>
+    <tr>
+      <th>Losses:</th>
+      <td>{{ userGameStatistics.numberOfLosses() }}</td>
+    </tr>
+  </table>
 
-    <button class="btn btn-primary" (click)="startNewGame()">New Game</button>
+  <button class="btn btn-primary" (click)="startNewGame()">New Game</button>
+
+  <br>
+
+  <table>
+    <tr>
+      <th>Game ID</th>
+      <th>Moves</th>
+    </tr>
+    <tr>
+      <td>xy7z4w</td>
+      <td>some text</td>
+    </tr>
+    <tr>
+      <td>a4ATcd</td>
+      <td>other text</td>
+    </tr>
+    <tr>
+      <td>432a6lc</td>
+      <td>more</td>
+    </tr>
+    <!-- Repeat the row structure as needed -->
+  </table>
 </div>

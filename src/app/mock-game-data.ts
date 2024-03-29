@@ -7,18 +7,18 @@ import { Move } from "src/model/move";
 import { Player } from "src/model/player";
 
 export const PLAYER1: Player = {
-    id: 0,
+    userId: 0,
     userName: "Enno"
 }
 
 export const COMPUTER_PLAYER: Player = {
-    id: 1,
+    userId: 1,
     userName: "Computer"
 }
 
 export const GAMES: Game[] = [
     createGame(1, [PLAYER1, COMPUTER_PLAYER]),
-    createGame(2, [PLAYER1, COMPUTER_PLAYER, { id: 2, userName: "cori" }]),
+    createGame(2, [PLAYER1, COMPUTER_PLAYER, { userId: 2, userName: "cori" }]),
     // Add more mock games as needed
 ];
 

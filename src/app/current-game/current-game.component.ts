@@ -31,7 +31,7 @@ export class CurrentGameComponent implements OnInit {
     private gameService: GameService,
     private aiService: ComputerAiService
   ) {
-   }
+  }
 
   ngOnInit(): void {
     const MOCK_GAME_ID = 1; // TODO
@@ -118,14 +118,14 @@ export class CurrentGameComponent implements OnInit {
     this.disablePlayerButtons();
     const playerCards: Card[] = this.game.cardsPerPlayer[0];
     if (playerCards.length === 0) {
-      this.openGameVictoryModal(true);
+        this.openGameVictoryModal(true);
     } else {
       this.makeComputerTurn();
       const computerCards: Card[] = this.game.cardsPerPlayer[1];
       if (computerCards.length === 0) {
         this.openGameVictoryModal(false);
       }
-    }    
+    }
     this.cardViews = this.createCardViews();
   }
 

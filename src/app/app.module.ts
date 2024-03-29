@@ -9,7 +9,8 @@ import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
 import { HomeComponent } from './home/home.component';
 import { CardCombinationComponent } from './current-game/card-combination/card-combination.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,13 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MockHttpInterceptor,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
