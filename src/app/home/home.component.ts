@@ -12,6 +12,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
+
   user: User = EMPTY_USER;
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
   finishedGames: Game[] = [];
@@ -41,6 +42,10 @@ export class HomeComponent {
 
   startNewGame() {
     this.router.navigate(['olf/cardgame']);
+  }
+
+  onRowClicked(game: Game) {
+    console.log(`Clicked game ${game.id}`)
   }
 
 }
