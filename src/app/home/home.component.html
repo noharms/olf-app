@@ -28,14 +28,40 @@
 
   <br>
 
-  <table>
-    <tr>
-      <th>Game ID</th>
-      <th>Moves</th>
-    </tr>
-    <tr *ngFor="let game of this.finishedGames">
-      <td>{{ game.id }}</td>
-      <td>{{ game.getHistoryString() }}</td>
-    </tr>
-  </table>
+  <!-- Tables flex-container -->
+  <div style="display: flex; width: 100%;">
+
+    <!-- Finished Games Column -->
+    <div style="flex: 1; margin-right: 10px;">
+      <h3>Finished Games</h3>
+      <table style="width: 100%;">
+        <tr>
+          <th>Game ID</th>
+          <th>Moves</th>
+        </tr>
+        <tr *ngFor="let game of finishedGames">
+          <td>{{ game.id }}</td>
+          <td>{{ game.getHistoryString() }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Open Games Column -->
+    <div style="flex: 1;">
+      <h3>Open Games</h3>
+      <table style="width: 100%; margin-left: 10px;">
+        <tr>
+          <th>Game ID</th>
+          <th>Involved Players</th>
+          <th>Current Turn</th>
+        </tr>
+        <tr *ngFor="let game of openGames">
+          <td>{{ game.id }}</td>
+          <td>{{ game.getPlayersString() }}</td>
+          <td>{{ game.players[game.currentPlayerIndex()].name }}</td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
 </div>

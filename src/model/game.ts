@@ -87,6 +87,10 @@ export class Game {
             .join(", ");
     }
 
+    getPlayersString(): string {
+        return this.players.map(p => p.name).join(", ");
+    }
+
     getUpdatedCards(currentPlayerMove: CardCombination): Card[][] {
         const iPlayer: number = this.currentPlayerIndex();
         let updatedCards: Card[][] = [[]];

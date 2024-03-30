@@ -15,6 +15,7 @@ export class HomeComponent {
   user: User = EMPTY_USER;
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
   finishedGames: Game[] = [];
+  openGames: Game[] = [];
 
   constructor(
     private router: Router,
@@ -32,6 +33,7 @@ export class HomeComponent {
     this.gameService.getAllGames(userId).subscribe(
       games => {
         this.finishedGames = games.filter(g => g.isFinished());
+        this.openGames = games.filter(g => !g.isFinished());
         this.userGameStatistics = UserGameStatistics.from(games, userId);
       }
     )
