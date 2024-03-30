@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card } from 'src/model/card';
 import { CardCombination } from 'src/model/card-combination';
@@ -13,6 +13,8 @@ import { GameService } from '../game.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
+export const GAME_ID_URL_PARAMETER_NAME = 'gameId';
+
 @Component({
   selector: 'app-current-game',
   templateUrl: './current-game.component.html',
@@ -27,14 +29,16 @@ export class CurrentGameComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private modalService: NgbModal,
     private gameService: GameService
   ) {
   }
 
   ngOnInit(): void {
-    const MOCK_GAME_ID = 1; // TODO
-    this.gameService.getGame(MOCK_GAME_ID).subscribe(game => this.game = game);
+    const substring: string | null = this.route.snapshot.paramMap.get(GAME_ID_URL_PARAMETER_NAME);
+    const gameId: number = Number(substring);
+    this.gameService.getGame(gameId).subscribe(game => this.game = game);
     this.stage = Stage.empty(this.game.currentPlayerCards())
     this.cardViews = this.createCardViews();
   }

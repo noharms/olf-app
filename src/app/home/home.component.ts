@@ -5,6 +5,7 @@ import { EMPTY_USER, User } from 'src/model/user';
 import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
+import { CURRENT_GAME_BASE_PATH } from '../app-routing.module';
 
 @Component({
   selector: 'app-home',
@@ -41,11 +42,13 @@ export class HomeComponent {
   }
 
   startNewGame() {
-    this.router.navigate(['olf/cardgame']);
+    const path: string = `${CURRENT_GAME_BASE_PATH}/-1`;
+    this.router.navigate([path]);
   }
 
   onRowClicked(game: Game) {
-    console.log(`Clicked game ${game.id}`)
+    const path: string = `${CURRENT_GAME_BASE_PATH}/${game.id}`;
+    this.router.navigate([path]);
   }
 
 }

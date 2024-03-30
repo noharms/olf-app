@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
-import { GAMES, updateBackendGame } from '../mocks/mock-game-data';
+import { MOCK_GAMES, updateBackendGame } from '../mocks/mock-game-data';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class GameService {
   public getGame(gameId: number): Observable<Game> {
     // const url = 'dummy'; //`${this.apiUrl}/${gameId}`;
     // return this.http.get<Game>(url);
-    const game: Game = GAMES.find(g => g.id === gameId)!;
+    const game: Game = MOCK_GAMES.find(g => g.id === gameId)!;
     return of(game);
   }
 
@@ -31,7 +31,7 @@ export class GameService {
   }
 
   public getAllGames(userId: number): Observable<Game[]> {
-    const games: Game[] = GAMES.filter(g => g.participatingUserIds().includes(userId));
+    const games: Game[] = MOCK_GAMES.filter(g => g.participatingUserIds().includes(userId));
     return of(games);
   }
 

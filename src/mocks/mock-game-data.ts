@@ -4,7 +4,7 @@ import { Game } from "src/model/game";
 import { createFinishedGame, createGame } from "src/model/game-factory";
 import { COMPUTER_PLAYER, MOCK_USERS, PLAYER1 } from "./mock-user-data";
 
-export const GAMES: Game[] = [
+export const MOCK_GAMES: Game[] = [
     createGame(1, [PLAYER1, COMPUTER_PLAYER]),
     createGame(2, MOCK_USERS),
     createFinishedGame(3, MOCK_USERS),
@@ -12,9 +12,9 @@ export const GAMES: Game[] = [
 ];
 
 export function updateBackendGame(gameId: number, cardsPlayed: CardCombination): Observable<Game> {
-    const gameIndex: number = GAMES.findIndex(game => game.id === gameId);
-    GAMES[gameIndex] = updateGame(GAMES[gameIndex], cardsPlayed);
-    return of(GAMES[gameIndex]);
+    const gameIndex: number = MOCK_GAMES.findIndex(game => game.id === gameId);
+    MOCK_GAMES[gameIndex] = updateGame(MOCK_GAMES[gameIndex], cardsPlayed);
+    return of(MOCK_GAMES[gameIndex]);
 }
 
 // TODO once we have a backend, this should be done in the backend
