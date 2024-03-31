@@ -11,6 +11,8 @@ import { HomeComponent } from './home/home.component';
 import { CardCombinationComponent } from './current-game/card-combination/card-combination.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
+import { InviteFormComponent } from './home/invite-form/invite-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,13 +21,15 @@ import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
     CardComponent,
     GameOverModalComponent,
     HomeComponent,
-    CardCombinationComponent
+    CardCombinationComponent,
+    InviteFormComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     {
