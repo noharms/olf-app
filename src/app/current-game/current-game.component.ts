@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from 'src/model/card';
@@ -7,7 +7,6 @@ import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
 import { Stage } from 'src/model/stage';
-import { User } from 'src/model/user';
 import { Game } from '../../model/game';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
@@ -209,6 +208,17 @@ export class CurrentGameComponent implements OnInit {
   discardPileView(): CardViewCombination[] {
     // TODO: rather show history here to include also player name
     return toCardViewCombinations(this.game?.discardPile ?? [], true, false);
+  }
+
+  moveHistory(): string {
+    // TODO: rather show history here to include also player name
+    return this.game?.getHistoryString() ?? "";
+  }
+
+  isStageValid(): boolean {
+    const stagedCardCombi: CardCombination = new CardCombination(this.stage.stagedCards);
+    const cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
+    return !this.stage.isEmpty() && stagedCardCombi.canBeat(cardCombiToBeat);
   }
 
 }

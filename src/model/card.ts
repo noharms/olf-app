@@ -15,7 +15,7 @@ export class Card {
     public set rank(value: Rank) {
         this._rank = value;
     }
-    
+
     public get id(): number {
         return this._id;
     }
@@ -23,7 +23,7 @@ export class Card {
     public set id(value: number) {
         this._id = value;
     }
-    
+
     public get suit(): Suit {
         return this._suit;
     }
@@ -31,10 +31,9 @@ export class Card {
     public set suit(value: Suit) {
         this._suit = value;
     }
-    
+
     isRankHigherThan(combinationToBeat: CardCombination): boolean {
-        const rankToBeat: number = combinationToBeat.cards[0].rank;
-        return this.rank > rankToBeat;
+        return this.rank > combinationToBeat.getUniqueRank();
     }
 
 }
