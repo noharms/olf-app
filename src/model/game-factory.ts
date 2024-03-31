@@ -98,7 +98,8 @@ export function createFinishedGame(gameId: number, players: User[]): Game {
         const cardsInHand: Card[] = gameToPlay.cardsPerPlayer[currentPlayerIndex];
         const cardsToBeat: CardCombination = gameToPlay.topOfDiscardPile();
         const cardsToPlay: CardCombination = ComputerAiService.chooseCards(cardsInHand, cardsToBeat);
-        const updatedCards: Card[][] = gameToPlay.getUpdatedCards(cardsToPlay);
+        const updatedCards: Card[][] = gameToPlay.cardsPerPlayer;
+        updatedCards[currentPlayerIndex] = gameToPlay.getPlayerCardsAfterMove(currentPlayerIndex, cardsToPlay);
         const updatedDiscardPile: CardCombination[] = gameToPlay.getUpdatedDiscardPile(cardsToPlay);
         const updatedHistory: Move[] = gameToPlay.getUpdatedHistory(cardsToPlay);
         gameToPlay = new Game(

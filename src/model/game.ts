@@ -91,15 +91,8 @@ export class Game {
         return this.players.map(p => p.name).join(", ");
     }
 
-    getUpdatedCards(currentPlayerMove: CardCombination): Card[][] {
-        const iPlayer: number = this.currentPlayerIndex();
-        let updatedCards: Card[][] = [[]];
-        for (let i = 0; i < this.playerCount(); ++i) {
-            updatedCards[i] = (i === iPlayer)
-                ? this.cardsPerPlayer[i].filter(c => !currentPlayerMove.cards.includes(c))
-                : Array.from(this.cardsPerPlayer[i]);
-        }
-        return updatedCards;
+    getPlayerCardsAfterMove(playerIndex: number, move: CardCombination): Card[] {
+        return this.cardsPerPlayer[playerIndex].filter(c => !move.cards.includes(c))
     }
 
     getUpdatedDiscardPile(currentPlayerMove: CardCombination): CardCombination[] {

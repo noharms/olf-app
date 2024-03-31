@@ -3,6 +3,7 @@ import { CardCombination } from "src/model/card-combination";
 import { Game } from "src/model/game";
 import { createFinishedGame, createGame } from "src/model/game-factory";
 import { COMPUTER_PLAYER, MOCK_USERS, PLAYER1 } from "./mock-user-data";
+import { Card } from "src/model/card";
 
 export const MOCK_GAMES: Game[] = [
     createGame(1, [PLAYER1, COMPUTER_PLAYER]),
@@ -19,10 +20,13 @@ export function updateBackendGame(gameId: number, cardsPlayed: CardCombination):
 
 // TODO once we have a backend, this should be done in the backend
 function updateGame(game: Game, currentPlayerMove: CardCombination): Game {
+    const currentPlayerIndex: number = game.currentPlayerIndex();
+    const updatedCards: Card[][] = game.cardsPerPlayer;
+    updatedCards[currentPlayerIndex] = game.getPlayerCardsAfterMove(currentPlayerIndex, currentPlayerMove);
     return new Game(
         game.id,
         game.players,
-        game.getUpdatedCards(currentPlayerMove),
+        updatedCards,
         game.getUpdatedDiscardPile(currentPlayerMove),
         game.turnCount + 1,
         game.getUpdatedHistory(currentPlayerMove)
