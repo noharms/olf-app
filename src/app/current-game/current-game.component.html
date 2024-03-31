@@ -13,9 +13,9 @@
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" [disabled]="isComputersTurn || stage.isEmpty()"
+        <button class="btn btn-primary action-button" [disabled]="isGameLocked || stage.isEmpty()"
             (click)="playStagedCards()">Play</button>
-        <button class="btn btn-primary action-button" [disabled]="isComputersTurn" (click)="pass()">Pass</button>
+        <button class="btn btn-primary action-button" [disabled]="isGameLocked" (click)="pass()">Pass</button>
     </div>
 
     <div class="player-cards">

@@ -95,7 +95,7 @@ export class Game {
         const iPlayer: number = this.currentPlayerIndex();
         let updatedCards: Card[][] = [[]];
         for (let i = 0; i < this.playerCount(); ++i) {
-            updatedCards[i] = i === iPlayer
+            updatedCards[i] = (i === iPlayer)
                 ? this.cardsPerPlayer[i].filter(c => !currentPlayerMove.cards.includes(c))
                 : Array.from(this.cardsPerPlayer[i]);
         }

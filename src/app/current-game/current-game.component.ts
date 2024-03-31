@@ -12,7 +12,7 @@ import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
-const COMPUTER_TURN_TIME_IN_MILLISECONDS = 3000;
+const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 export const GAME_ID_URL_PARAMETER_NAME = 'gameId';
 
 @Component({
@@ -25,7 +25,7 @@ export class CurrentGameComponent implements OnInit {
   game!: Game;
   cardViews: CardView[][] = [];
   stage: Stage = Stage.empty([]);
-  isComputersTurn: boolean = false;
+  isGameLocked: boolean = false;
 
   constructor(
     private router: Router,
@@ -42,6 +42,12 @@ export class CurrentGameComponent implements OnInit {
       game => {
         if (!game) {
           console.log(`Game id ${gameId} not found. Going back to home.`)
+          this.router.navigateByUrl("/");
+        } else if (game.playerCount() != 2) {
+          // Caveat: since the current player is determined from the turn count and we
+          // currently make only one computer turn here, we only allow games with 2 players
+          // (one player and one computer)
+          console.log(`Game restricted to 2 players at the moment (not ${game.playerCount()}).`)
           this.router.navigateByUrl("/");
         } else {
           this.game = game;
@@ -103,19 +109,41 @@ export class CurrentGameComponent implements OnInit {
   }
 
   pass(): void {
-    this.gameService.commitStagedCards(this.game.id, CardCombination.TURN_PASSED_PLACEHOLDER).subscribe(
-      game => this.game = game
-    );
-    this.doAfterPlayersTurn();
+    this.isGameLocked = true;
+    this
+      .gameService
+      .commitStagedCards(
+        this.game.id,
+        CardCombination.TURN_PASSED_PLACEHOLDER
+      ).subscribe(
+        game => {
+          this.game = game;
+          setTimeout(
+            () => this.isGameLocked = false,
+            COMPUTER_TURN_TIME_IN_MILLISECONDS
+          );
+          this.doAfterPlayersTurn();
+        }
+      );
   }
 
   playStagedCards() {
     this.logIfInvalidState();
-    this.gameService.commitStagedCards(this.game.id, new CardCombination(this.stage.stagedCards)).subscribe(
-      game => this.game = game
+    this.isGameLocked = true;
+    this.gameService.commitStagedCards(
+      this.game.id,
+      new CardCombination(this.stage.stagedCards)
+    ).subscribe(
+      game => {
+        this.game = game;
+        setTimeout(
+          () => this.isGameLocked = false,
+          COMPUTER_TURN_TIME_IN_MILLISECONDS
+        );
+        this.stage.clear();
+        this.doAfterPlayersTurn();
+      }
     );
-    this.stage.clear();
-    this.doAfterPlayersTurn();
   }
 
   private logIfInvalidState() {
@@ -127,11 +155,13 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private doAfterPlayersTurn() {
-    this.disablePlayerButtons();
     const playerCards: Card[] = this.game.cardsPerPlayer[0];
     if (playerCards.length === 0) {
       this.openGameVictoryModal(true);
     } else {
+      // Caveat: since the current player is determined from the turn count and we
+      // currently make only one computer turn here, we only allow games with 2 players
+      // (one player and one computer)
       this.makeComputerTurn();
       const computerCards: Card[] = this.game.cardsPerPlayer[1];
       if (computerCards.length === 0) {
@@ -139,11 +169,6 @@ export class CurrentGameComponent implements OnInit {
       }
     }
     this.cardViews = this.createCardViews();
-  }
-
-  private disablePlayerButtons(): void {
-    this.isComputersTurn = true;
-    setTimeout(() => this.isComputersTurn = false, COMPUTER_TURN_TIME_IN_MILLISECONDS);
   }
 
   // needs to be enhanced - currently using cardsPerPlayer[1]
