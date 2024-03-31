@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Inject, Input } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export const NEW_GAME_KEY = 'new-game';
 export const REDIRECT_TO_STATS_KEY = 'my-stats';
@@ -12,13 +12,17 @@ export const REDIRECT_TO_STATS_KEY = 'my-stats';
 export class GameOverModalComponent {
   @Input() message!: string;
 
-  constructor(public activeModal: NgbActiveModal) { }
+  constructor(
+    public dialogRef: MatDialogRef<GameOverModalComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) { }
+
 
   onNewGame() {
-    this.activeModal.close(NEW_GAME_KEY);
+    this.dialogRef.close(NEW_GAME_KEY);
   }
 
   onMyStats() {
-    this.activeModal.close(REDIRECT_TO_STATS_KEY);
+    this.dialogRef.close(REDIRECT_TO_STATS_KEY);
   }
 }

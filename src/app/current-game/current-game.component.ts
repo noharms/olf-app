@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Card } from 'src/model/card';
 import { CardCombination } from 'src/model/card-combination';
 import { CardViewCombination } from 'src/model/card-combination-view';
@@ -30,7 +30,7 @@ export class CurrentGameComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
+    private dialog: MatDialog,
     private gameService: GameService
   ) {
   }
@@ -38,9 +38,18 @@ export class CurrentGameComponent implements OnInit {
   ngOnInit(): void {
     const substring: string | null = this.route.snapshot.paramMap.get(GAME_ID_URL_PARAMETER_NAME);
     const gameId: number = Number(substring);
-    this.gameService.getGame(gameId).subscribe(game => this.game = game);
-    this.stage = Stage.empty(this.game.currentPlayerCards())
-    this.cardViews = this.createCardViews();
+    this.gameService.getGame(gameId).subscribe(
+      game => {
+        if (!game) {
+          console.log(`Game id ${gameId} not found. Going back to home.`)
+          this.router.navigateByUrl("/");
+        } else {
+          this.game = game;
+          this.stage = Stage.empty(this.game.currentPlayerCards())
+          this.cardViews = this.createCardViews();
+        }
+      }
+    );
   }
 
   // this creates "CardView" objects from the current game and stage;
@@ -157,24 +166,21 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private openGameVictoryModal(hasPlayerWon: boolean): void {
-    const modalRef = this.modalService.open(
+    const dialogRef = this.dialog.open(
       GameOverModalComponent,
-      { backdrop: 'static', keyboard: false }
-    );
-    modalRef.componentInstance.message = hasPlayerWon ? 'Congratulations! You won the game!' : 'You have lost this game.';
-
-    modalRef.result.then(
-      (result) => {
-        if (result === NEW_GAME_KEY) {
-          this.ngOnInit();
-        } else if (result === REDIRECT_TO_STATS_KEY) {
-          this.navigateToStats();
-        }
-      },
-      (dismissReason) => {
-        // Handle modal dismiss
+      {
+        disableClose: true,
+        data: { message: hasPlayerWon ? 'Congratulations! You won the game!' : 'You have lost this game.' }
       }
     );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === NEW_GAME_KEY) {
+        this.ngOnInit();
+      } else if (result === REDIRECT_TO_STATS_KEY) {
+        this.navigateToStats();
+      }
+    });
   }
 
   private navigateToStats() {
@@ -182,7 +188,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   discardPileView(): CardViewCombination[] {
-    return toCardViewCombinations(this.game.discardPile, true, false);
+    return toCardViewCombinations(this.game?.discardPile ?? [], true, false);
   }
 
 }

@@ -12,6 +12,7 @@ import { CardCombinationComponent } from './current-game/card-combination/card-c
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
 import { InviteFormComponent } from './home/invite-form/invite-form.component';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    MatDialogModule,
     ReactiveFormsModule
   ],
   providers: [
