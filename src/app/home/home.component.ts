@@ -26,7 +26,7 @@ export class HomeComponent {
   ) { }
 
   ngOnInit() {
-    const userId: number = 0;
+    const userId: number = 1;
     this.userService.getUserById(userId).subscribe(
       user => {
         this.user = user;
