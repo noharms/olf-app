@@ -7,8 +7,8 @@ import { Card } from "src/model/card";
 
 export const MOCK_GAMES: Game[] = [
     createGame(1, [PLAYER1, COMPUTER_PLAYER]),
-    createGame(2, [PLAYER1, COMPUTER_PLAYER]),
-    createFinishedGame(3, [PLAYER1, COMPUTER_PLAYER]),
+    createGame(2, MOCK_USERS),
+    createFinishedGame(3, MOCK_USERS),
     // Add more mock games as needed
 ];
 

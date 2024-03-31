@@ -1,6 +1,7 @@
 <div class="current-game">
     <div class="computer-cards">
-        <div class="card-container" *ngFor="let cardView of cardViews[1]" (click)="toggleCardFaceUp(cardView)">
+        <div class="card-container" *ngFor="let cardView of cardViews[computerPlayerIndex]"
+            (click)="toggleCardFaceUp(cardView)">
             <app-card [cardView]="cardView"></app-card>
         </div>
     </div>
@@ -13,13 +14,16 @@
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" [disabled]="isGameLocked || stage.isEmpty()"
+        <button class="btn btn-primary action-button" [disabled]="!isUsersTurn || stage.isEmpty()"
             (click)="playStagedCards()">Play</button>
-        <button class="btn btn-primary action-button" [disabled]="isGameLocked" (click)="pass()">Pass</button>
+        <button class="btn btn-primary action-button" [disabled]="!isUsersTurn" (click)="pass()">Pass</button>
+        <button class="btn btn-primary action-button" [disabled]="isUsersTurn"
+            (click)="makeComputerTurn()">computer</button>
     </div>
 
     <div class="player-cards">
-        <div class="card-container" *ngFor="let cardView of cardViews[0]" (click)="toggleStagedProperty(cardView)">
+        <div class="card-container" *ngFor="let cardView of cardViews[userPlayerIndex]"
+            (click)="toggleStagedProperty(cardView)">
             <app-card [cardView]="cardView"></app-card>
         </div>
     </div>

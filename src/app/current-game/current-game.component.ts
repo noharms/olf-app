@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from 'src/model/card';
@@ -7,6 +7,7 @@ import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
 import { Stage } from 'src/model/stage';
+import { User } from 'src/model/user';
 import { Game } from '../../model/game';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
@@ -22,10 +23,12 @@ export const GAME_ID_URL_PARAMETER_NAME = 'gameId';
 })
 export class CurrentGameComponent implements OnInit {
 
-  game!: Game;
+  userPlayerIndex: number = 0; // TODO currently we assume the user is the first player
+  computerPlayerIndex: number = 1;
+  game: Game = Game.EMPTY_GAME;
   cardViews: CardView[][] = [];
   stage: Stage = Stage.empty([]);
-  isGameLocked: boolean = false;
+  isUsersTurn: boolean = false;
 
   constructor(
     private router: Router,
@@ -38,20 +41,16 @@ export class CurrentGameComponent implements OnInit {
   ngOnInit(): void {
     const substring: string | null = this.route.snapshot.paramMap.get(GAME_ID_URL_PARAMETER_NAME);
     const gameId: number = Number(substring);
+
     this.gameService.getGame(gameId).subscribe(
       game => {
         if (!game) {
           console.log(`Game id ${gameId} not found. Going back to home.`)
           this.router.navigateByUrl("/");
-        } else if (game.playerCount() != 2) {
-          // Caveat: since the current player is determined from the turn count and we
-          // currently make only one computer turn here, we only allow games with 2 players
-          // (one player and one computer)
-          console.log(`Game restricted to 2 players at the moment (not ${game.playerCount()}).`)
-          this.router.navigateByUrl("/");
         } else {
           this.game = game;
           this.stage = Stage.empty(this.game.currentPlayerCards())
+          this.isUsersTurn = this.userPlayerIndex === game.currentPlayerIndex();
           this.cardViews = this.createCardViews();
         }
       }
@@ -67,7 +66,7 @@ export class CurrentGameComponent implements OnInit {
       cardViews[i] = this.game.cardsPerPlayer[i].map(
         c => {
           const isAlreadyStaged: boolean = this.stage.contains(c);
-          const canBeStaged: boolean = this.stage.canStage(c, this.game.topOfDiscardPile());
+          const canBeStaged: boolean = (i === this.userPlayerIndex) && this.isUsersTurn && this.stage.canStage(c, this.game.topOfDiscardPile());
           return new CardView(c, true, isAlreadyStaged, canBeStaged);
         }
       );
@@ -109,7 +108,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   pass(): void {
-    this.isGameLocked = true;
+    this.isUsersTurn = false;
     this
       .gameService
       .commitStagedCards(
@@ -118,10 +117,7 @@ export class CurrentGameComponent implements OnInit {
       ).subscribe(
         game => {
           this.game = game;
-          setTimeout(
-            () => this.isGameLocked = false,
-            COMPUTER_TURN_TIME_IN_MILLISECONDS
-          );
+          this.stage.clear();
           this.doAfterPlayersTurn();
         }
       );
@@ -129,17 +125,13 @@ export class CurrentGameComponent implements OnInit {
 
   playStagedCards() {
     this.logIfInvalidState();
-    this.isGameLocked = true;
+    this.isUsersTurn = false;
     this.gameService.commitStagedCards(
       this.game.id,
       new CardCombination(this.stage.stagedCards)
     ).subscribe(
       game => {
         this.game = game;
-        setTimeout(
-          () => this.isGameLocked = false,
-          COMPUTER_TURN_TIME_IN_MILLISECONDS
-        );
         this.stage.clear();
         this.doAfterPlayersTurn();
       }
@@ -155,37 +147,39 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private doAfterPlayersTurn() {
-    const playerCards: Card[] = this.game.cardsPerPlayer[0];
+    const playerCards: Card[] = this.game.cardsPerPlayer[this.userPlayerIndex];
     if (playerCards.length === 0) {
       this.openGameVictoryModal(true);
-    } else {
-      // Caveat: since the current player is determined from the turn count and we
-      // currently make only one computer turn here, we only allow games with 2 players
-      // (one player and one computer)
-      this.makeComputerTurn();
-      const computerCards: Card[] = this.game.cardsPerPlayer[1];
-      if (computerCards.length === 0) {
-        this.openGameVictoryModal(false);
-      }
     }
     this.cardViews = this.createCardViews();
   }
 
-  // needs to be enhanced - currently using cardsPerPlayer[1]
-  private makeComputerTurn(): void {
-    this.gameService.commitStagedCards(this.game.id, this.pickCardsComputer()).subscribe(
-      game => this.game = game
+  // TODO: it is not enough to check top of discard pile!
+  // TODO: because imagine in 3 player game first player played, 2nd one passed!
+  makeComputerTurn(): void {
+    const playerIndex: number = this.game.currentPlayerIndex();
+    const moveComputer: CardCombination = this.pickCardsComputer(playerIndex);
+    this.gameService.commitStagedCards(this.game.id, moveComputer).subscribe(
+      game => {
+        this.game = game;
+        const cardsAfterMove: Card[] = this.game.cardsPerPlayer[playerIndex];
+        if (cardsAfterMove.length === 0) {
+          this.openGameVictoryModal(false);
+        }
+        this.isUsersTurn = this.game.currentPlayerIndex() === this.userPlayerIndex;
+        this.cardViews = this.createCardViews();
+      }
     );
   }
 
-  private pickCardsComputer(): CardCombination {
+  private pickCardsComputer(playerIndex: number): CardCombination {
     let cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
     let cardCombiComputer: CardCombination = ComputerAiService.chooseCards(
-      this.game.cardsPerPlayer[1],
+      this.game.cardsPerPlayer[playerIndex],
       cardCombiToBeat
     );
     if (cardCombiComputer === CardCombination.TURN_PASSED_PLACEHOLDER) {
-      alert("Computer passes");
+      alert(`Computer player ${playerIndex} passes`);
     }
     return cardCombiComputer;
   }
@@ -213,6 +207,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   discardPileView(): CardViewCombination[] {
+    // TODO: rather show history here to include also player name
     return toCardViewCombinations(this.game?.discardPile ?? [], true, false);
   }
 

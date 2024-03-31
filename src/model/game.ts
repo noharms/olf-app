@@ -5,6 +5,15 @@ import { User } from "./user";
 
 export class Game {
 
+    static readonly EMPTY_GAME: Game = new Game(
+        -1,
+        [],
+        [],
+        [],
+        0,
+        []
+    );
+
     // stagedCards should also be stored on server
     // history of turns also
     constructor(
