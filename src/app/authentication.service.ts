@@ -12,7 +12,6 @@ export class AuthenticationService {
   private static readonly CURRENT_USER_KEY = 'currentUser';
 
   constructor() {
-    // Initialize the currentUserSubject with the user from local storage if available
     const storedUser: User = this.getCurrentUserFromLocalStorage();
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
   }
@@ -31,14 +30,14 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string): void {
-    // TODO
+    // TODO: check password
     // Placeholder for login logic, should be replaced with real authentication logic
     // For demonstration, we assume login is successful and create a dummy user
-    const user: User = MOCK_USERS[1];
+    const user: User = MOCK_USERS.filter(user => user.name === username)[0];
 
     // In a real scenario, you'd get the user object from your backend
     // and possibly a token which you'd want to store as well
-    localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
 
