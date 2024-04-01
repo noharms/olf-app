@@ -36,7 +36,7 @@ export class AuthenticationService {
     // For demonstration, we assume login is successful and create a dummy user
     const user: User | undefined = MOCK_USERS.find(user => user.name === username);
     if (!user) {
-      console.log(`Error, ${username} not found.`);
+      console.warn(`${username} not found.`);
       return;
     }
 

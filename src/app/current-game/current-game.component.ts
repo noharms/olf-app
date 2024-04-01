@@ -8,12 +8,12 @@ import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
 import { Stage } from 'src/model/stage';
 import { Game } from '../../model/game';
+import { GAME_ID_URL_PARAMETER_NAME, HOME_PATH } from '../app-routing.module';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
-export const GAME_ID_URL_PARAMETER_NAME = 'gameId';
 
 @Component({
   selector: 'app-current-game',
@@ -194,7 +194,7 @@ export class CurrentGameComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === NEW_GAME_KEY) {
-        this.ngOnInit();
+        this.ngOnInit(); // TODO: rather a method that gives a new game from the backend
       } else if (result === REDIRECT_TO_STATS_KEY) {
         this.navigateToStats();
       }
@@ -202,7 +202,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private navigateToStats() {
-    this.router.navigate(['/olf/home']);
+    this.router.navigateByUrl(HOME_PATH);
   }
 
   discardPileView(): CardViewCombination[] {

@@ -13,7 +13,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
 import { InviteFormComponent } from './home/invite-form/invite-form.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     GameOverModalComponent,
     HomeComponent,
     CardCombinationComponent,
-    InviteFormComponent
+    InviteFormComponent,
+    LandingPageComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     HttpClientModule,
     MatDialogModule,
+    FormsModule,
     ReactiveFormsModule
   ],
   providers: [

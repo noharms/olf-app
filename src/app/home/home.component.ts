@@ -4,7 +4,7 @@ import { MOCK_USERS } from 'src/mocks/mock-user-data';
 import { Game } from 'src/model/game';
 import { EMPTY_USER as UNDEFINED_USER, User } from 'src/model/user';
 import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
-import { CURRENT_GAME_BASE_PATH } from '../app-routing.module';
+import { CURRENT_GAME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
@@ -46,12 +46,12 @@ export class HomeComponent {
   }
 
   startNewGame() {
-    const path: string = `${CURRENT_GAME_BASE_PATH}/-1`;
+    const path: string = `${CURRENT_GAME_PATH}/-1`;
     this.router.navigate([path]);
   }
 
   onRowClicked(game: Game) {
-    const path: string = `${CURRENT_GAME_BASE_PATH}/${game.id}`;
+    const path: string = `${CURRENT_GAME_PATH}/${game.id}`;
     this.router.navigate([path]);
   }
 
