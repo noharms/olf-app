@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MOCK_USERS } from 'src/mocks/mock-user-data';
 import { Game } from 'src/model/game';
 import { EMPTY_USER as UNDEFINED_USER, User } from 'src/model/user';
 import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
@@ -29,8 +28,6 @@ export class HomeComponent {
   ) { }
 
   ngOnInit() {
-    // TODO remove the default login
-    this.authenticationService.login(MOCK_USERS[1].name, "dummyPassword");
     this.authenticationService.currentUser.subscribe(
       user => {
         this.user = user ?? UNDEFINED_USER;
@@ -46,13 +43,13 @@ export class HomeComponent {
   }
 
   startNewGame() {
-    const path: string = `${CURRENT_GAME_PATH}/-1`;
-    this.router.navigate([path]);
+    // TODO: use game service here to create a new game in backend and then use its id
+    this.router.navigateByUrl(`${CURRENT_GAME_PATH}/-1`);
   }
 
   onRowClicked(game: Game) {
     const path: string = `${CURRENT_GAME_PATH}/${game.id}`;
-    this.router.navigate([path]);
+    this.router.navigateByUrl(path);
   }
 
 }
