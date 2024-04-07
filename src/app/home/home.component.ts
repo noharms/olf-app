@@ -9,6 +9,7 @@ import { GameService } from '../game.service';
 import { UserService } from '../user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewGameModalComponent } from './new-game-modal/new-game-modal.component';
+import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ export class HomeComponent {
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
   finishedGames: Game[] = [];
   openGames: Game[] = [];
+  upcomingGameStatuses: GameInvitationStatus[] = [];
   playersForNewGame: User[] = [];
 
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
