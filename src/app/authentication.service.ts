@@ -7,10 +7,11 @@ import { User } from 'src/model/user';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<User | null>;
 
   private static readonly CURRENT_USER_KEY = 'currentUser';
   private static readonly AUTH_TOKEN_KEY = 'authToken';
+
+  private currentUserSubject: BehaviorSubject<User | null>;
 
   constructor() {
     const storedUser: User = this.getCurrentUserFromLocalStorage();
@@ -36,7 +37,7 @@ export class AuthenticationService {
     // For demonstration, we assume login is successful and create a dummy user
     const user: User | undefined = MOCK_USERS.find(user => user.name === username);
     if (!user) {
-      console.warn(`${username} not found.`);
+      console.warn(`Username <${username}> not found.`);
       return;
     }
 
@@ -47,12 +48,14 @@ export class AuthenticationService {
     // In a real scenario, you'd get the user object from your backend
     // and possibly a token which you'd want to store as well
     localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(user));
+    // the call to "next" will set a new value and then notify all observers
     this.currentUserSubject.next(user);
   }
 
   logout(): void {
     localStorage.removeItem(AuthenticationService.CURRENT_USER_KEY);
     localStorage.removeItem(AuthenticationService.AUTH_TOKEN_KEY);
+    // the call to "next" will set a new value and then notify all observers
     this.currentUserSubject.next(null);
   }
 

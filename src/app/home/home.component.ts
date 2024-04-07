@@ -7,6 +7,8 @@ import { CURRENT_GAME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NewGameModalComponent } from './new-game-modal/new-game-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -19,12 +21,16 @@ export class HomeComponent {
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
   finishedGames: Game[] = [];
   openGames: Game[] = [];
+  playersForNewGame: User[] = [];
+
+  private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private gameService: GameService
+    private gameService: GameService,
+    public matDialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -39,12 +45,20 @@ export class HomeComponent {
           }
         )
       }
-    )
+    );
   }
 
   startNewGame() {
-    // TODO: use game service here to create a new game in backend and then use its id
-    this.router.navigateByUrl(`${CURRENT_GAME_PATH}/-1`);
+    const dialogRef = this.matDialog.open(NewGameModalComponent, {
+      minWidth: '300px', // Customize modal width here
+      minHeight: '400px', // Customize modal width here
+      // Add more options here as needed
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // Handle any actions after the dialog is closed
+    });
   }
 
   onRowClicked(game: Game) {
