@@ -38,18 +38,19 @@ export class AuthenticationService {
     const user: User | undefined = MOCK_USERS.find(user => user.name === username);
     if (!user) {
       console.warn(`Username <${username}> not found.`);
+      this.logout();
       return;
+    } else {
+      // Store the token in local storage or in-memory storage for later use
+      const token: string = this.generateTokenForUser(user);
+      localStorage.setItem(AuthenticationService.AUTH_TOKEN_KEY, token);
+
+      // In a real scenario, you'd get the user object from your backend
+      // and possibly a token which you'd want to store as well
+      localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(user));
+      // the call to "next" will set a new value and then notify all observers
+      this.currentUserSubject.next(user);
     }
-
-    // Store the token in local storage or in-memory storage for later use
-    const token: string = this.generateTokenForUser(user);
-    localStorage.setItem(AuthenticationService.AUTH_TOKEN_KEY, token);
-
-    // In a real scenario, you'd get the user object from your backend
-    // and possibly a token which you'd want to store as well
-    localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(user));
-    // the call to "next" will set a new value and then notify all observers
-    this.currentUserSubject.next(user);
   }
 
   logout(): void {

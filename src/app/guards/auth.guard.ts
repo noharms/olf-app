@@ -7,6 +7,7 @@ export const authGuard: CanActivateFn = (
   next: ActivatedRouteSnapshot,
   state: RouterStateSnapshot): boolean => {
   if (inject(AuthenticationService).authToken != null) {
+    // TODO check that it is a valid and correct token
     return true;
   } else {
     console.warn("No authentication token found. Redirecting to the landing page.");
