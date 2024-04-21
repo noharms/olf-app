@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
-import { MOCK_GAMES, updateBackendGame } from '../mocks/mock-game-data';
-import { createGame } from 'src/model/game-factory';
+import { GameInvitation } from 'src/model/game-invitation/game-invitation';
+import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
+import { UserResponse } from 'src/model/game-invitation/user-response';
 import { User } from 'src/model/user';
+import { MOCK_GAMES, MOCK_INVITATION_STATUS, createMockGame, createMockInvitation, updateBackendGame } from '../mocks/mock-game-data';
 
 @Injectable({
   providedIn: 'root'
@@ -25,15 +27,29 @@ export class GameService {
     return of(game);
   }
 
-  createNewGame(players: User[]): Game {
-    const newGame: Game = createGame(MOCK_GAMES.length, players);
+  createGame(players: User[]): Game {
+    // TODO: replace by backend call
+    const newGame: Game = createMockGame(players);
     MOCK_GAMES.push(newGame);
     return newGame;
   }
 
-  getAllGames(userId: number): Observable<Game[]> {
+  createInvitation(creator: User, invitees: User[]): GameInvitationStatus {
+    // TODO: replace by backend call
+    const newInvitation: GameInvitation = createMockInvitation(creator, invitees);
+    const invitationStatus: GameInvitationStatus = new GameInvitationStatus(newInvitation, []);
+    MOCK_INVITATION_STATUS.push(invitationStatus);
+    return invitationStatus;
+  }
+
+  getGames(userId: number): Observable<Game[]> {
     const games: Game[] = MOCK_GAMES.filter(g => g.participatingUserIds().includes(userId));
     return of(games);
+  }
+
+  getUpcomingGames(userId: number): Observable<GameInvitationStatus[]> {
+    const upcomingGames: GameInvitationStatus[] = MOCK_INVITATION_STATUS.filter(g => g.playerIds().includes(userId));
+    return of(upcomingGames);
   }
 
   /**
@@ -41,6 +57,10 @@ export class GameService {
    */
   commitStagedCards(gameId: number, cardCombination: CardCombination): Observable<Game> {
     return updateBackendGame(gameId, cardCombination);
+  }
+
+  addResponseToInvitation(gameInvitationId: number, newResponse: UserResponse) {
+    return
   }
 
 

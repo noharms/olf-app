@@ -39,10 +39,10 @@
           <th>Invited Players</th>
           <th>Required Action</th>
         </tr>
-        <tr *ngFor="let gameStatus of upcomingGameStatuses">
-          <td>{{ gameStatus.invitation.creator }}</td>
-          <td>{{ gameStatus.invitation.invitedPlayers }}</td>
-          <td>{{ gameStatus.requiredActions() }}</td>
+        <tr *ngFor="let invitationStatus of invitationStatuses">
+          <td>{{ invitationStatus.invitation.creator.name }}</td>
+          <td>{{ invitationStatus.getPlayersString() }}</td>
+          <td>{{ invitationStatus.requiredActions() }}</td>
         </tr>
       </table>
     </div>

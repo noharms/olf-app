@@ -15,11 +15,10 @@ export function createGame(gameId: number, players: User[]): Game {
     let allCards: Card[] = createAllCardsForGame(playerCount);
     shuffleCards(allCards);
     let cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
-    // TODO get id from server
     return new Game(gameId, players, cardsPerPlayer, [], 0, []);
 }
 
-function distributeCards(playerCount: number, allCards: Card[]) {
+export function distributeCards(playerCount: number, allCards: Card[]) {
     const totalCardCount: number = allCards.length;
     const initialHandSize = (totalCardCount - 2) / playerCount;
     let cardsPerPlayer: Card[][] = [[]];
@@ -36,7 +35,7 @@ function distributeCards(playerCount: number, allCards: Card[]) {
     return cardsPerPlayer;
 }
 
-function createAllCardsForGame(playerCount: number): Card[] {
+export function createAllCardsForGame(playerCount: number): Card[] {
     let allCardsInGame: Card[] = [];
     let cardId = 0;
     const suits: Suit[] = Object.values(Suit);
@@ -57,7 +56,7 @@ function createAllCardsForGame(playerCount: number): Card[] {
     return allCardsInGame;
 }
 
-function createAllCardsForSuit(suit: Suit, startId: number): Card[] {
+export function createAllCardsForSuit(suit: Suit, startId: number): Card[] {
     const allRanks: Card[] = []
     for (const rank of RANKS_IN_GAME) {
         const newCard = new Card(startId++, rank, suit);
@@ -66,7 +65,7 @@ function createAllCardsForSuit(suit: Suit, startId: number): Card[] {
     return allRanks;
 }
 
-function createAllOnes(startId: number): Card[] {
+export function createAllOnes(startId: number): Card[] {
     const allOnes: Card[] = []
     for (let i = 0; i < COUNT_ONES_PER_PLAYER; i++) {
         const newCard = new Card(startId++, Rank.One, Suit.Colorless);
@@ -76,7 +75,7 @@ function createAllOnes(startId: number): Card[] {
 }
 
 // Shuffle the cards using Fisher-Yates algorithm
-function shuffleCards(cards: Card[]): void {
+export function shuffleCards(cards: Card[]): void {
     let currentIndex = cards.length;
     let temporaryValue;
     let randomIndex;

@@ -32,6 +32,10 @@ export class Card {
         this._suit = value;
     }
 
+    toString(): string {
+        return `(rank: ${this.rank}, suit: ${this.suit})`;
+    }
+
     isRankHigherThan(combinationToBeat: CardCombination): boolean {
         return this.rank > combinationToBeat.getUniqueRank();
     }

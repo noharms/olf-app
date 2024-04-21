@@ -1,3 +1,4 @@
+import { concatUsers } from "src/utils/user-utils";
 import { User } from "../user";
 import { GameInvitation } from "./game-invitation";
 import { InvitationAction, UserResponse } from "./user-response";
@@ -13,9 +14,25 @@ export class GameInvitationStatus {
         return this._invitation;
     }
 
+    getPlayers(): User[] {
+        return [this._invitation.creator, ...this._invitation.invitees];
+    }
+
+    getPlayersString(): string {
+        return concatUsers(this.getPlayers());
+    }
+
+    playerIds(): number[] {
+        return [this.invitation.creator.id, ...this.invitedUserIds()]
+    }
+
+    invitedUserIds(): number[] {
+        return this.invitation.invitees.map(p => p.id);
+    }
+
     usersNotResponded(): User[] {
         const usersWhoResponded: User[] = this.usersWhoResponded();
-        return this.invitation.invitedPlayers.filter(
+        return this.invitation.invitees.filter(
             invitedUser => usersWhoResponded.includes(invitedUser)
         );
     }
@@ -36,4 +53,7 @@ export class GameInvitationStatus {
         }
     }
 
+    addResponse(newResponse: UserResponse) {
+        this.userResponses.push(newResponse);
+    }
 }

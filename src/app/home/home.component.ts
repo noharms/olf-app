@@ -22,7 +22,7 @@ export class HomeComponent {
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
   finishedGames: Game[] = [];
   openGames: Game[] = [];
-  upcomingGameStatuses: GameInvitationStatus[] = [];
+  invitationStatuses: GameInvitationStatus[] = [];
   playersForNewGame: User[] = [];
 
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
@@ -36,16 +36,29 @@ export class HomeComponent {
   ) { }
 
   ngOnInit() {
-    this.authenticationService.currentUser.subscribe(
+    this.authenticationService.currentUser$.subscribe(
       user => {
         this.user = user ?? UNDEFINED_USER;
-        this.gameService.getAllGames(this.user.id).subscribe(
-          games => {
-            this.finishedGames = games.filter(g => g.isFinished());
-            this.openGames = games.filter(g => !g.isFinished());
-            this.userGameStatistics = UserGameStatistics.from(games, this.user.id);
-          }
-        )
+        this.syncGamesBackend();
+        this.syncInvitationsBackend();
+      }
+    );
+  }
+
+  private syncGamesBackend() {
+    this.gameService.getGames(this.user.id).subscribe(
+      games => {
+        this.finishedGames = games.filter(g => g.isFinished());
+        this.openGames = games.filter(g => !g.isFinished());
+        this.userGameStatistics = UserGameStatistics.from(games, this.user.id);
+      }
+    );
+  }
+
+  private syncInvitationsBackend() {
+    this.gameService.getUpcomingGames(this.user.id).subscribe(
+      invitationStatuses => {
+        this.invitationStatuses = invitationStatuses;
       }
     );
   }
@@ -58,7 +71,8 @@ export class HomeComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      this.syncInvitationsBackend();
+      console.log('The dialog was closed. Invitations will be updated.');
       // Handle any actions after the dialog is closed
     });
   }

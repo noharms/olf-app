@@ -1,3 +1,4 @@
+import { concatUsers } from "src/utils/user-utils";
 import { Card } from "./card";
 import { CardCombination } from "./card-combination";
 import { Move } from "./move";
@@ -97,7 +98,7 @@ export class Game {
     }
 
     getPlayersString(): string {
-        return this.players.map(p => p.name).join(", ");
+        return concatUsers(this.players);
     }
 
     getPlayerCardsAfterMove(playerIndex: number, move: CardCombination): Card[] {

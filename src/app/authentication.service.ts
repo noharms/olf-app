@@ -14,20 +14,20 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User | null>;
 
   constructor() {
-    const storedUser: User = this.getCurrentUserFromLocalStorage();
+    const storedUser: User | null = this.getCurrentUserFromLocalStorage();
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
   }
 
-  private getCurrentUserFromLocalStorage(): User {
+  private getCurrentUserFromLocalStorage(): User | null {
     const currentUserJson: string = localStorage.getItem(AuthenticationService.CURRENT_USER_KEY) ?? 'null';
     return JSON.parse(currentUserJson);
   }
 
-  public get currentUserValue(): User | null {
+  public get currentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  public get currentUser(): Observable<User | null> {
+  public get currentUser$(): Observable<User | null> {
     return this.currentUserSubject.asObservable();
   }
 

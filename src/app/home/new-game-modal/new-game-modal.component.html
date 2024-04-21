@@ -1,9 +1,10 @@
 <h2>New Game</h2>
 <form [formGroup]="form">
     <mat-form-field>
-        <input type="text" placeholder="Enter username" matInput [matAutocomplete]="auto" formControlName="username">
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addPlayer($event)">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+        <input type="text" placeholder="Enter username" matInput [matAutocomplete]="auto"
+            formControlName={{FORM_FIELD_USERNAME}}>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelection($event)">
+            <mat-option *ngFor="let option of matchingUsernames | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>
@@ -23,8 +24,8 @@
 </table> -->
 <button mat-button (click)="submitGame()">Submit</button>
 <button mat-button (click)="cancel()">Cancel</button>
-<div *ngIf="dataSource.data.length > 0; else noPlayers">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<div *ngIf="addedPlayersDataSource.data.length > 0; else noPlayers">
+    <table mat-table [dataSource]="addedPlayersDataSource" class="mat-elevation-z8">
         <!-- Column Definitions -->
         <ng-container matColumnDef="players">
             <th mat-header-cell *matHeaderCellDef> Players </th>

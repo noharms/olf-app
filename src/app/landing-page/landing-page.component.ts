@@ -19,7 +19,7 @@ export class LandingPageComponent {
 
   onLogin(): void {
     this.authService.login(this.username, this.password);
-    if (this.authService.currentUserValue) {
+    if (this.authService.currentUser) {
       this.router.navigate([HOME_PATH]);
     } else {
       console.warn(`Error: login credentials for user (${this.username}) unknown. Login failed.`)
