@@ -10,7 +10,10 @@
         <td>{{ invitationStatus.invitation.creator.name }}</td>
         <td>{{ invitationStatus.invitation.createdAt.toLocaleString() }}</td>
         <td>{{ invitationStatus.getPlayersString() }}</td>
-        <td>{{ requiredActionCurrentUser(invitationStatus) }}</td>
+        <td (click)="handleActionClick(invitationStatus)"
+            [class.clickableTableCell]="canCurrentUserAct(invitationStatus)">
+            {{ requiredActions(invitationStatus) }}
+        </td>
         <!-- TODO: cancel action for creator? -->
     </tr>
 </table>

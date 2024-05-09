@@ -5,7 +5,7 @@ import { CardCombination } from 'src/model/card-combination';
 import { Game } from 'src/model/game';
 import { GameInvitation } from 'src/model/game-invitation/game-invitation';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
-import { CompletedAction } from 'src/model/game-invitation/user-response';
+import { CompletedAction, InvitationAction } from 'src/model/game-invitation/user-response';
 import { User } from 'src/model/user';
 import { MOCK_GAMES, MOCK_INVITATION_STATUS, createMockGame, createMockInvitation, updateBackendGame } from '../mocks/mock-game-data';
 
@@ -59,7 +59,12 @@ export class GameService {
     return updateBackendGame(gameId, cardCombination);
   }
 
-  addResponseToInvitation(gameInvitationId: number, newResponse: CompletedAction) {
+  updateInvitationWith(
+    gameInvitationId: number,
+    action: InvitationAction,
+    actingUser: User
+  ): void {
+    // TODO
     return
   }
 

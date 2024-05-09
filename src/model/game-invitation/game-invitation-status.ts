@@ -14,6 +14,10 @@ export class GameInvitationStatus {
         return this._invitation;
     }
 
+    isCreator(user: User): boolean {
+        return user === this.invitation.creator;
+    }
+
     getPlayers(): User[] {
         return [this._invitation.creator, ...this._invitation.invitees];
     }

@@ -5,7 +5,7 @@ export enum InvitationAction {
     ACCEPT = "Accept",
     DECLINE = "Decline",
     START = "Start Game",
-    // REVOKE, to allow creator revoking the invitation
+    CANCEL = "Cancel Game"
 }
 
 export interface CompletedAction {

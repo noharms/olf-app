@@ -12,3 +12,11 @@ td {
 th {
     background-color: #ddd;
 }
+
+.clickableTableCell:hover {
+    cursor: pointer;
+    background-color: rgba(15, 160, 192, 0.2);
+    /* Light blue background on hover */
+    box-shadow: 0 0 0 3px rgba(23, 101, 203, 0.5) inset;
+    /* Simulates a border */
+}
