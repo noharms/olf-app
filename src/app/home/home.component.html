@@ -4,16 +4,14 @@
   <!-- Grid Layout Container -->
   <div class="grid-layout">
 
-    <app-user-table class="user-table-container" [userGameStatistics]="userGameStatistics">
+    <app-user-table [userGameStatistics]="userGameStatistics">
     </app-user-table>
 
-    <app-upcoming-games-table class="upcoming-games-container"
-      [invitationStatuses]="invitationStatuses"></app-upcoming-games-table>
+    <app-upcoming-games-table [invitationStatuses]="invitationStatuses"></app-upcoming-games-table>
 
-    <app-finished-games-table class="finished-games-container"
-      [finishedGames]="finishedGames"></app-finished-games-table>
+    <app-finished-games-table [finishedGames]="finishedGames"></app-finished-games-table>
 
-    <app-open-games-table class="open-games-container" [openGames]="openGames"></app-open-games-table>
+    <app-open-games-table [openGames]="openGames"></app-open-games-table>
   </div>
 
   <button class="btn btn-primary" (click)="startNewGame()">New Game</button>
