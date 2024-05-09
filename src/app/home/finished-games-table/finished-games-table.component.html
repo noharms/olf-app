@@ -1,0 +1,11 @@
+<h3>Finished Games</h3>
+<table>
+    <tr>
+        <th>Game ID</th>
+        <th>Moves</th>
+    </tr>
+    <tr *ngFor="let game of finishedGames">
+        <td>{{ game.id }}</td>
+        <td>{{ game.getHistoryString() }}</td>
+    </tr>
+</table>

@@ -29,7 +29,6 @@ export class HomeComponent {
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
 
   constructor(
-    private router: Router,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private gameService: GameService,
@@ -76,21 +75,6 @@ export class HomeComponent {
       console.log('The dialog was closed. Invitations will be updated.');
       // Handle any actions after the dialog is closed
     });
-  }
-
-  onRowClicked(game: Game) {
-    const path: string = `${CURRENT_GAME_PATH}/${game.id}`;
-    this.router.navigateByUrl(path);
-  }
-
-  requiredActionCurrentUser(invitationStatus: GameInvitationStatus): string {
-    const allRequiredActions: Map<User, InvitationAction> = invitationStatus.requiredActions();
-    const requiredActionUser: InvitationAction | undefined = allRequiredActions.get(this.user);
-    return requiredActionUser !== undefined
-      ? `${this.user.name}: ${requiredActionUser?.toString()}`
-      : Array.from(allRequiredActions.entries()).map(
-        ([user, action]) => `${user.name}: ${action.toString()}`
-      ).join(', ');
   }
 
 }

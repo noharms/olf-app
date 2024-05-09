@@ -20,6 +20,10 @@ import { GameOverModalComponent } from './current-game/game-over-modal/game-over
 import { HomeComponent } from './home/home.component';
 import { NewGameModalComponent } from './home/new-game-modal/new-game-modal.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
+import { UserTableComponent } from './home/user-table/user-table.component';
+import { UpcomingGamesTableComponent } from './home/upcoming-games-table/upcoming-games-table.component';
+import { FinishedGamesTableComponent } from './home/finished-games-table/finished-games-table.component';
+import { OpenGamesTableComponent } from './home/open-games-table/open-games-table.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,11 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     HomeComponent,
     CardCombinationComponent,
     LandingPageComponent,
-    NewGameModalComponent
+    NewGameModalComponent,
+    UserTableComponent,
+    UpcomingGamesTableComponent,
+    FinishedGamesTableComponent,
+    OpenGamesTableComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,13 @@
+<h3>Open Games</h3>
+<table>
+    <tr>
+        <th>Game ID</th>
+        <th>Involved Players</th>
+        <th>Current Turn</th>
+    </tr>
+    <tr *ngFor="let game of openGames" (click)="onRowClicked(game)" class="clickableTableRow">
+        <td>{{ game.id }}</td>
+        <td>{{ game.getPlayersString() }}</td>
+        <td>{{ game.players[game.currentPlayerIndex()].name }}</td>
+    </tr>
+</table>

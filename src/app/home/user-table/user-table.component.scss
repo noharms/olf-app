@@ -1,0 +1,22 @@
+.user-table {
+    margin-top: 20px;
+    text-align: left;
+    width: fit-content;
+    border-collapse: collapse;
+    background-color: #f2f2f2;
+}
+
+/* Ensure content is centralized in their grid cell */
+table {
+    margin: auto;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+th {
+    background-color: #ddd;
+}

@@ -1,0 +1,16 @@
+<h3>Upcoming Games</h3>
+<table>
+    <tr>
+        <th>Creator</th>
+        <th>Created at</th>
+        <th>Invited Players</th>
+        <th>Required Action</th>
+    </tr>
+    <tr *ngFor="let invitationStatus of invitationStatuses">
+        <td>{{ invitationStatus.invitation.creator.name }}</td>
+        <td>{{ invitationStatus.invitation.createdAt.toLocaleString() }}</td>
+        <td>{{ invitationStatus.getPlayersString() }}</td>
+        <td>{{ requiredActionCurrentUser(invitationStatus) }}</td>
+        <!-- TODO: cancel action for creator? -->
+    </tr>
+</table>

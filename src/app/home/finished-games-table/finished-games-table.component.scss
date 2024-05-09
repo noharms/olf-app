@@ -1,0 +1,14 @@
+/* Ensure content is centralized in their grid cell */
+table {
+    margin: auto;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+th {
+    background-color: #ddd;
+}
