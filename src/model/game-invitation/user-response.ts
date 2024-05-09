@@ -2,13 +2,13 @@ import { User } from "../user";
 
 
 export enum InvitationAction {
-    ACCEPT,
-    DECLINE,
-    START,
+    ACCEPT = "Accept",
+    DECLINE = "Decline",
+    START = "Start Game",
     // REVOKE, to allow creator revoking the invitation
 }
 
-export interface UserResponse {
+export interface CompletedAction {
     registeredAt: Date,
     user: User,
     action: InvitationAction,

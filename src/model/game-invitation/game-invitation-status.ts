@@ -1,13 +1,13 @@
 import { concatUsers } from "src/utils/user-utils";
 import { User } from "../user";
 import { GameInvitation } from "./game-invitation";
-import { InvitationAction, UserResponse } from "./user-response";
+import { InvitationAction, CompletedAction } from "./user-response";
 
 export class GameInvitationStatus {
 
     constructor(
         private _invitation: GameInvitation,
-        private userResponses: UserResponse[]
+        private completedUserActions: CompletedAction[]
     ) { }
 
     public get invitation(): GameInvitation {
@@ -23,37 +23,43 @@ export class GameInvitationStatus {
     }
 
     playerIds(): number[] {
-        return [this.invitation.creator.id, ...this.invitedUserIds()]
+        return [this.invitation.creator.id, ...this.inviteesIds()]
     }
 
-    invitedUserIds(): number[] {
+    inviteesIds(): number[] {
         return this.invitation.invitees.map(p => p.id);
     }
 
-    usersNotResponded(): User[] {
-        const usersWhoResponded: User[] = this.usersWhoResponded();
-        return this.invitation.invitees.filter(
-            invitedUser => usersWhoResponded.includes(invitedUser)
-        );
+    inviteesNotResponded(): User[] {
+        const usersWhoResponded: User[] = this.inviteesWhoResponded();
+        return this.invitation.invitees.filter(u => !usersWhoResponded.includes(u));
     }
 
-    usersWhoResponded(): User[] {
-        return this.userResponses.map(response => response.user);
+    inviteesWhoResponded(): User[] {
+        return this
+            .completedUserActions
+            .filter(action => action.user !== this._invitation.creator)
+            .filter(action => action.action === InvitationAction.ACCEPT || action.action === InvitationAction.DECLINE)
+            .map(action => action.user);
     }
 
     private allResponded(): boolean {
-        return this.usersNotResponded().length === 0;
+        return this.inviteesNotResponded().length === 0;
     }
 
-    requiredActions(): [User, InvitationAction][] {
+    requiredActions(): Map<User, InvitationAction> {
         if (this.allResponded()) {
-            return [[this.invitation.creator, InvitationAction.START]];
+            return new Map<User, InvitationAction>([
+                [this.invitation.creator, InvitationAction.START]
+            ]);
         } else {
-            return this.usersNotResponded().map(user => [user, InvitationAction.ACCEPT]);
+            return new Map<User, InvitationAction>(
+                this.inviteesNotResponded().map(user => [user, InvitationAction.ACCEPT])
+            );
         }
     }
 
-    addResponse(newResponse: UserResponse) {
-        this.userResponses.push(newResponse);
+    addResponse(newResponse: CompletedAction) {
+        this.completedUserActions.push(newResponse);
     }
 }

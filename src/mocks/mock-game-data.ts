@@ -5,7 +5,7 @@ import { Game } from "src/model/game";
 import { createFinishedGame, createGame } from "src/model/game-factory";
 import { GameInvitation } from "src/model/game-invitation/game-invitation";
 import { GameInvitationStatus } from "src/model/game-invitation/game-invitation-status";
-import { UserResponse } from "src/model/game-invitation/user-response";
+import { CompletedAction } from "src/model/game-invitation/user-response";
 import { User } from "src/model/user";
 import { COMPUTER_PLAYER, MOCK_USERS, PLAYER1 } from "./mock-user-data";
 
@@ -16,7 +16,17 @@ export const MOCK_GAMES: Game[] = [
     // Add more mock games as needed
 ];
 
-export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [];
+export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [
+    new GameInvitationStatus(
+        {
+            id: 1,
+            createdAt: new Date(),
+            creator: MOCK_USERS[0],
+            invitees: MOCK_USERS.slice(1, 3)
+        },
+        []
+    )
+];
 
 export function createMockGame(players: User[]): Game {
     return createGame(MOCK_GAMES.length, players);
@@ -54,7 +64,7 @@ export function updateGame(game: Game, currentPlayerMove: CardCombination): Game
     );
 }
 
-export function updateBackendWithResponse(gameInvitationId: number, newResponse: UserResponse) {
+export function updateBackendWithResponse(gameInvitationId: number, newResponse: CompletedAction) {
     const gameIndex: number = MOCK_INVITATION_STATUS.findIndex(g => g.invitation.id === gameInvitationId);
     const gameInvitation: GameInvitationStatus = MOCK_INVITATION_STATUS[gameIndex];
     gameInvitation.addResponse(newResponse);

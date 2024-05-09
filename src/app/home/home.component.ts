@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Game } from 'src/model/game';
+import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
+import { InvitationAction } from 'src/model/game-invitation/user-response';
 import { EMPTY_USER as UNDEFINED_USER, User } from 'src/model/user';
 import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
 import { CURRENT_GAME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
-import { MatDialog } from '@angular/material/dialog';
 import { NewGameModalComponent } from './new-game-modal/new-game-modal.component';
-import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 
 @Component({
   selector: 'app-home',
@@ -80,6 +81,16 @@ export class HomeComponent {
   onRowClicked(game: Game) {
     const path: string = `${CURRENT_GAME_PATH}/${game.id}`;
     this.router.navigateByUrl(path);
+  }
+
+  requiredActionCurrentUser(invitationStatus: GameInvitationStatus): string {
+    const allRequiredActions: Map<User, InvitationAction> = invitationStatus.requiredActions();
+    const requiredActionUser: InvitationAction | undefined = allRequiredActions.get(this.user);
+    return requiredActionUser !== undefined
+      ? `${this.user.name}: ${requiredActionUser?.toString()}`
+      : Array.from(allRequiredActions.entries()).map(
+        ([user, action]) => `${user.name}: ${action.toString()}`
+      ).join(', ');
   }
 
 }

@@ -36,13 +36,16 @@
       <table>
         <tr>
           <th>Creator</th>
+          <th>Created at</th>
           <th>Invited Players</th>
           <th>Required Action</th>
         </tr>
         <tr *ngFor="let invitationStatus of invitationStatuses">
           <td>{{ invitationStatus.invitation.creator.name }}</td>
+          <td>{{ invitationStatus.invitation.createdAt.toLocaleString() }}</td>
           <td>{{ invitationStatus.getPlayersString() }}</td>
-          <td>{{ invitationStatus.requiredActions() }}</td>
+          <td>{{ requiredActionCurrentUser(invitationStatus) }}</td>
+          <!-- TODO: cancel action for creator? -->
         </tr>
       </table>
     </div>
@@ -81,5 +84,4 @@
   </div>
 
   <button class="btn btn-primary" (click)="startNewGame()">New Game</button>
-  <app-invite-form></app-invite-form>
 </div>

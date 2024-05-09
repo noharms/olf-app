@@ -1,5 +1,8 @@
 <header class="header-section">
     <h1>Olf App</h1>
+    <nav class="toolbar">
+        <button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
+    </nav>
 </header>
 
 <main>

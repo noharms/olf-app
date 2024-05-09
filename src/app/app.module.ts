@@ -18,7 +18,6 @@ import { CardComponent } from './current-game/card/card.component';
 import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
 import { HomeComponent } from './home/home.component';
-import { InviteFormComponent } from './home/invite-form/invite-form.component';
 import { NewGameModalComponent } from './home/new-game-modal/new-game-modal.component';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 
@@ -30,7 +29,6 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     GameOverModalComponent,
     HomeComponent,
     CardCombinationComponent,
-    InviteFormComponent,
     LandingPageComponent,
     NewGameModalComponent
   ],
