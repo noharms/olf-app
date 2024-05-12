@@ -7,7 +7,7 @@ import { GameInvitation } from 'src/model/game-invitation/game-invitation';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 import { CompletedAction, InvitationAction } from 'src/model/game-invitation/user-response';
 import { User } from 'src/model/user';
-import { MOCK_GAMES, MOCK_INVITATION_STATUS, createMockGame, createMockInvitation, updateBackendGame } from '../mocks/mock-game-data';
+import { MOCK_GAMES, MOCK_INVITATION_STATUS as MOCK_INVITATION_STATUSES, createMockGame, createMockInvitation, updateBackendGame } from '../mocks/mock-game-data';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,7 @@ export class GameService {
     // TODO: replace by backend call
     const newInvitation: GameInvitation = createMockInvitation(creator, invitees);
     const invitationStatus: GameInvitationStatus = new GameInvitationStatus(newInvitation, []);
-    MOCK_INVITATION_STATUS.push(invitationStatus);
+    MOCK_INVITATION_STATUSES.push(invitationStatus);
     return invitationStatus;
   }
 
@@ -48,7 +48,7 @@ export class GameService {
   }
 
   getUpcomingGames(userId: number): Observable<GameInvitationStatus[]> {
-    const upcomingGames: GameInvitationStatus[] = MOCK_INVITATION_STATUS.filter(g => g.playerIds().includes(userId));
+    const upcomingGames: GameInvitationStatus[] = MOCK_INVITATION_STATUSES.filter(g => g.playerIds().includes(userId));
     return of(upcomingGames);
   }
 
@@ -59,14 +59,41 @@ export class GameService {
     return updateBackendGame(gameId, cardCombination);
   }
 
+  // TODO replace by backend
   updateInvitationWith(
-    gameInvitationId: number,
+    invitationId: number,
     action: InvitationAction,
     actingUser: User
-  ): void {
-    // TODO
-    return
+  ): Observable<GameInvitationStatus[]> {
+    const invitationStatus: GameInvitationStatus | undefined =
+      MOCK_INVITATION_STATUSES
+        .find(status => status.invitation.id === invitationId);
+    return new Observable(
+      subscriber => {
+        if (invitationStatus) {
+          invitationStatus.addResponse(
+            {
+              registeredAt: new Date(),
+              user: actingUser,
+              action: action
+            }
+          )
+          if (InvitationAction.START === action) {
+            MOCK_INVITATION_STATUSES.splice(
+              MOCK_INVITATION_STATUSES.findIndex(status => status === invitationStatus),
+              1
+            );
+            this.createGame(invitationStatus.getPlayers());
+          }
+          subscriber.next(MOCK_INVITATION_STATUSES);
+          subscriber.complete();
+        } else {
+          subscriber.error(
+            new Error(`Invitation with id ${invitationId} not found.`)
+          )
+        };
+      }
+    );
   }
-
 
 }

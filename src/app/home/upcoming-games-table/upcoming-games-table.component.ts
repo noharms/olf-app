@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { GameService } from 'src/app/game.service';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
@@ -14,6 +14,9 @@ export class UpcomingGamesTableComponent {
 
   @Input()
   invitationStatuses: GameInvitationStatus[] = [];
+
+  @Output()
+  onBackendUpdateCompleted: EventEmitter<void> = new EventEmitter<void>();
 
   user: User = EMPTY_USER;
 
@@ -39,7 +42,7 @@ export class UpcomingGamesTableComponent {
   }
 
   canCurrentUserAct(invitationStatus: GameInvitationStatus): boolean {
-    return invitationStatus.isCreator(this.user) || this.requiredActionUser(invitationStatus, this.user) !== undefined;
+    return this.requiredActionUser(invitationStatus, this.user) !== undefined;
   }
 
   private requiredActionUser(invitationStatus: GameInvitationStatus, user: User) {
@@ -55,11 +58,15 @@ export class UpcomingGamesTableComponent {
         invitationStatus.invitation.id,
         requiredActionUser,
         this.user
+      ).subscribe(
+        statuses => {
+          this.invitationStatuses = statuses;
+          // at the very end, tell the parent component, that the backend was updated
+          this.onBackendUpdateCompleted.emit();
+        }
       );
     } else {
       // if no action available for the current user, do nothing
     }
-
-
   }
 }

@@ -39,13 +39,17 @@ export class HomeComponent {
     this.authenticationService.currentUser$.subscribe(
       user => {
         this.user = user ?? UNDEFINED_USER;
-        this.syncGamesBackend();
-        this.syncInvitationsBackend();
+        this.fetchFreshData();
       }
     );
   }
 
-  private syncGamesBackend() {
+  fetchFreshData() {
+    this.fetchGamesBackend();
+    this.fetchInvitationsBackend();
+  }
+
+  private fetchGamesBackend() {
     this.gameService.getGames(this.user.id).subscribe(
       games => {
         this.finishedGames = games.filter(g => g.isFinished());
@@ -55,7 +59,7 @@ export class HomeComponent {
     );
   }
 
-  private syncInvitationsBackend() {
+  private fetchInvitationsBackend() {
     this.gameService.getUpcomingGames(this.user.id).subscribe(
       invitationStatuses => {
         this.invitationStatuses = invitationStatuses;
@@ -71,7 +75,7 @@ export class HomeComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.syncInvitationsBackend();
+      this.fetchInvitationsBackend();
       console.log('The dialog was closed. Invitations will be updated.');
       // Handle any actions after the dialog is closed
     });

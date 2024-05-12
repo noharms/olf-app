@@ -48,7 +48,7 @@ export class GameInvitationStatus {
     }
 
     private allResponded(): boolean {
-        return this.inviteesNotResponded().length === 0;
+        return this.inviteesWhoResponded().length === this._invitation.invitees.length;
     }
 
     requiredActions(): Map<User, InvitationAction> {
