@@ -2,25 +2,48 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MOCK_USERS } from 'src/mocks/mock-user-data';
 import { User } from 'src/model/user';
+import { UserService } from './user.service';
+import { Router } from '@angular/router';
+import { HOME_PATH } from './app-routing.module';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  private static readonly CURRENT_USER_KEY = 'currentUser';
+  private static readonly CURRENT_USER_ID = 'currentUserId';
   private static readonly AUTH_TOKEN_KEY = 'authToken';
 
   private currentUserSubject: BehaviorSubject<User | null>;
 
-  constructor() {
-    const storedUser: User | null = this.getCurrentUserFromLocalStorage();
-    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
+  constructor(
+    private userService: UserService,
+    private router: Router,
+  ) {
+    this.currentUserSubject = new BehaviorSubject<User | null>(null);
+    this.initializeUser();
   }
 
-  private getCurrentUserFromLocalStorage(): User | null {
-    const currentUserJson: string = localStorage.getItem(AuthenticationService.CURRENT_USER_KEY) ?? 'null';
-    return JSON.parse(currentUserJson);
+  private initializeUser(): void {
+    const userId: string = localStorage.getItem(AuthenticationService.CURRENT_USER_ID) ?? "";
+    const authToken: string = localStorage.getItem(AuthenticationService.AUTH_TOKEN_KEY) ?? "";
+    if (this.validateToken(authToken)) {
+      this.fetchUserById(parseInt(userId));
+    }
+  }
+
+  private fetchUserById(userId: number): void {
+    this.userService.getUserById(userId).subscribe({
+      next: (user) => {
+        this.currentUserSubject.next(user);
+      },
+      error: () => {
+        // handle errors, possibly token invalid or user not found
+        console.log("User could not be retrieved. Redirecting to login page.")
+        this.logout();
+        this.router.navigate([HOME_PATH]);
+      }
+    });
   }
 
   public get currentUser(): User | null {
@@ -39,22 +62,18 @@ export class AuthenticationService {
     if (!user) {
       console.warn(`Username <${username}> not found.`);
       this.logout();
-      return;
     } else {
-      // Store the token in local storage or in-memory storage for later use
+      // TODO: the user and token should come from the backend
       const token: string = this.generateTokenForUser(user);
       localStorage.setItem(AuthenticationService.AUTH_TOKEN_KEY, token);
-
-      // In a real scenario, you'd get the user object from your backend
-      // and possibly a token which you'd want to store as well
-      localStorage.setItem(AuthenticationService.CURRENT_USER_KEY, JSON.stringify(user));
+      localStorage.setItem(AuthenticationService.CURRENT_USER_ID, JSON.stringify(user.id));
       // the call to "next" will set a new value and then notify all observers
       this.currentUserSubject.next(user);
     }
   }
 
   logout(): void {
-    localStorage.removeItem(AuthenticationService.CURRENT_USER_KEY);
+    localStorage.removeItem(AuthenticationService.CURRENT_USER_ID);
     localStorage.removeItem(AuthenticationService.AUTH_TOKEN_KEY);
     // the call to "next" will set a new value and then notify all observers
     this.currentUserSubject.next(null);

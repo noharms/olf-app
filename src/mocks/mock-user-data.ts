@@ -3,9 +3,9 @@ import { User } from "src/model/user";
 
 
 export const MOCK_USERS: User[] = [
-    { id: 0, name: 'olf', email: 'system@olf.com', registrationDate: new Date() },
-    { id: 1, name: 'johndoe', email: 'john@example.com', registrationDate: new Date() },
-    { id: 2, name: 'janedoe', email: 'jane@example.com', registrationDate: new Date() },
+    new User(0, 'olf', 'system@olf.com', new Date()),
+    new User(1, 'johndoe', 'john@example.com', new Date()),
+    new User(2, 'janedoe', 'jane@example.com', new Date()),
     // Add more users as needed
 ];
 

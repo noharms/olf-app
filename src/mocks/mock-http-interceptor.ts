@@ -20,6 +20,9 @@ export class MockHttpInterceptor implements HttpInterceptor {
         } else if (request.url.endsWith('/users/1') && request.method === 'GET') {
             console.log(`Achtung: intercepting the following url ${request.url}.`);
             return of(new HttpResponse({ status: 200, body: MOCK_USERS[1] }));
+        } else if (request.url.endsWith('/users/2') && request.method === 'GET') {
+            console.log(`Achtung: intercepting the following url ${request.url}.`);
+            return of(new HttpResponse({ status: 200, body: MOCK_USERS[2] }));
         } else {
             console.log(`Achtung: we are in development and the following url ${request.url} is not intercepted.`);
             return nextHttpHandler.handle(request);

@@ -42,7 +42,9 @@ export class UpcomingGamesTableComponent {
   }
 
   canCurrentUserAct(invitationStatus: GameInvitationStatus): boolean {
-    return this.requiredActionUser(invitationStatus, this.user) !== undefined;
+    const requiredAction: InvitationAction | undefined = this.requiredActionUser(invitationStatus, this.user);
+    console.log("Action: " + requiredAction + ", User: " + this.user.name)
+    return requiredAction !== undefined;
   }
 
   private requiredActionUser(invitationStatus: GameInvitationStatus, user: User) {

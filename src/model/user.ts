@@ -1,22 +1,34 @@
 
+export class User {
 
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    registrationDate: Date
-    // Additional properties can be added here as needed, such as:
-    // username: string;
-    // password: string; // Note: Storing passwords on the client-side is generally unsafe.
-    // roles: string[]; // For role-based access control (RBAC).
-    // isActive: boolean; // To indicate if the user account is active.
-    // createdAt: Date; // To track when the account was created.
-    // updatedAt: Date; // To track when the account was last updated.
+    constructor(
+        private _id: number,
+        private _name: string,
+        private _email: string,
+        private _registrationDate: Date
+    ) { }
+
+    public get registrationDate(): Date {
+        return this._registrationDate;
+    }
+    public get email(): string {
+        return this._email;
+    }
+    public get id(): number {
+        return this._id;
+    }
+    public get name(): string {
+        return this._name;
+    }
+
+    toString(): string {
+        return this.name;
+    }
 }
 
-export const EMPTY_USER: User = {
-    id: -1,
-    name: "-",
-    email: "-",
-    registrationDate: new Date()
-}
+export const EMPTY_USER: User = new User(
+    -1,
+    "-",
+    "-",
+    new Date()
+);
