@@ -4,7 +4,7 @@
         <input type="text" placeholder="Enter username" matInput [matAutocomplete]="auto"
             formControlName={{FORM_FIELD_USERNAME}}>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelection($event)">
-            <mat-option *ngFor="let option of matchingUsernames | async" [value]="option">
+            <mat-option *ngFor="let option of autoCompleteOptions | async" [value]="option">
                 {{option}}
             </mat-option>
         </mat-autocomplete>

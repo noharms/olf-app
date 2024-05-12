@@ -27,7 +27,7 @@ export class NewGameModalComponent implements OnInit {
   form: FormGroup = new FormGroup({
     username: new FormControl('', Validators.required),
   });
-  matchingUsernames: Observable<string[]> = of([]);
+  autoCompleteOptions: Observable<string[]> = of([]);
   addedPlayersDataSource: MatTableDataSource<string> = new MatTableDataSource<string>([]);
 
   constructor(
@@ -48,18 +48,27 @@ export class NewGameModalComponent implements OnInit {
 
   private initializeAutoCompleteOptions(): void {
     const userNameControl: AbstractControl<any, any> = this.form.controls[this.FORM_FIELD_USERNAME];
-    this.matchingUsernames = userNameControl.valueChanges.pipe(
+    this.autoCompleteOptions = userNameControl.valueChanges.pipe(
       // This operator ensures that filteredOptions emits an initial value immediately upon subscription.
       // It helps populate autocomplete options even before the user starts typing.
       startWith(''),
-      // If there is a value (i.e., the user has typed something): find matching options, otherwise no options
-      map(userInput => userInput ? this.findMatchingUsernames(userInput) : this.knownUsers.map(u => u.name))
-    );
+      // If there is a value (i.e., the user has typed something): find matching options except current user
+      // if nothing is typed, show all users except current user
+      map(
+        userInput => {
+          const userNames: string[] = userInput ? this.findMatchingUsernames(userInput) : this.knownUsers.map(u => u.name);
+          return userNames.filter(userName => userName !== this.authService.currentUser?.name.toLowerCase())
+        }
+      )
+    )
   }
 
   private findMatchingUsernames(userInput: string): string[] {
     const input: string = userInput.toLowerCase();
-    return this.knownUsers.map(u => u.name).filter(userName => userName.toLowerCase().includes(input));
+    return this
+      .knownUsers
+      .map(u => u.name)
+      .filter(userName => userName.toLowerCase().includes(input));
   }
 
   onOptionSelection(event: MatAutocompleteSelectedEvent): void {
