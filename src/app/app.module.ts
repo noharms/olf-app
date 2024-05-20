@@ -24,6 +24,7 @@ import { UserTableComponent } from './home/user-table/user-table.component';
 import { UpcomingGamesTableComponent } from './home/upcoming-games-table/upcoming-games-table.component';
 import { FinishedGamesTableComponent } from './home/finished-games-table/finished-games-table.component';
 import { OpenGamesTableComponent } from './home/open-games-table/open-games-table.component';
+import { SignUpModalComponent } from './landing-page/sign-up-modal/sign-up-modal.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { OpenGamesTableComponent } from './home/open-games-table/open-games-tabl
     UserTableComponent,
     UpcomingGamesTableComponent,
     FinishedGamesTableComponent,
-    OpenGamesTableComponent
+    OpenGamesTableComponent,
+    SignUpModalComponent
   ],
   imports: [
     BrowserModule,

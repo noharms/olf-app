@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HOME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SignUpModalComponent } from './sign-up-modal/sign-up-modal.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -15,6 +17,7 @@ export class LandingPageComponent {
   constructor(
     private router: Router,
     private authService: AuthenticationService,
+    private signUpDialog: MatDialog
   ) { }
 
   onLogin(): void {
@@ -24,5 +27,13 @@ export class LandingPageComponent {
     } else {
       console.warn(`Error: login credentials for user (${this.username}) unknown. Login failed.`)
     }
+  }
+
+  onSignUp() {
+    this.signUpDialog.open(
+      SignUpModalComponent,
+      {
+        disableClose: true // Disables closing by clicking outside of the dialog
+      });
   }
 }

@@ -43,7 +43,8 @@ export class UpcomingGamesTableComponent {
 
   canCurrentUserAct(invitationStatus: GameInvitationStatus): boolean {
     const requiredAction: InvitationAction | undefined = this.requiredActionUser(invitationStatus, this.user);
-    console.log("Action: " + requiredAction + ", User: " + this.user.name)
+    // TODO: this is disabled because this method is continuosly called!!!
+    // console.log("Action: " + requiredAction + ", User: " + this.user.name)
     return requiredAction !== undefined;
   }
 

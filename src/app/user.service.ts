@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { NewUser } from 'src/model/new-user';
 import { User } from 'src/model/user';
 
 @Injectable({
@@ -8,33 +9,41 @@ import { User } from 'src/model/user';
 })
 export class UserService {
 
-  private baseUrl = 'https://yourapi.domain.com/users';
+  private usersBackendUrl: string = 'https://yourapi.domain.com/users';
 
   constructor(private http: HttpClient) { }
 
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.baseUrl);
+    return this.http.get<User[]>(this.usersBackendUrl);
   }
 
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/${id}`);
+    return this.http.get<User>(`${this.usersBackendUrl}/${id}`);
   }
 
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.baseUrl, user);
+  createUser(username: string, password: string): Observable<any> {
+    const newUser: NewUser = {
+      "username": username,
+      "password": password
+    };
+    console.log('Making POST request to:', this.usersBackendUrl);
+    return this.http.post<NewUser>(
+      this.usersBackendUrl,
+      newUser
+    );
   }
 
   updateUser(user: User): Observable<User> {
-    return this.http.put<User>(`${this.baseUrl}/${user.id}`, user);
+    return this.http.put<User>(`${this.usersBackendUrl}/${user.id}`, user);
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/${id}`);
+    return this.http.delete(`${this.usersBackendUrl}/${id}`);
   }
 
   authenticateUser(email: string, password: string): Observable<any> {
     // Assuming you have an endpoint for authentication that expects email and password
-    return this.http.post(`${this.baseUrl}/authenticate`, { email, password });
+    return this.http.post(`${this.usersBackendUrl}/authenticate`, { email, password });
   }
 
 }
