@@ -1,10 +1,16 @@
-<div>
+<div class="login-container">
     <h2>Login</h2>
     <form (ngSubmit)="onLogin()">
         <!-- TODO: allow only small letters and digits in username, no special characters -->
-        <input type="text" [(ngModel)]="username" name="username" placeholder="Username" required>
-        <input type="password" [(ngModel)]="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
+        <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" [(ngModel)]="username" name="username" required>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" [(ngModel)]="password" name="password" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Login</button>
     </form>
-    <button (click)="onSignUp()">Sign Up</button>
+    <button mat-button (click)="onSignUp()">Sign Up</button>
 </div>
