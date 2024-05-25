@@ -1,14 +1,15 @@
-<header class="header-section">
-    <h1>Olf App</h1>
+<mat-toolbar color="primary" class="header-section">
+    <span>Olf App</span>
+    <span class="spacer"></span>
     <nav class="toolbar">
-        <button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
+        <button mat-button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
     </nav>
-</header>
+</mat-toolbar>
 
 <main>
     <router-outlet></router-outlet>
 </main>
 
-<footer class="footer-section">
-    <p>&copy; 2023 Olf App. All rights reserved.</p>
-</footer>
+<mat-toolbar color="primary" class="footer-section">
+    <span>&copy; 2023 Olf App. All rights reserved.</span>
+</mat-toolbar>

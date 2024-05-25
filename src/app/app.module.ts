@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
 import { AppRoutingModule } from './app-routing.module';
@@ -53,6 +54,7 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
     MatInputModule,
     MatButtonModule,
     MatTableModule,
+    MatToolbarModule,
     MatAutocompleteModule,
     MatIconModule
   ],
