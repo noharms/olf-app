@@ -1,16 +1,34 @@
 <div class="login-container">
     <h2>Login</h2>
-    <form (ngSubmit)="onLogin()">
-        <!-- TODO: allow only small letters and digits in username, no special characters -->
-        <mat-form-field appearance="fill">
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()">
+        <!-- Username field with live validation -->
+        <mat-form-field appearance="fill"
+            [class.mat-form-field-invalid]="usernameInput.invalid && (usernameInput.dirty || usernameInput.touched)">
             <mat-label>Username</mat-label>
-            <input matInput type="text" [(ngModel)]="username" name="username" required>
+            <input matInput type="text" [(ngModel)]="username" name="username" #usernameInput="ngModel" required
+                pattern="^[a-z0-9]+$"
+                matTooltip="Username should contain only lowercase letters and digits, no special characters."
+                matTooltipPosition="left">
+            <mat-error
+                *ngIf="usernameInput.errors?.['required'] && (usernameInput.dirty || usernameInput.touched)">Username is
+                required.</mat-error>
+            <mat-error
+                *ngIf="usernameInput.errors?.['pattern'] && (usernameInput.dirty || usernameInput.touched)">Username
+                should contain only lowercase letters and digits, no special characters.</mat-error>
         </mat-form-field>
-        <mat-form-field appearance="fill">
+
+        <!-- Password field with live validation -->
+        <mat-form-field appearance="fill"
+            [class.mat-form-field-invalid]="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)">
             <mat-label>Password</mat-label>
-            <input matInput type="password" [(ngModel)]="password" name="password" required>
+            <input matInput type="password" [(ngModel)]="password" name="password" #passwordInput="ngModel" required
+                matTooltip="Password is required." matTooltipPosition="left">
+            <mat-error
+                *ngIf="passwordInput.errors?.['required'] && (passwordInput.dirty || passwordInput.touched)">Password is
+                required.</mat-error>
         </mat-form-field>
-        <button mat-raised-button color="primary" type="submit">Login</button>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
     </form>
     <button mat-button (click)="onSignUp()">Sign Up</button>
 </div>

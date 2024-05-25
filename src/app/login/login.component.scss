@@ -20,6 +20,21 @@
         margin-bottom: 16px;
     }
 
+    // The [class.mat-form-field-invalid] directive adds a red border to invalid fields when they are dirty or touched. The mat-error elements display error messages based on the control's validation state.
+    .mat-form-field-invalid {
+        .mat-form-field-wrapper {
+            .mat-form-field-flex {
+                .mat-form-field-underline {
+                    background-color: red;
+                }
+
+                .mat-form-field-ripple {
+                    background-color: red;
+                }
+            }
+        }
+    }
+
     button {
         margin-top: 10px;
     }
