@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HOME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
-import { MatDialog } from '@angular/material/dialog';
 import { SignUpModalComponent } from './sign-up-modal/sign-up-modal.component';
 
 @Component({
-  selector: 'app-landing-page',
-  templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class LandingPageComponent {
+export class LoginComponent {
   username: string = '';
   password: string = '';
 

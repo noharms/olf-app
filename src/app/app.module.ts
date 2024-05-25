@@ -17,14 +17,14 @@ import { CardCombinationComponent } from './current-game/card-combination/card-c
 import { CardComponent } from './current-game/card/card.component';
 import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
+import { FinishedGamesTableComponent } from './home/finished-games-table/finished-games-table.component';
 import { HomeComponent } from './home/home.component';
 import { NewGameModalComponent } from './home/new-game-modal/new-game-modal.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
-import { UserTableComponent } from './home/user-table/user-table.component';
-import { UpcomingGamesTableComponent } from './home/upcoming-games-table/upcoming-games-table.component';
-import { FinishedGamesTableComponent } from './home/finished-games-table/finished-games-table.component';
 import { OpenGamesTableComponent } from './home/open-games-table/open-games-table.component';
-import { SignUpModalComponent } from './landing-page/sign-up-modal/sign-up-modal.component';
+import { UpcomingGamesTableComponent } from './home/upcoming-games-table/upcoming-games-table.component';
+import { UserTableComponent } from './home/user-table/user-table.component';
+import { LoginComponent } from './login/login.component';
+import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,7 @@ import { SignUpModalComponent } from './landing-page/sign-up-modal/sign-up-modal
     GameOverModalComponent,
     HomeComponent,
     CardCombinationComponent,
-    LandingPageComponent,
+    LoginComponent,
     NewGameModalComponent,
     UserTableComponent,
     UpcomingGamesTableComponent,

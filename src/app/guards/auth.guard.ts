@@ -10,7 +10,7 @@ export const authGuard: CanActivateFn = (
     // TODO check that it is a valid and correct token
     return true;
   } else {
-    console.warn("No authentication token found. Redirecting to the landing page.");
+    console.warn("No authentication token found. Redirecting to the login page.");
     inject(Router).navigateByUrl(TOP_LEVEL_DOMAIN_NAME);
     return false;
   };
