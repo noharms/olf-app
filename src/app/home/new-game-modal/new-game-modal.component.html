@@ -1,21 +1,5 @@
 <h2>New Game</h2>
 
-<!-- "Username Input" form field -->
-<form [formGroup]="form" class="form-container">
-    <mat-form-field class="full-width-form-field">
-        <input type="text" placeholder="Type for suggestions" matInput [matAutocomplete]="auto"
-            formControlName="{{ FORM_FIELD_USERNAME }}">
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelection($event)">
-            <mat-option *ngFor="let option of autoCompleteOptions | async" [value]="option">
-                {{ option }}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-    <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()"
-        [disabled]="isAddPlayersDisabled">
-        <mat-icon>arrow_downward</mat-icon> Add Player
-    </button>
-</form>
 
 <!-- "Added Players" table -->
 <div class="table-container">
@@ -33,6 +17,24 @@
         <tr mat-row *matRowDef="let row; columns: ['players'];"></tr>
     </table>
 </div>
+
+<!-- "Username Input" form field -->
+<form [formGroup]="form" class="form-container">
+    <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()"
+        [disabled]="isAddPlayersDisabled">
+        <mat-icon>arrow_upward</mat-icon> Add Player
+    </button>
+    <mat-form-field class="full-width-form-field">
+        <input type="text" placeholder="Type for suggestions" matInput [matAutocomplete]="auto"
+            formControlName="{{ FORM_FIELD_USERNAME }}">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelection($event)">
+            <mat-option *ngFor="let option of autoCompleteOptions | async" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-autocomplete>
+    </mat-form-field>
+</form>
+
 
 <!-- Submit/Cancel buttons -->
 <div class="buttons-container">
