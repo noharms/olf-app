@@ -30,7 +30,7 @@ export class NewGameModalComponent implements OnInit {
   autoCompleteOptions: Observable<string[]> = of([]);
   addedPlayersDataSource: MatTableDataSource<string> = new MatTableDataSource<string>([]);
   isAddPlayersDisabled = true;
-
+  isSubmitDisabled = true;
 
   constructor(
     private dialogRef: MatDialogRef<NewGameModalComponent>,
@@ -99,6 +99,7 @@ export class NewGameModalComponent implements OnInit {
       // the following new array assignment is needed to trigger change detection and rerender the table
       this.addedPlayersDataSource.data = [...this.addedPlayersDataSource.data];
       this.form.controls[this.FORM_FIELD_USERNAME].reset();
+      this.isSubmitDisabled = false;
     }
   }
 

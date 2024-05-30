@@ -38,6 +38,6 @@
 
 <!-- Submit/Cancel buttons -->
 <div class="buttons-container">
-    <button mat-raised-button color="primary" (click)="submitGame()">Submit</button>
+    <button mat-raised-button color="primary" (click)="submitGame()" [disabled]="isSubmitDisabled">Submit</button>
     <button mat-raised-button #cancelButton (click)="cancel()">Cancel</button>
 </div>
