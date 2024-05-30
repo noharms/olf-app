@@ -11,7 +11,8 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
-    <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()">
+    <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()"
+        [disabled]="isAddPlayersDisabled">
         <mat-icon>arrow_downward</mat-icon> Add Player
     </button>
 </form>

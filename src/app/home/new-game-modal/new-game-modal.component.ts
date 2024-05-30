@@ -29,6 +29,7 @@ export class NewGameModalComponent implements OnInit {
   });
   autoCompleteOptions: Observable<string[]> = of([]);
   addedPlayersDataSource: MatTableDataSource<string> = new MatTableDataSource<string>([]);
+  isAddPlayersDisabled = true;
 
 
   constructor(
@@ -44,6 +45,10 @@ export class NewGameModalComponent implements OnInit {
         this.knownUsers = users;
         this.initializeAutoCompleteOptions();
         this.addedPlayersDataSource.data = [this.PLACEHOLDER_ROW];
+
+        this.form.get(this.FORM_FIELD_USERNAME)?.valueChanges.subscribe(value => {
+          this.isAddPlayersDisabled = !users.map(u => u.name).includes(value);
+        });
       }
     );
   }
