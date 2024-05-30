@@ -2,6 +2,9 @@
 @import '@angular/material/theming';
 @include mat-core();
 
+// extract color from theme
+$primary: mat-palette($mat-indigo);
+
 #holygrail {
     display: flex;
     flex-flow: column nowrap;
@@ -24,4 +27,15 @@ body {
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// to add border around mat modal dialog use
+// this class for the 'panelClass' option of
+// this.matDialog.open(...)
+.custom-modal-container {
+    mat-dialog-container {
+        padding: 0;
+        border: 6px solid mat-color($primary);
+        border-radius: 7px;
+    }
 }

@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Game } from 'src/model/game';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
-import { InvitationAction } from 'src/model/game-invitation/user-response';
 import { EMPTY_USER as UNDEFINED_USER, User } from 'src/model/user';
 import { EMPTY_USER_STATISTICS, IUserGameStatistics, UserGameStatistics } from 'src/model/user-game-statistics';
-import { CURRENT_GAME_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
@@ -69,8 +66,9 @@ export class HomeComponent {
 
   startNewGame() {
     const dialogRef = this.matDialog.open(NewGameModalComponent, {
-      minWidth: '300px', // Customize modal width here
-      minHeight: '400px', // Customize modal width here
+      minWidth: '300px',
+      minHeight: '400px',
+      panelClass: 'custom-modal-container'
       // Add more options here as needed
     });
 
