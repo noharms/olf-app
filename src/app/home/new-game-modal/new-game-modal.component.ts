@@ -4,12 +4,10 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { GameService } from 'src/app/game.service';
 import { UserService } from 'src/app/user.service';
-import { Game } from 'src/model/game';
-import { GameInvitation } from 'src/model/game-invitation/game-invitation';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 import { User } from 'src/model/user';
 import { getOrIfBlank } from 'src/utils/string-utils';
@@ -49,9 +47,11 @@ export class NewGameModalComponent implements OnInit {
   private initializeAutoCompleteOptions(): void {
     const userNameControl: AbstractControl<any, any> = this.form.controls[this.FORM_FIELD_USERNAME];
     this.autoCompleteOptions = userNameControl.valueChanges.pipe(
-      // This operator ensures that filteredOptions emits an initial value immediately upon subscription.
-      // It helps populate autocomplete options even before the user starts typing.
-      startWith(''),
+      // Note: The startWith operator ensures that filteredOptions emits an initial value immediately upon
+      // subscription. It populates autocomplete options even before the user starts typing
+      // --> in our case, however, we do not want to see the autocomplete options because they hide buttons
+      // startWith(''),
+
       // If there is a value (i.e., the user has typed something): find matching options except current user
       // if nothing is typed, show all users except current user
       map(
