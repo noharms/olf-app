@@ -150,18 +150,11 @@ export class NewGameModalComponent implements OnInit {
           .map(username => this.knownUsers.find(u => u.name === username))
           .filter(user => user !== undefined) as User[];
         const invitationStatus: GameInvitationStatus = this.gameService.createInvitation(creator, invitedPlayers);
-
+        this.dialogRef.close(invitationStatus);
       }
-
-      //   this.router.navigateByUrl(`${CURRENT_GAME_PATH}/${newGame.id}`);
-      // } 
     } else {
       alert(`Cannot create a new game if less than ${this.MINIMUM_PLAYERS_PER_GAME} are selected.`);
     }
-    // Logic to submit the game to your GameService API
-    // Close the dialog and redirect
-    this.dialogRef.close();
-    // Redirect logic here
   }
 
   cancel(): void {

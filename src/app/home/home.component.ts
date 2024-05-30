@@ -72,10 +72,12 @@ export class HomeComponent {
       // Add more options here as needed
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(newInvitationStatus => {
       this.fetchInvitationsBackend();
       console.log('The dialog was closed. Invitations will be updated.');
-      // Handle any actions after the dialog is closed
+      if (newInvitationStatus) {
+        console.log(`Home component received new invitation with id ${newInvitationStatus.invitation.id}`)
+      }
     });
   }
 
