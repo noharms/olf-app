@@ -4,13 +4,38 @@ h2 {
     margin-bottom: 20px;
 }
 
-.buttons-container {
+.form-container {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 20px;
 
-    button {
-        margin: 0 10px;
+    .full-width-form-field {
+        width: 100%;
+        margin: 0;
+
+        .mat-form-field-wrapper {
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .mat-form-field-flex {
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .mat-form-field-underline {
+            margin: 0;
+        }
+    }
+
+    .add-button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        /* Remove any default margin */
     }
 }
 
@@ -28,17 +53,12 @@ h2 {
     }
 }
 
-.form-container {
+.buttons-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    mat-form-field {
-        flex: 1;
-        margin-right: 10px;
-    }
+    justify-content: space-around;
+    margin-bottom: 20px;
 
     button {
-        flex-shrink: 0;
+        margin: 0 10px;
     }
 }

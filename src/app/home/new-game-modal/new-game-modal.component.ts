@@ -19,14 +19,17 @@ import { getOrIfBlank } from 'src/utils/string-utils';
 })
 export class NewGameModalComponent implements OnInit {
 
-  private knownUsers: User[] = [];
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
+  private readonly PLACEHOLDER_ROW: string = 'No players added yet';
   readonly FORM_FIELD_USERNAME: string = 'username'; // needs to match with the definition of the formGroup
+
+  private knownUsers: User[] = [];
   form: FormGroup = new FormGroup({
     username: new FormControl('', Validators.required),
   });
   autoCompleteOptions: Observable<string[]> = of([]);
   addedPlayersDataSource: MatTableDataSource<string> = new MatTableDataSource<string>([]);
+
 
   constructor(
     private dialogRef: MatDialogRef<NewGameModalComponent>,
@@ -40,6 +43,7 @@ export class NewGameModalComponent implements OnInit {
       users => {
         this.knownUsers = users;
         this.initializeAutoCompleteOptions();
+        this.addedPlayersDataSource.data = [this.PLACEHOLDER_ROW];
       }
     );
   }
@@ -79,6 +83,7 @@ export class NewGameModalComponent implements OnInit {
   }
 
   addPlayerByUsername(): void {
+    this.removePlaceHolderRow();
     const username: string = this.form.value.username;
     if (this.isAdded(username)) {
       console.log(getOrIfBlank(`Username ${username} is already added`, 'Username is empty.'));
@@ -89,6 +94,12 @@ export class NewGameModalComponent implements OnInit {
       // the following new array assignment is needed to trigger change detection and rerender the table
       this.addedPlayersDataSource.data = [...this.addedPlayersDataSource.data];
       this.form.controls[this.FORM_FIELD_USERNAME].reset();
+    }
+  }
+
+  private removePlaceHolderRow(): void {
+    if (this.addedPlayersDataSource.data.includes(this.PLACEHOLDER_ROW)) {
+      this.addedPlayersDataSource.data = [];
     }
   }
 
