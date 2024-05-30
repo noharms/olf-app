@@ -17,7 +17,8 @@ export class UserService {
     return this.http.get<User[]>(this.usersBackendUrl);
   }
 
-  getUserById(id: number): Observable<User> {
+  getUserById(id: number, authToken: string): Observable<User> {
+    // TODO: send authToken in header
     return this.http.get<User>(`${this.usersBackendUrl}/${id}`);
   }
 

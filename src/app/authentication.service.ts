@@ -28,12 +28,12 @@ export class AuthenticationService {
     const userId: string = localStorage.getItem(AuthenticationService.CURRENT_USER_ID) ?? "";
     const authToken: string = localStorage.getItem(AuthenticationService.AUTH_TOKEN_KEY) ?? "";
     if (this.validateToken(authToken)) {
-      this.fetchUserById(parseInt(userId));
+      this.fetchUserById(parseInt(userId), authToken);
     }
   }
 
-  private fetchUserById(userId: number): void {
-    this.userService.getUserById(userId).subscribe({
+  private fetchUserById(userId: number, authToken: string): void {
+    this.userService.getUserById(userId, authToken).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
       },
