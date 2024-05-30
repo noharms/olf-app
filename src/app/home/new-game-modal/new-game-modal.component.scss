@@ -10,6 +10,21 @@ h2 {
     align-items: center;
     margin-bottom: 20px;
 
+    .button-group {
+        display: flex;
+        width: 100%;
+        margin-bottom: 0px;
+        /* Add some space between buttons and input field */
+
+        .add-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+    }
+
     .full-width-form-field {
         width: 100%;
         margin: 0;
@@ -29,14 +44,6 @@ h2 {
         }
     }
 
-    .add-button {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        /* Remove any default margin */
-    }
 }
 
 .table-container {

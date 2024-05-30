@@ -87,6 +87,10 @@ export class NewGameModalComponent implements OnInit {
     }
   }
 
+  addComputer() {
+    console.log("Computer added");
+  }
+
   addPlayerByUsername(): void {
     this.removePlaceHolderRow();
     const username: string = this.form.value.username;

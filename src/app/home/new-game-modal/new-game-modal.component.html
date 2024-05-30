@@ -20,10 +20,15 @@
 
 <!-- "Username Input" form field -->
 <form [formGroup]="form" class="form-container">
-    <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()"
-        [disabled]="isAddPlayersDisabled">
-        <mat-icon>arrow_upward</mat-icon> Add Player
-    </button>
+    <div class="button-group">
+        <button mat-raised-button color="primary" class="add-button" (click)="addComputer()">
+            <mat-icon>arrow_upward</mat-icon> <mat-icon>laptop</mat-icon>
+        </button>
+        <button mat-raised-button color="primary" class="add-button" (click)="addPlayerByUsername()"
+            [disabled]="isAddPlayersDisabled">
+            <mat-icon>arrow_upward</mat-icon> <mat-icon>person</mat-icon>
+        </button>
+    </div>
     <mat-form-field class="full-width-form-field">
         <input type="text" placeholder="Type for suggestions" matInput [matAutocomplete]="auto"
             formControlName="{{ FORM_FIELD_USERNAME }}">
