@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { GameService } from 'src/app/game.service';
+import { GameInvitation } from 'src/model/game-invitation/game-invitation';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 import { InvitationAction } from 'src/model/game-invitation/user-response';
 import { EMPTY_USER, User } from 'src/model/user';
@@ -62,8 +63,8 @@ export class UpcomingGamesTableComponent {
         requiredActionUser,
         this.user
       ).subscribe(
-        statuses => {
-          this.invitationStatuses = statuses;
+        updatedStatuses => {
+          this.invitationStatuses = updatedStatuses;
           // at the very end, tell the parent component, that the backend was updated
           this.onBackendUpdateCompleted.emit();
         }
@@ -72,4 +73,16 @@ export class UpcomingGamesTableComponent {
       // if no action available for the current user, do nothing
     }
   }
+
+  isNewGame(gameInvitation: GameInvitation): boolean {
+    return this.isLessThanTenSecondsOld(gameInvitation.createdAt);
+  }
+
+  private isLessThanTenSecondsOld(date: Date): boolean {
+    const now = new Date();
+    const tenSecondsInMilliseconds: number = 10 * 1000;
+    const timeDifference: number = now.getTime() - date.getTime();
+    return timeDifference < tenSecondsInMilliseconds;
+  }
+
 }

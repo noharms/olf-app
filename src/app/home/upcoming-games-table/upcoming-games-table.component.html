@@ -6,7 +6,8 @@
         <th>Invited Players</th>
         <th>Required Action</th>
     </tr>
-    <tr *ngFor="let invitationStatus of invitationStatuses">
+    <tr *ngFor="let invitationStatus of invitationStatuses"
+        [ngClass]="{'pulsating-row-border': isNewGame(invitationStatus.invitation)}">
         <td>{{ invitationStatus.invitation.creator.name }}</td>
         <td>{{ invitationStatus.invitation.createdAt.toLocaleString() }}</td>
         <td>{{ invitationStatus.getPlayersString() }}</td>
