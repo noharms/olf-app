@@ -146,6 +146,8 @@ export class NewGameModalComponent implements OnInit {
       if (creator == null) {
         console.log('Unexpected behaviour: no user logged in. Cannot create a new game.');
       } else {
+        // TODO: later the backend should do the conversion of usernames to User objects
+        // so the request just sends a list of usernames or user ids
         const invitedPlayers: User[] = addedUsernames
           .map(username => this.knownUsers.find(u => u.name === username))
           .filter(user => user !== undefined) as User[];

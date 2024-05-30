@@ -23,8 +23,6 @@ export class HomeComponent {
   invitationStatuses: GameInvitationStatus[] = [];
   playersForNewGame: User[] = [];
 
-  private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
-
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
