@@ -20,7 +20,7 @@ import { getOrIfBlank } from 'src/utils/string-utils';
 export class NewGameModalComponent implements OnInit {
 
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
-  private readonly PLACEHOLDER_ROW: string = 'None';
+  readonly PLACEHOLDER_ROW: string = 'None';
   readonly FORM_FIELD_USERNAME: string = 'username'; // needs to match with the definition of the formGroup
 
   private knownUsers: User[] = [];
@@ -29,8 +29,9 @@ export class NewGameModalComponent implements OnInit {
   });
   autoCompleteOptions: Observable<string[]> = of([]);
   addedPlayersDataSource: MatTableDataSource<string> = new MatTableDataSource<string>([]);
-  isAddPlayersDisabled = true;
-  isSubmitDisabled = true;
+  isAddPlayersDisabled: boolean = true;
+  isSubmitDisabled: boolean = true;
+  tableColumnHeaders: string[] = ['COL_PLAYERS', 'COL_REMOVE']
 
   constructor(
     private dialogRef: MatDialogRef<NewGameModalComponent>,
@@ -87,8 +88,19 @@ export class NewGameModalComponent implements OnInit {
     }
   }
 
+  removePlayer(dataSourceElement: string, dataSourceIndex: number) {
+    console.log(`Remove ${dataSourceElement}`)
+    const updatedData: string[] = this.addedPlayersDataSource.data.slice();
+    updatedData.splice(dataSourceIndex, 1);
+    if (updatedData.length == 0) {
+      updatedData.push(this.PLACEHOLDER_ROW);
+      this.isSubmitDisabled = true;
+    }
+    this.addedPlayersDataSource.data = updatedData;
+  }
+
   addComputer() {
-    console.log("Computer added");
+    console.log("Add computer");
     this.addValidUserToPlayersTable('computer');
   }
 

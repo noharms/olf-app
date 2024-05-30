@@ -1,20 +1,31 @@
 <h2>New Game</h2>
 
-
 <!-- "Added Players" table -->
 <div class="table-container">
     <table mat-table [dataSource]="addedPlayersDataSource" class="mat-elevation-z8">
-        <!-- Column Definitions: only has one column, namely the added players -->
-        <ng-container matColumnDef="players">
+        <!-- Column Definitions-->
+        <!-- 1st column: the added players  -->
+        <ng-container matColumnDef='COL_PLAYERS'>
             <th mat-header-cell *matHeaderCellDef> Added Players </th>
-            <td mat-cell *matCellDef="let element">
-                {{ element }}
+            <td mat-cell *matCellDef="let dataSourceElement">
+                {{ dataSourceElement }}
+            </td>
+        </ng-container>
+
+        <!-- 2nd column: remove buttons -->
+        <ng-container matColumnDef='COL_REMOVE'>
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let dataSourceElement; let i = index">
+                <button *ngIf="dataSourceElement !== PLACEHOLDER_ROW" mat-icon-button
+                    (click)="removePlayer(dataSourceElement, i)">
+                    <mat-icon>close</mat-icon>
+                </button>
             </td>
         </ng-container>
 
         <!-- Header and Row Declarations -->
-        <tr mat-header-row *matHeaderRowDef="['players']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['players'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="tableColumnHeaders"></tr>
+        <tr mat-row *matRowDef="let row, columns: tableColumnHeaders;"></tr>
     </table>
 </div>
 

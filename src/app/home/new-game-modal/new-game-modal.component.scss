@@ -58,6 +58,18 @@ h2 {
         box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
         background-color: #f9f9f9;
     }
+
+    // for the action buttons in each row
+    .mat-icon-button {
+        height: 24px;
+        padding: 0;
+    }
+
+    .mat-icon {
+        font-size: 14px;
+        margin: 0;
+        line-height: 24px;
+    }
 }
 
 .buttons-container {
