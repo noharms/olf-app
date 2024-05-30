@@ -7,10 +7,10 @@ import { GameInvitation } from "src/model/game-invitation/game-invitation";
 import { GameInvitationStatus } from "src/model/game-invitation/game-invitation-status";
 import { CompletedAction, InvitationAction } from "src/model/game-invitation/user-response";
 import { User } from "src/model/user";
-import { COMPUTER_PLAYER, MOCK_USERS, PLAYER1 } from "./mock-user-data";
+import { MOCK_USERS, PLAYER1, PLAYER2 } from "./mock-user-data";
 
 export const MOCK_GAMES: Game[] = [
-    createGame(1, [PLAYER1, COMPUTER_PLAYER]),
+    createGame(1, [PLAYER1, PLAYER2]),
     createGame(2, [...MOCK_USERS]),
     createFinishedGame(3, [...MOCK_USERS]),
     // Add more mock games as needed

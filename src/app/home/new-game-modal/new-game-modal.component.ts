@@ -20,7 +20,7 @@ import { getOrIfBlank } from 'src/utils/string-utils';
 export class NewGameModalComponent implements OnInit {
 
   private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
-  private readonly PLACEHOLDER_ROW: string = 'No players added yet';
+  private readonly PLACEHOLDER_ROW: string = 'None';
   readonly FORM_FIELD_USERNAME: string = 'username'; // needs to match with the definition of the formGroup
 
   private knownUsers: User[] = [];
@@ -89,22 +89,27 @@ export class NewGameModalComponent implements OnInit {
 
   addComputer() {
     console.log("Computer added");
+    this.addValidUserToPlayersTable('computer');
   }
 
   addPlayerByUsername(): void {
-    this.removePlaceHolderRow();
     const username: string = this.form.value.username;
     if (this.isAdded(username)) {
       console.log(getOrIfBlank(`Username ${username} is already added`, 'Username is empty.'));
     } else if (!this.isUserKnown(username)) {
       console.log(getOrIfBlank(`Username ${username} does not exist`, 'Username is empty.'));
     } else {
-      this.addedPlayersDataSource.data.push(username);
-      // the following new array assignment is needed to trigger change detection and rerender the table
-      this.addedPlayersDataSource.data = [...this.addedPlayersDataSource.data];
+      this.addValidUserToPlayersTable(username);
       this.form.controls[this.FORM_FIELD_USERNAME].reset();
-      this.isSubmitDisabled = false;
     }
+  }
+
+  private addValidUserToPlayersTable(username: string) {
+    this.removePlaceHolderRow();
+    this.addedPlayersDataSource.data.push(username);
+    // the following new array assignment is needed to trigger change detection and rerender the table
+    this.addedPlayersDataSource.data = [...this.addedPlayersDataSource.data];
+    this.isSubmitDisabled = false;
   }
 
   private removePlaceHolderRow(): void {
