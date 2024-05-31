@@ -30,11 +30,11 @@ export class MockHttpInterceptor implements HttpInterceptor {
             );
             MOCK_USERS.push(newUser)
             return of(new HttpResponse({ status: 200, body: newUser }));
-        } else if (request.url.endsWith('/users/0') && request.method === 'GET') {
+        } else if (request.url.endsWith('/users/' + MOCK_USERS[0].id) && request.method === 'GET') {
             return of(new HttpResponse({ status: 200, body: MOCK_USERS[0] }));
-        } else if (request.url.endsWith('/users/1') && request.method === 'GET') {
+        } else if (request.url.endsWith('/users/' + MOCK_USERS[1].id) && request.method === 'GET') {
             return of(new HttpResponse({ status: 200, body: MOCK_USERS[1] }));
-        } else if (request.url.endsWith('/users/2') && request.method === 'GET') {
+        } else if (request.url.endsWith('/users/' + MOCK_USERS[2].id) && request.method === 'GET') {
             return of(new HttpResponse({ status: 200, body: MOCK_USERS[2] }));
         } else {
             console.log(`Achtung: we are in development and the following url ${request.url} is not intercepted.`);

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
+import { MOCK_USERS } from 'src/mocks/mock-user-data';
 
 @Component({
   selector: 'app-root',

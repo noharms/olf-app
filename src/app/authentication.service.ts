@@ -21,18 +21,30 @@ export class AuthenticationService {
     private router: Router,
   ) {
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
-    this.initializeUser();
+
+    //----- TODO: this is a hack to avoid login during development
+    localStorage.clear();
+    this.login(MOCK_USERS[1].name, "NOT CHECKING PASSWORD AT THE MOMENT");
+    //-----
+    const userIdWithToken: [string, string] = this.retrieveUserIdAndTokenFromStorage();
+    this.tryInitializeCurrentUserSubject(userIdWithToken);
   }
 
-  private initializeUser(): void {
+  private retrieveUserIdAndTokenFromStorage(): [string, string] {
     const userId: string = localStorage.getItem(AuthenticationService.CURRENT_USER_ID) ?? "";
     const authToken: string = localStorage.getItem(AuthenticationService.AUTH_TOKEN_KEY) ?? "";
+    return [userId, authToken];
+  }
+
+  private tryInitializeCurrentUserSubject(userIdWithToken: [string, string]) {
+    const userId: number = parseInt(userIdWithToken[0]);
+    const authToken: string = userIdWithToken[1];
     if (this.validateToken(authToken)) {
-      this.fetchUserById(parseInt(userId), authToken);
+      this.initializeCurrentUserSubject(userId, authToken);
     }
   }
 
-  private fetchUserById(userId: number, authToken: string): void {
+  private initializeCurrentUserSubject(userId: number, authToken: string): void {
     this.userService.getUserById(userId, authToken).subscribe({
       next: (user) => {
         this.currentUserSubject.next(user);
@@ -61,7 +73,7 @@ export class AuthenticationService {
     // TODO: check password
     // Placeholder for login logic, should be replaced with real authentication logic
     // For demonstration, we assume login is successful and create a dummy user
-    console.log(MOCK_USERS.map(u => u.name))
+    console.log("Known mock users in login: " + MOCK_USERS.map(u => u.name))
     const user: User | undefined = MOCK_USERS.find(user => user.name === username);
     if (!user) {
       console.warn(`Username <${username}> not found.`);
