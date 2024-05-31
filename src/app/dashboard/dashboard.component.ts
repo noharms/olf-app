@@ -12,11 +12,11 @@ import { UserService } from '../user.service';
 import { NewGameModalComponent } from './new-game-modal/new-game-modal.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class HomeComponent {
+export class DashboardComponent {
 
   user: User = UNDEFINED_USER;
   userGameStatistics: IUserGameStatistics = EMPTY_USER_STATISTICS;
@@ -95,7 +95,7 @@ export class HomeComponent {
       this.fetchInvitationsBackend();
       console.log('The dialog was closed. Invitations will be updated.');
       if (newInvitationStatus) {
-        console.log(`Home component received new invitation with id ${newInvitationStatus.invitation.id}`)
+        console.log(`Dashboard component received new invitation with id ${newInvitationStatus.invitation.id}`)
       }
     });
   }

@@ -8,7 +8,7 @@ import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
 import { Stage } from 'src/model/stage';
 import { Game } from '../../model/game';
-import { GAME_ID_URL_PARAMETER_NAME, HOME_PATH } from '../app-routing.module';
+import { GAME_ID_URL_PARAMETER_NAME, DASHBOARD_PATH } from '../app-routing.module';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
@@ -44,7 +44,7 @@ export class CurrentGameComponent implements OnInit {
     this.gameService.getGame(gameId).subscribe(
       game => {
         if (!game) {
-          console.log(`Game id ${gameId} not found. Going back to home.`)
+          console.log(`Game id ${gameId} not found. Going back to dashboard.`)
           this.router.navigateByUrl("/");
         } else {
           this.game = game;
@@ -202,7 +202,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private navigateToStats() {
-    this.router.navigateByUrl(HOME_PATH);
+    this.router.navigateByUrl(DASHBOARD_PATH);
   }
 
   discardPileView(): CardViewCombination[] {

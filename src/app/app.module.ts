@@ -21,12 +21,12 @@ import { CardCombinationComponent } from './current-game/card-combination/card-c
 import { CardComponent } from './current-game/card/card.component';
 import { CurrentGameComponent } from './current-game/current-game.component';
 import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
-import { FinishedGamesTableComponent } from './home/finished-games-table/finished-games-table.component';
-import { HomeComponent } from './home/home.component';
-import { NewGameModalComponent } from './home/new-game-modal/new-game-modal.component';
-import { OpenGamesTableComponent } from './home/open-games-table/open-games-table.component';
-import { UpcomingGamesTableComponent } from './home/upcoming-games-table/upcoming-games-table.component';
-import { UserTableComponent } from './home/user-table/user-table.component';
+import { FinishedGamesTableComponent } from './dashboard/finished-games-table/finished-games-table.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NewGameModalComponent } from './dashboard/new-game-modal/new-game-modal.component';
+import { OpenGamesTableComponent } from './dashboard/open-games-table/open-games-table.component';
+import { UpcomingGamesTableComponent } from './dashboard/upcoming-games-table/upcoming-games-table.component';
+import { UserTableComponent } from './dashboard/user-table/user-table.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.component';
 
@@ -36,7 +36,7 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
     CurrentGameComponent,
     CardComponent,
     GameOverModalComponent,
-    HomeComponent,
+    DashboardComponent,
     CardCombinationComponent,
     LoginComponent,
     NewGameModalComponent,

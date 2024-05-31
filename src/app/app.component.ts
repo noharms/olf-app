@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { CURRENT_GAME_PATH, HOME_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
+import { CURRENT_GAME_PATH, DASHBOARD_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
 
 @Component({
@@ -12,12 +12,12 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
 
   title: string = 'Olf App';
-  currentPath: string = HOME_PATH;
+  currentPath: string = DASHBOARD_PATH;
 
   readonly TAB_PATHS: string[] = [
-    HOME_PATH,
+    DASHBOARD_PATH,
     CURRENT_GAME_PATH + "/1",
-    HOME_PATH,
+    DASHBOARD_PATH,
     CURRENT_GAME_PATH + "/2",
   ];
 

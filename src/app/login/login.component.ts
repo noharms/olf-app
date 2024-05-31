@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { HOME_PATH } from '../app-routing.module';
+import { DASHBOARD_PATH } from '../app-routing.module';
 import { AuthenticationService } from '../authentication.service';
 import { SignUpModalComponent } from './sign-up-modal/sign-up-modal.component';
 import { User } from 'src/model/user';
@@ -28,20 +28,20 @@ export class LoginComponent {
   private redirectIfUserLoggedIn() {
     const currentUser: User | null = this.authService.currentUser;
     if (currentUser) {
-      this.redirectToHome(currentUser);
+      this.redirectToDashboard(currentUser);
     }
   }
 
-  private redirectToHome(currentUser: User) {
-    console.log(`Logged in user found: ${currentUser.name}. Redirecting from login to home`);
-    this.router.navigate([HOME_PATH]);
+  private redirectToDashboard(currentUser: User) {
+    console.log(`Logged in user found: ${currentUser.name}. Redirecting from login to dashboard`);
+    this.router.navigate([DASHBOARD_PATH]);
   }
 
   onLogin(): void {
     this.authService.login(this.username, this.password);
     const currentUser: User | null = this.authService.currentUser;
     if (currentUser) {
-      this.redirectToHome(currentUser);
+      this.redirectToDashboard(currentUser);
     } else {
       console.warn(`Error: login credentials for user (${this.username}) unknown. Login failed.`);
     }
