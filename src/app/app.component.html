@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="header-section">
-    <span>Olf App</span>
+    <span>{{title}}</span>
     <span class="spacer"></span>
     <nav class="toolbar">
         <button mat-button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
@@ -7,7 +7,20 @@
 </mat-toolbar>
 
 <main>
-    <router-outlet></router-outlet>
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Home">
+            <router-outlet *ngIf="currentPath === TAB_PATHS[0]"></router-outlet>
+        </mat-tab>
+        <mat-tab label="Personal">
+            <router-outlet *ngIf="currentPath === TAB_PATHS[1]"></router-outlet>
+        </mat-tab>
+        <mat-tab label="Arena">
+            <router-outlet *ngIf="currentPath === TAB_PATHS[2]"></router-outlet>
+        </mat-tab>
+        <mat-tab label="About">
+            <router-outlet *ngIf="currentPath === TAB_PATHS[3]"></router-outlet>
+        </mat-tab>
+    </mat-tab-group>
 </main>
 
 <mat-toolbar color="primary" class="footer-section">
