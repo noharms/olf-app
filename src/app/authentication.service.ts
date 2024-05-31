@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MOCK_USERS } from 'src/mocks/mock-user-data';
 import { User } from 'src/model/user';
+import { TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { UserService } from './user.service';
-import { Router } from '@angular/router';
-import { HOME_PATH } from './app-routing.module';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +41,7 @@ export class AuthenticationService {
         // handle errors, possibly token invalid or user not found
         console.log("User could not be retrieved. Redirecting to login page.")
         this.logout();
-        this.router.navigate([HOME_PATH]);
+        this.router.navigate([TOP_LEVEL_DOMAIN_NAME]);
       }
     });
   }
