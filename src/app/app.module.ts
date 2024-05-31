@@ -5,6 +5,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,6 +30,7 @@ import { UpcomingGamesTableComponent } from './dashboard/upcoming-games-table/up
 import { UserTableComponent } from './dashboard/user-table/user-table.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.component';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
     UpcomingGamesTableComponent,
     FinishedGamesTableComponent,
     OpenGamesTableComponent,
-    SignUpModalComponent
+    SignUpModalComponent,
+    HomeComponent
   ],
   imports: [
     AppRoutingModule,
@@ -55,6 +58,7 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatButtonModule,
+    MatCardModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
