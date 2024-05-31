@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="header-section">
     <span>{{title}}</span>
-    <div class="tabs">
+    <div class="tabs" *ngIf="isUserLoggedIn()">
         <button class="tab-button" [class.active]="currentPath === TAB_PATHS[0]"
             (click)="selectTab(TAB_PATHS[0])">Home</button>
         <button class="tab-button" [class.active]="currentPath === TAB_PATHS[1]"
