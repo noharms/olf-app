@@ -1,33 +1,17 @@
 .header-section {
-    // background-color: #f2f2f2;
     padding: 10px;
     margin-bottom: 10px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-main {
-    flex: 1;
-    border: 1px solid #34c4d7;
-    margin: 10px;
-}
-
-.footer-section {
-    // background-color: #f2f2f2;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    margin-top: 10px;
-    display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    position: relative;
 }
 
 .toolbar {
     display: flex;
     justify-content: flex-end;
+    position: absolute;
+    right: 0;
 }
 
 .spacer {
@@ -46,4 +30,48 @@ main {
 
 .toolbar button:hover {
     background-color: #0056b3;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #3f51b5;
+    color: white;
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 16px;
+    cursor: pointer;
+    color: white;
+    // transition: border-bottom 0.3s;
+}
+
+.tab-button.active {
+    border-bottom: 2px solid #007BFF;
+}
+
+.tab-content {
+    padding: 16px;
+}
+
+main {
+    flex: 1;
+    border: 1px solid #34c4d7;
+    margin: 10px;
+}
+
+.footer-section {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }

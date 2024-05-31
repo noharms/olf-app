@@ -1,5 +1,15 @@
 <mat-toolbar color="primary" class="header-section">
     <span>{{title}}</span>
+    <div class="tabs">
+        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[0]"
+            (click)="selectTab(TAB_PATHS[0])">Home</button>
+        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[1]"
+            (click)="selectTab(TAB_PATHS[1])">Personal</button>
+        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[2]"
+            (click)="selectTab(TAB_PATHS[2])">Arena</button>
+        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[3]"
+            (click)="selectTab(TAB_PATHS[3])">About</button>
+    </div>
     <span class="spacer"></span>
     <nav class="toolbar">
         <button mat-button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
@@ -7,20 +17,7 @@
 </mat-toolbar>
 
 <main>
-    <mat-tab-group (selectedTabChange)="onTabChange($event)">
-        <mat-tab label="Home">
-            <router-outlet *ngIf="currentPath === TAB_PATHS[0]"></router-outlet>
-        </mat-tab>
-        <mat-tab label="Personal">
-            <router-outlet *ngIf="currentPath === TAB_PATHS[1]"></router-outlet>
-        </mat-tab>
-        <mat-tab label="Arena">
-            <router-outlet *ngIf="currentPath === TAB_PATHS[2]"></router-outlet>
-        </mat-tab>
-        <mat-tab label="About">
-            <router-outlet *ngIf="currentPath === TAB_PATHS[3]"></router-outlet>
-        </mat-tab>
-    </mat-tab-group>
+    <router-outlet></router-outlet>
 </main>
 
 <mat-toolbar color="primary" class="footer-section">

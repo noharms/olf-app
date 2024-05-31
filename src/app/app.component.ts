@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { CURRENT_GAME_PATH, HOME_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
@@ -6,11 +6,13 @@ import { AuthenticationService } from './authentication.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
+
   title: string = 'Olf App';
-  currentPath: string = TOP_LEVEL_DOMAIN_NAME;
+  currentPath: string = HOME_PATH;
 
   readonly TAB_PATHS: string[] = [
     HOME_PATH,
@@ -33,9 +35,8 @@ export class AppComponent {
     return this.authService.currentUser !== null;
   }
 
-  onTabChange(event: any) {
-    console.log(`Switching to tab ${event.index}`);
-    this.currentPath = this.TAB_PATHS[event.index];
+  selectTab(newPath: string) {
+    this.currentPath = newPath;
     this.router.navigate([this.currentPath]);
   }
 }
