@@ -7,7 +7,7 @@
     <app-user-table [userGameStatistics]="userGameStatistics">
     </app-user-table>
 
-    <app-upcoming-games-table [invitationStatuses]="invitationStatuses"
+    <app-upcoming-games-table [invitationStatuses]="invitationStatuses" [isInvitationPulsating]="isInvitationPulsating"
       (onBackendUpdateCompleted)="fetchFreshData()"></app-upcoming-games-table>
 
     <app-finished-games-table [finishedGames]="finishedGames"></app-finished-games-table>

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { GameService } from 'src/app/game.service';
-import { GameInvitation } from 'src/model/game-invitation/game-invitation';
 import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
 import { InvitationAction } from 'src/model/game-invitation/user-response';
 import { EMPTY_USER, User } from 'src/model/user';
@@ -16,6 +15,9 @@ export class UpcomingGamesTableComponent {
   @Input()
   invitationStatuses: GameInvitationStatus[] = [];
 
+  @Input()
+  isInvitationPulsating: boolean[] = [];
+
   @Output()
   onBackendUpdateCompleted: EventEmitter<void> = new EventEmitter<void>();
 
@@ -27,11 +29,18 @@ export class UpcomingGamesTableComponent {
   ) { }
 
   ngOnInit() {
+    this.validateInputFields();
     this.authenticationService.currentUser$.subscribe(
       user => {
         this.user = user ?? EMPTY_USER;
       }
     );
+  }
+
+  private validateInputFields() {
+    if (this.invitationStatuses.length != this.isInvitationPulsating.length) {
+      console.warn(`Unexpected behaviour: ${this.invitationStatuses.length} != ${this.isInvitationPulsating.length} but there should be a pulsating flag for each input game.`);
+    }
   }
 
   requiredActions(invitationStatus: GameInvitationStatus): string {
@@ -72,17 +81,6 @@ export class UpcomingGamesTableComponent {
     } else {
       // if no action available for the current user, do nothing
     }
-  }
-
-  isNewGame(gameInvitation: GameInvitation): boolean {
-    return this.isLessThanTenSecondsOld(gameInvitation.createdAt);
-  }
-
-  private isLessThanTenSecondsOld(date: Date): boolean {
-    const now = new Date();
-    const tenSecondsInMilliseconds: number = 10 * 1000;
-    const timeDifference: number = now.getTime() - date.getTime();
-    return timeDifference < tenSecondsInMilliseconds;
   }
 
 }
