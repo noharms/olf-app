@@ -10,6 +10,8 @@ import { AuthenticationService } from '../authentication.service';
 import { GameService } from '../game.service';
 import { UserService } from '../user.service';
 import { NewGameModalComponent } from './new-game-modal/new-game-modal.component';
+import { TabService } from '../tab.service';
+import { Tab } from 'src/model/tabs';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,11 +32,14 @@ export class DashboardComponent {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private tabService: TabService,
     private userService: UserService,
     private gameService: GameService,
     public matDialog: MatDialog,
     private router: Router
-  ) { }
+  ) {
+    this.tabService.selectWithoutRedirect(Tab.PERSONAL);
+  }
 
   ngOnInit() {
     this.authenticationService.currentUser$.subscribe(

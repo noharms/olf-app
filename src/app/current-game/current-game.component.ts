@@ -7,10 +7,12 @@ import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
 import { Stage } from 'src/model/stage';
+import { Tab } from 'src/model/tabs';
 import { Game } from '../../model/game';
-import { GAME_ID_URL_PARAMETER_NAME, DASHBOARD_PATH } from '../app-routing.module';
+import { DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from '../app-routing.module';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
+import { TabService } from '../tab.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
@@ -24,6 +26,7 @@ export class CurrentGameComponent implements OnInit {
 
   userPlayerIndex: number = 0; // TODO currently we assume the user is the first player
   computerPlayerIndex: number = 1;
+  gameId: number | undefined;
   game: Game = Game.EMPTY_GAME;
   cardViews: CardView[][] = [];
   stage: Stage = Stage.empty([]);
@@ -33,22 +36,32 @@ export class CurrentGameComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private gameService: GameService
+    private gameService: GameService,
+    private tabService: TabService
   ) {
+    this.tabService.selectWithoutRedirect(Tab.ARENA);
   }
 
   ngOnInit(): void {
-    const substring: string | null = this.route.snapshot.paramMap.get(GAME_ID_URL_PARAMETER_NAME);
-    const gameId: number = Number(substring);
+    this.route.paramMap.subscribe(params => {
+      const substring: string | null = params.get(GAME_ID_URL_PARAMETER_NAME);
+      this.gameId = substring ? Number(substring) : undefined;
+      console.log("Path " + this.route.outlet + " was parsed to get gameId: " + this.gameId);
+      if (this.gameId) {
+        this.loadGame(this.gameId);
+      }
+    }
+    );
+  }
 
+  private loadGame(gameId: number): void {
     this.gameService.getGame(gameId).subscribe(
       game => {
         if (!game) {
-          console.log(`Game id ${gameId} not found. Going back to dashboard.`)
-          this.router.navigateByUrl("/");
+          console.log(`Game id ${gameId} not found on server.`);
         } else {
           this.game = game;
-          this.stage = Stage.empty(this.game.currentPlayerCards())
+          this.stage = Stage.empty(this.game.currentPlayerCards());
           this.isUsersTurn = this.userPlayerIndex === game.currentPlayerIndex();
           this.cardViews = this.createCardViews();
         }

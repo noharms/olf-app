@@ -1,4 +1,4 @@
-<div class="current-game">
+<div class="current-game" *ngIf="gameId">
     <div class="computer-cards">
         <div class="card-container" *ngFor="let cardView of cardViews[computerPlayerIndex]"
             (click)="toggleCardFaceUp(cardView)">
@@ -28,3 +28,5 @@
         </div>
     </div>
 </div>
+
+<div>The following games are available: TODO</div>

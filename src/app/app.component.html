@@ -1,14 +1,14 @@
 <mat-toolbar color="primary" class="header-section">
     <span>{{title}}</span>
     <div class="tabs">
-        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[0]"
-            (click)="selectTab(TAB_PATHS[0])">Home</button>
-        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[1]"
-            (click)="selectTab(TAB_PATHS[1])">Personal</button>
-        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[2]"
-            (click)="selectTab(TAB_PATHS[2])">Arena</button>
-        <button class="tab-button" [class.active]="currentPath === TAB_PATHS[3]"
-            (click)="selectTab(TAB_PATHS[3])">About</button>
+        <button class="tab-button" [class.active]="selectedTab === tabsEnum.HOME"
+            (click)="selectTab(tabsEnum.HOME)">Home</button>
+        <button class="tab-button" [class.active]="selectedTab === tabsEnum.PERSONAL"
+            (click)="selectTab(tabsEnum.PERSONAL)">Personal</button>
+        <button class="tab-button" [class.active]="selectedTab === tabsEnum.ARENA"
+            (click)="selectTab(tabsEnum.ARENA)">Arena</button>
+        <button class="tab-button" [class.active]="selectedTab === tabsEnum.ABOUT"
+            (click)="selectTab(tabsEnum.ABOUT)">About</button>
     </div>
     <span class="spacer"></span>
     <nav class="toolbar">

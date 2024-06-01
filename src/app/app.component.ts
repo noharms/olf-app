@@ -2,6 +2,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { CURRENT_GAME_PATH, DASHBOARD_PATH, HOME_PATH, LOGIN_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
+import { TabService } from './tab.service';
+import { Tab } from 'src/model/tabs';
 
 @Component({
   selector: 'app-root',
@@ -12,36 +14,36 @@ import { AuthenticationService } from './authentication.service';
 export class AppComponent {
 
   title: string = 'Olf App';
-  currentPath: string = HOME_PATH;
-
-  readonly TAB_PATHS: string[] = [
-    HOME_PATH,
-    DASHBOARD_PATH,
-    CURRENT_GAME_PATH + "/1",
-    CURRENT_GAME_PATH + "/2",
-  ];
+  tabsEnum: typeof Tab = Tab;
+  selectedTab: Tab = Tab.HOME;
 
   constructor(
     private authService: AuthenticationService,
+    private tabService: TabService,
     private router: Router
   ) { }
 
+  ngOnInit() {
+    this.tabService.tab$.subscribe(
+      newTab => this.selectedTab = newTab
+    );
+  }
+
   redirectToLogin() {
+    // note: this happens without changing the selected tab
     this.router.navigate([LOGIN_PATH]);
   }
 
   logout() {
     this.authService.logout();
-    this.currentPath = HOME_PATH;
-    this.router.navigate([HOME_PATH]);
+    this.tabService.selectTabAndRedirect(Tab.HOME);
   }
 
   isUserLoggedIn(): boolean {
     return this.authService.currentUser !== null;
   }
 
-  selectTab(newPath: string) {
-    this.currentPath = newPath;
-    this.router.navigate([this.currentPath]);
+  selectTab(tab: Tab) {
+    this.tabService.selectTabAndRedirect(tab)
   }
 }
