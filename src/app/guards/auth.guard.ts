@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthenticationService } from '../authentication.service';
-import { TOP_LEVEL_DOMAIN_NAME } from '../app-routing.module';
+import { LOGIN_PATH, TOP_LEVEL_DOMAIN_NAME } from '../app-routing.module';
 
 export const authGuard: CanActivateFn = (
   next: ActivatedRouteSnapshot,
@@ -11,7 +11,7 @@ export const authGuard: CanActivateFn = (
     return true;
   } else {
     console.warn("No authentication token found. Redirecting to the login page.");
-    inject(Router).navigateByUrl(TOP_LEVEL_DOMAIN_NAME);
+    inject(Router).navigateByUrl(LOGIN_PATH);
     return false;
   };
 };

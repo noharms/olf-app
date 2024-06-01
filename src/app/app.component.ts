@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { CURRENT_GAME_PATH, DASHBOARD_PATH, HOME_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
+import { CURRENT_GAME_PATH, DASHBOARD_PATH, HOME_PATH, LOGIN_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
 
 @Component({
@@ -26,9 +26,14 @@ export class AppComponent {
     private router: Router
   ) { }
 
+  redirectToLogin() {
+    this.router.navigate([LOGIN_PATH]);
+  }
+
   logout() {
     this.authService.logout();
-    this.router.navigate([TOP_LEVEL_DOMAIN_NAME]);
+    this.currentPath = HOME_PATH;
+    this.router.navigate([HOME_PATH]);
   }
 
   isUserLoggedIn(): boolean {
