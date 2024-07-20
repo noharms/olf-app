@@ -1,11 +1,27 @@
 <div class="current-game" *ngIf="gameId">
-    <div class="computer-cards">
-        <div class="card-container" *ngFor="let cardView of cardViews[computerPlayerIndex]"
-            (click)="toggleCardFaceUp(cardView)">
-            <app-card [cardView]="cardView"></app-card>
+
+    <!-- TOP SECTION -->
+    <div class="top-section">
+        <!-- Names of players after logged in player but before currently focused opponent -->
+        <div class="previous-players">
+            <span *ngFor="let player of playersBeforeFocusedOpponent">{{ player.playerName() }}</span>
+        </div>
+
+        <div class="focused-opponent-cards">
+            {{ this.game.players[focusedOpponentIndex] }}
+            <div class="card-container" *ngFor="let cardView of cardViews[focusedOpponentIndex]"
+                (click)="toggleCardFaceUp(cardView)">
+                <app-card [cardView]="cardView"></app-card>
+            </div>
+        </div>
+
+        <!-- Names of players before logged in player but after currently focused opponent -->
+        <div class="next-players">
+            <span *ngFor="let player of playersAfterFocusedOpponent">{{ player.playerName() }}</span>
         </div>
     </div>
 
+    <!-- OTHER SECTIONS -->
     <div class="discard-stack">
         <div class="card-container" *ngFor="let cardViewCombination of discardPileView()">
             <!-- SHOW ONLY LAST FROM DISCARD PILE? <app-card [styledCard]="discardPile[discardPile.length - 1]"></app-card> -->

@@ -14,6 +14,7 @@ import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { TabService } from '../tab.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
+import { Player } from 'src/model/player';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 
@@ -25,7 +26,9 @@ const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 export class CurrentGameComponent implements OnInit {
 
   userPlayerIndex: number = 0; // TODO currently we assume the user is the first player
-  computerPlayerIndex: number = 1;
+  focusedOpponentIndex: number = 1;
+  playersBeforeFocusedOpponent: Player[] = [];
+  playersAfterFocusedOpponent: Player[] = [];
   gameId: number | undefined;
   game: Game = Game.EMPTY_GAME;
   cardViews: CardView[][] = [];
@@ -64,6 +67,14 @@ export class CurrentGameComponent implements OnInit {
           this.stage = Stage.empty(this.game.currentPlayerCards());
           this.isUsersTurn = this.userPlayerIndex === game.currentPlayerIndex();
           this.cardViews = this.createCardViews();
+          const isFocusNextAfterUser: boolean = this.game.isXAfterY(this.focusedOpponentIndex, this.userPlayerIndex);
+          this.playersBeforeFocusedOpponent = isFocusNextAfterUser
+            ? []
+            : game.slicePlayers(this.userPlayerIndex + 1, this.focusedOpponentIndex - 1);
+          this.playersAfterFocusedOpponent = game.slicePlayers(
+            this.focusedOpponentIndex + 1,
+            this.userPlayerIndex === 0 ? game.playerCount() - 1 : this.userPlayerIndex - 1
+          );
         }
       }
     );

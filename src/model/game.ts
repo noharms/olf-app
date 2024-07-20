@@ -117,4 +117,31 @@ export class Game {
         return this.history.concat(new Move(this.currentPlayer(), currentPlayerMove));
     }
 
+    /**
+     * 
+     * @param fromIncl start at this index and copy all following players until (inclusive) toIndex
+     * @param toIncl note that toIndex can be smaller than fromIndex: in that case the
+     * returned players array will be [fromIndex, end] + [0, toIndex]
+     */
+    slicePlayers(fromIncl: number, toIncl: number): Player[] {
+        if (toIncl >= fromIncl) {
+            return this.players.slice(fromIncl, toIncl + 1);
+        } else {
+            const untilEnd: Player[] = this.players.slice(fromIncl, this.playerCount());
+            const from0: Player[] = this.players.slice(0, toIncl + 1);
+            return untilEnd.concat(from0);
+        }
+    }
+
+    isXAfterY(x: number, y: number) {
+        const nPlayers: number = this.playerCount();
+        if (x < 0 || y < 0) {
+            throw new Error('Negative player index not allowed.')
+        } else if (x >= nPlayers || y >= nPlayers) {
+            throw new Error(`Index larger than ${nPlayers} not allowed.`);
+        } else {
+            return y === nPlayers - 1 ? x === 0 : x === y + 1
+        }
+    }
+
 }
