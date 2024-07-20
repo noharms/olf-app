@@ -6,24 +6,33 @@ import { Move } from "./move";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
 import { User } from "./user";
+import { Player } from "./player";
 
 const COUNT_ONES_PER_PLAYER = 8;
 const RANKS_IN_GAME = [Rank.Two, Rank.Three, Rank.Four, Rank.Five]; //RANKS_2_TO_10;
 
-export function createGame(gameId: number, players: User[]): Game {
-    const playerCount = players.length;
-    let allCards: Card[] = createAllCardsForGame(playerCount);
+export function createGame(gameId: number, humans: User[], nComputer: number): Game {
+    const playerCount = humans.length + nComputer;
+    const allCards: Card[] = createAllCardsForGame(playerCount);
     shuffleCards(allCards);
-    let cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
+    const cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
+    const computerPlayers: Player[] = createComputerPlayers(nComputer);
+    const players: Player[] = (humans as Player[]).concat(computerPlayers)
     return new Game(gameId, players, cardsPerPlayer, [], 0, []);
+}
+
+export function createComputerPlayers(nComputers: number): Player[] {
+    return Array.from({ length: nComputers }, (_, i) => i + 1).map(i => ({ playerName: () => "Computer " + i }));
 }
 
 export function distributeCards(playerCount: number, allCards: Card[]) {
     const totalCardCount: number = allCards.length;
-    const initialHandSize = (totalCardCount - 2) / playerCount;
+    // TODO: this can mean that more than 2 cards are in the pot
+    const initialHandSize: number = Math.trunc((totalCardCount - 2) / playerCount);
     let cardsPerPlayer: Card[][] = [[]];
     for (let i = 0; i < playerCount; ++i) {
         cardsPerPlayer[i] = allCards.splice(0, initialHandSize);
+        console.log(`Player ${i} received ${cardsPerPlayer[i].length} cards.`);
         if (cardsPerPlayer[i].length < initialHandSize) {
             throw new Error(
                 `Not enough cards in game (only ${totalCardCount}) for ${playerCount} players.`
@@ -37,14 +46,14 @@ export function distributeCards(playerCount: number, allCards: Card[]) {
 
 export function createAllCardsForGame(playerCount: number): Card[] {
     let allCardsInGame: Card[] = [];
-    let cardId = 0;
+    let cardId: number = 0;
     const suits: Suit[] = Object.values(Suit);
     if (playerCount > suits.length) {
         throw new Error(
             `Not enough suits (only ${suits.length} but need ${playerCount} for ${playerCount} players).`
         );
     }
-    for (let i = 0; i < playerCount; ++i) {
+    for (let i = 0; i < suits.length; ++i) {
         const suit: Suit = suits[i];
         const allRanks: Card[] = createAllCardsForSuit(suit, cardId);
         allCardsInGame.push(...allRanks);
@@ -52,7 +61,6 @@ export function createAllCardsForGame(playerCount: number): Card[] {
     }
     const allOnes: Card[] = createAllOnes(cardId);
     allCardsInGame.push(...allOnes);
-    cardId += allOnes.length;
     return allCardsInGame;
 }
 
@@ -90,8 +98,8 @@ export function shuffleCards(cards: Card[]): void {
     }
 }
 
-export function createFinishedGame(gameId: number, players: User[]): Game {
-    let gameToPlay: Game = createGame(gameId, players);
+export function createFinishedGame(gameId: number, players: User[], nComputers: number): Game {
+    let gameToPlay: Game = createGame(gameId, players, nComputers);
     while (!gameToPlay.isFinished()) {
         const currentPlayerIndex: number = gameToPlay.currentPlayerIndex();
         const cardsInHand: Card[] = gameToPlay.cardsPerPlayer[currentPlayerIndex];

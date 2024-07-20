@@ -1,4 +1,5 @@
 import { Game } from "./game";
+import { User } from "./user";
 
 
 export interface IUserGameStatistics {
@@ -37,9 +38,10 @@ export class UserGameStatistics implements IUserGameStatistics {
     static from(games: Game[], userId: number): UserGameStatistics {
         const userGames: Game[] = games.filter(g => g.participatingUserIds().includes(userId));
         const finishedGames: Game[] = userGames.filter(g => g.isFinished());
+        const wonGames: Game[] = finishedGames.filter(g => (g.getWinner() instanceof User) && (g.getWinner() as User).id === userId);
         return new UserGameStatistics(
             finishedGames.length,
-            finishedGames.filter(g => g.getWinner()?.id === userId).length
+            wonGames.length
         )
     }
 }

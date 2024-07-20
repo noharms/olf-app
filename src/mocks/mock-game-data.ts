@@ -10,9 +10,10 @@ import { User } from "src/model/user";
 import { MOCK_USERS, PLAYER1, PLAYER2 } from "./mock-user-data";
 
 export const MOCK_GAMES: Game[] = [
-    createGame(1, [PLAYER1, PLAYER2]),
-    createGame(2, [...MOCK_USERS]),
-    createFinishedGame(3, [...MOCK_USERS]),
+    createGame(1, [PLAYER1, PLAYER2], 0),
+    createGame(2, [...MOCK_USERS], 0),
+    createGame(3, [...MOCK_USERS], 2),
+    createFinishedGame(4, [...MOCK_USERS], 0),
     // Add more mock games as needed
 ];
 
@@ -22,7 +23,8 @@ export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [
             id: 1,
             createdAt: new Date(),
             creator: MOCK_USERS[0],
-            invitees: MOCK_USERS.slice(1, 3)
+            invitees: MOCK_USERS.slice(1, 3),
+            nComputerPlayers: 0
         },
         []
     ),
@@ -31,7 +33,8 @@ export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [
             id: 2,
             createdAt: new Date(),
             creator: MOCK_USERS[0],
-            invitees: MOCK_USERS.slice(1, 3)
+            invitees: MOCK_USERS.slice(1, 3),
+            nComputerPlayers: 0
         },
         [
             {
@@ -48,16 +51,21 @@ export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [
     )
 ];
 
-export function createMockGame(players: User[]): Game {
-    return createGame(MOCK_GAMES.length, players);
+export function createMockGame(humanPlayers: User[], nComputers: number): Game {
+    const newGameId: number = MOCK_GAMES.length + 1;
+    if (MOCK_GAMES.map(g => g.id).find(id => id === newGameId)) {
+        throw new Error(`Programming bug: id ${newGameId} already exists!`);
+    }
+    return createGame(newGameId, humanPlayers, nComputers);
 }
 
-export function createMockInvitation(creator: User, invitees: User[]): GameInvitation {
+export function createMockInvitation(creator: User, invitees: User[], nComputers: number): GameInvitation {
     return {
         id: MOCK_INVITATION_STATUS.length + 1,
         createdAt: new Date(),
         creator: creator,
-        invitees: invitees
+        invitees: invitees,
+        nComputerPlayers: nComputers
     };
 }
 

@@ -1,5 +1,5 @@
-import { User } from "src/model/user";
+import { Player } from "src/model/player";
 
-export function concatUsers(users: User[]): string {
-    return users.map(u => u.name).join(", ")
+export function concatPlayerNames(players: Player[]): string {
+    return players.map(p => p.playerName()).join(", ")
 }

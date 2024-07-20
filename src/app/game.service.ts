@@ -27,16 +27,16 @@ export class GameService {
     return of(game);
   }
 
-  createGame(players: User[]): Game {
+  createGame(humanPlayers: User[], nComputers: number): Game {
     // TODO: replace by backend call
-    const newGame: Game = createMockGame(players);
+    const newGame: Game = createMockGame(humanPlayers, nComputers);
     MOCK_GAMES.push(newGame);
     return newGame;
   }
 
-  createInvitation(creator: User, invitees: User[]): GameInvitationStatus {
+  createInvitation(creator: User, invitees: User[], nComputers: number): GameInvitationStatus {
     // TODO: replace by backend call
-    const newInvitation: GameInvitation = createMockInvitation(creator, invitees);
+    const newInvitation: GameInvitation = createMockInvitation(creator, invitees, nComputers);
     const invitationStatus: GameInvitationStatus = new GameInvitationStatus(newInvitation, []);
     MOCK_INVITATION_STATUSES.push(invitationStatus);
     return invitationStatus;
@@ -48,7 +48,7 @@ export class GameService {
   }
 
   getUpcomingGames(userId: number): Observable<GameInvitationStatus[]> {
-    const upcomingGames: GameInvitationStatus[] = MOCK_INVITATION_STATUSES.filter(g => g.playerIds().includes(userId));
+    const upcomingGames: GameInvitationStatus[] = MOCK_INVITATION_STATUSES.filter(g => g.userIds().includes(userId));
     return of(upcomingGames);
   }
 
@@ -83,7 +83,7 @@ export class GameService {
               MOCK_INVITATION_STATUSES.findIndex(status => status === invitationStatus),
               1
             );
-            this.createGame(invitationStatus.getPlayers());
+            this.createGame(invitationStatus.getInvolvedUsers(), invitationStatus.invitation.nComputerPlayers);
           }
           subscriber.next(MOCK_INVITATION_STATUSES);
           subscriber.complete();

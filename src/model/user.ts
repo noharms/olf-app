@@ -1,5 +1,6 @@
+import { Player } from "./player";
 
-export class User {
+export class User implements Player {
 
     constructor(
         private _id: number,
@@ -19,6 +20,10 @@ export class User {
     }
     public get name(): string {
         return this._name;
+    }
+
+    playerName(): string {
+        return this.name;
     }
 
     toString(): string {

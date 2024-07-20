@@ -1,7 +1,9 @@
-import { concatUsers } from "src/utils/user-utils";
+import { concatPlayerNames } from "src/utils/user-utils";
 import { User } from "../user";
 import { GameInvitation } from "./game-invitation";
 import { InvitationAction, CompletedAction } from "./user-response";
+import { createComputerPlayers } from "../game-factory";
+import { Player } from "../player";
 
 export class GameInvitationStatus {
 
@@ -18,15 +20,20 @@ export class GameInvitationStatus {
         return user === this.invitation.creator;
     }
 
-    getPlayers(): User[] {
+    getInvolvedUsers(): User[] {
         return [this._invitation.creator, ...this._invitation.invitees];
     }
 
     getPlayersString(): string {
-        return concatUsers(this.getPlayers());
+        const humanPlayers: Player[] = this.getInvolvedUsers() as Player[];
+        return concatPlayerNames(humanPlayers.concat(this.getComputerPlayers()));
     }
 
-    playerIds(): number[] {
+    getComputerPlayers(): Player[] {
+        return createComputerPlayers(this._invitation.nComputerPlayers);
+    }
+
+    userIds(): number[] {
         return [this.invitation.creator.id, ...this.inviteesIds()]
     }
 

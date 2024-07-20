@@ -19,7 +19,8 @@ import { getOrIfBlank } from 'src/utils/string-utils';
 })
 export class NewGameModalComponent implements OnInit {
 
-  private readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
+  private static readonly COMPUTER_PLAYER_DUMMY_NAME = 'computer';
+  private static readonly MINIMUM_PLAYERS_PER_GAME: number = 2;
   readonly PLACEHOLDER_ROW: string = 'None';
   readonly FORM_FIELD_USERNAME: string = 'username'; // needs to match with the definition of the formGroup
 
@@ -32,6 +33,7 @@ export class NewGameModalComponent implements OnInit {
   isAddPlayersDisabled: boolean = true;
   isSubmitDisabled: boolean = true;
   tableColumnHeaders: string[] = ['COL_PLAYERS', 'COL_REMOVE']
+
 
   constructor(
     private dialogRef: MatDialogRef<NewGameModalComponent>,
@@ -101,7 +103,7 @@ export class NewGameModalComponent implements OnInit {
 
   addComputer() {
     console.log("Add computer");
-    this.addValidUserToPlayersTable('computer');
+    this.addRowPlayersTable(NewGameModalComponent.COMPUTER_PLAYER_DUMMY_NAME);
   }
 
   addPlayerByUsername(): void {
@@ -111,12 +113,12 @@ export class NewGameModalComponent implements OnInit {
     } else if (!this.isUserKnown(username)) {
       console.log(getOrIfBlank(`Username ${username} does not exist`, 'Username is empty.'));
     } else {
-      this.addValidUserToPlayersTable(username);
+      this.addRowPlayersTable(username);
       this.form.controls[this.FORM_FIELD_USERNAME].reset();
     }
   }
 
-  private addValidUserToPlayersTable(username: string) {
+  private addRowPlayersTable(username: string) {
     this.removePlaceHolderRow();
     this.addedPlayersDataSource.data.push(username);
     // the following new array assignment is needed to trigger change detection and rerender the table
@@ -141,7 +143,7 @@ export class NewGameModalComponent implements OnInit {
   submitGame(): void {
     const addedUsernames: string[] = this.addedPlayersDataSource.data;
     const playerCount: number = addedUsernames.length + 1; // +1 for game creator
-    if (playerCount >= this.MINIMUM_PLAYERS_PER_GAME) {
+    if (playerCount >= NewGameModalComponent.MINIMUM_PLAYERS_PER_GAME) {
       const creator: User | null = this.authService.currentUser;
       if (creator == null) {
         console.log('Unexpected behaviour: no user logged in. Cannot create a new game.');
@@ -151,11 +153,12 @@ export class NewGameModalComponent implements OnInit {
         const invitedPlayers: User[] = addedUsernames
           .map(username => this.knownUsers.find(u => u.name === username))
           .filter(user => user !== undefined) as User[];
-        const invitationStatus: GameInvitationStatus = this.gameService.createInvitation(creator, invitedPlayers);
+        const nComputers: number = addedUsernames.filter(u => u.includes(NewGameModalComponent.COMPUTER_PLAYER_DUMMY_NAME)).length;
+        const invitationStatus: GameInvitationStatus = this.gameService.createInvitation(creator, invitedPlayers, nComputers);
         this.dialogRef.close(invitationStatus);
       }
     } else {
-      alert(`Cannot create a new game if less than ${this.MINIMUM_PLAYERS_PER_GAME} are selected.`);
+      alert(`Cannot create a new game if less than ${NewGameModalComponent.MINIMUM_PLAYERS_PER_GAME} are selected.`);
     }
   }
 

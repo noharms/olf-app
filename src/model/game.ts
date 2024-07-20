@@ -1,8 +1,9 @@
-import { concatUsers } from "src/utils/user-utils";
+import { concatPlayerNames } from "src/utils/user-utils";
 import { Card } from "./card";
 import { CardCombination } from "./card-combination";
 import { Move } from "./move";
 import { User } from "./user";
+import { Player } from "./player";
 
 export class Game {
 
@@ -19,7 +20,7 @@ export class Game {
     // history of turns also
     constructor(
         private _id: number,
-        private _players: User[],
+        private _players: Player[], // both human and computer players contained
         private _cardsPerPlayer: Card[][],
         private _discardPile: CardCombination[],
         private _turnCount: number,
@@ -33,7 +34,7 @@ export class Game {
     public get id(): number {
         return this._id;
     }
-    public get players(): User[] {
+    public get players(): Player[] {
         return this._players;
     }
     public get cardsPerPlayer(): Card[][] {
@@ -59,7 +60,7 @@ export class Game {
         return this.turnCount % this.playerCount();
     }
 
-    currentPlayer(): User {
+    currentPlayer(): Player {
         return this.players[this.currentPlayerIndex()];
     }
 
@@ -74,14 +75,14 @@ export class Game {
     }
 
     participatingUserIds(): number[] {
-        return this.players.map(p => p.id);
+        return this.players.filter(p => p instanceof User).map(p => (p as User).id);
     }
 
     isFinished(): boolean {
         return this.cardsPerPlayer.map(cards => cards.length).includes(0);
     }
 
-    getWinner(): User | undefined {
+    getWinner(): Player | undefined {
         for (let i = 0; i < this.playerCount(); ++i) {
             if (this.cardsPerPlayer[i].length === 0) {
                 return this.players[i];
@@ -93,12 +94,12 @@ export class Game {
     getHistoryString(): string {
         return this
             .history
-            .map(move => move.player.name + " " + move.cardCombi.toUIString())
+            .map(move => move.player.playerName() + " " + move.cardCombi.toUIString())
             .join(", ");
     }
 
     getPlayersString(): string {
-        return concatUsers(this.players);
+        return concatPlayerNames(this.players);
     }
 
     getPlayerCardsAfterMove(playerIndex: number, move: CardCombination): Card[] {
