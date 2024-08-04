@@ -8,3 +8,7 @@ export function isBlank(text: string): boolean {
 export function getOrIfBlank(text: string, defaultIfBlank: string) {
     return isBlank(text) ? defaultIfBlank : text;
 }
+
+export function concatWords(words: string[]) {
+    return words.join(", ");
+}

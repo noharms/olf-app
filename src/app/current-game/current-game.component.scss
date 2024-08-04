@@ -51,13 +51,11 @@
         /* Take full width of the container */
     }
 
-    .previous-players,
-    .next-players {
-        display: flex;
-        flex-direction: row;
-        /* Align items in a row */
-        justify-content: center;
-        /* Center the items horizontally within each section */
+    .arrow-container {
+        cursor: pointer;
+        padding: 0 20px;
+        font-size: 2em;
     }
+
 
 }

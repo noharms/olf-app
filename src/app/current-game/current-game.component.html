@@ -2,22 +2,23 @@
 
     <!-- TOP SECTION -->
     <div class="top-section">
-        <!-- Names of players after logged in player but before currently focused opponent -->
-        <div class="previous-players">
-            <span *ngFor="let player of playersBeforeFocusedOpponent">{{ player.playerName() }}</span>
+        <!-- Left arrow with tooltip for previous players -->
+        <div class="arrow-container left-arrow" matTooltip="{{ getPreviousPlayersNames() }}"
+            (click)="onLeftArrowClick()">
+            <mat-icon>arrow_back_ios</mat-icon>
         </div>
 
         <div class="focused-opponent-cards">
-            {{ this.game.players[focusedOpponentIndex] }}
+            {{ game.players[focusedOpponentIndex].playerName() }}
             <div class="card-container" *ngFor="let cardView of cardViews[focusedOpponentIndex]"
                 (click)="toggleCardFaceUp(cardView)">
                 <app-card [cardView]="cardView"></app-card>
             </div>
         </div>
 
-        <!-- Names of players before logged in player but after currently focused opponent -->
-        <div class="next-players">
-            <span *ngFor="let player of playersAfterFocusedOpponent">{{ player.playerName() }}</span>
+        <!-- Right arrow with tooltip for next players -->
+        <div class="arrow-container right-arrow" matTooltip="{{ getNextPlayersNames() }}" (click)="onRightArrowClick()">
+            <mat-icon>arrow_forward_ios</mat-icon>
         </div>
     </div>
 
@@ -30,15 +31,16 @@
     </div>
 
     <div class="buttons">
-        <button class="btn btn-primary action-button" [disabled]="!isUsersTurn || !isStageValid()"
+        <button class="btn btn-primary action-button" [disabled]="!isLoggedInPlayerOnTurn || !isStageValid()"
             (click)="playStagedCards()">Play</button>
-        <button class="btn btn-primary action-button" [disabled]="!isUsersTurn" (click)="pass()">Pass</button>
-        <button class="btn btn-primary action-button" [disabled]="isUsersTurn"
+        <button class="btn btn-primary action-button" [disabled]="!isLoggedInPlayerOnTurn"
+            (click)="pass()">Pass</button>
+        <button class="btn btn-primary action-button" [disabled]="isLoggedInPlayerOnTurn"
             (click)="makeComputerTurn()">computer</button>
     </div>
 
     <div class="player-cards">
-        <div class="card-container" *ngFor="let cardView of cardViews[userPlayerIndex]"
+        <div class="card-container" *ngFor="let cardView of cardViews[loggedInPlayerIndex]"
             (click)="toggleStagedProperty(cardView)">
             <app-card [cardView]="cardView"></app-card>
         </div>

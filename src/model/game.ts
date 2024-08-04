@@ -43,6 +43,8 @@ export class Game {
     public get discardPile(): CardCombination[] {
         return this._discardPile;
     }
+
+    // at the beginning of a game the turn should be == 1
     public get turnCount(): number {
         return this._turnCount;
     }
@@ -54,18 +56,27 @@ export class Game {
         return this.players.length;
     }
 
-    // create GameImpl class for these methods
-    // and use GameImpl instead of anonymous instances
-    currentPlayerIndex(): number {
-        return this.turnCount % this.playerCount();
+    // returns -1 if not found
+    playerIndex(player: Player): number {
+        const result: number = this.players.findIndex(p => player.playerName() == p.playerName());
+        // TODO improve this by changing Player interface
+        if (result === -1) {
+            console.log(`Player with name ${player.playerName()} could not be found.`);
+        }
+        return result;
     }
 
-    currentPlayer(): Player {
-        return this.players[this.currentPlayerIndex()];
+    playerIndexOnTurn(): number {
+        // -1 because player index is 0-based, while turnCount 1-based
+        return (this.turnCount - 1) % this.playerCount();
     }
 
-    currentPlayerCards(): Card[] {
-        return this.cardsPerPlayer[this.currentPlayerIndex()];
+    playerOnTurn(): Player {
+        return this.players[this.playerIndexOnTurn()];
+    }
+
+    cardsOfPlayerOnTurn(): Card[] {
+        return this.cardsPerPlayer[this.playerIndexOnTurn()];
     }
 
     topOfDiscardPile(): CardCombination {
@@ -114,7 +125,7 @@ export class Game {
     }
 
     getUpdatedHistory(currentPlayerMove: CardCombination): Move[] {
-        return this.history.concat(new Move(this.currentPlayer(), currentPlayerMove));
+        return this.history.concat(new Move(this.playerOnTurn(), currentPlayerMove));
     }
 
     /**
@@ -130,17 +141,6 @@ export class Game {
             const untilEnd: Player[] = this.players.slice(fromIncl, this.playerCount());
             const from0: Player[] = this.players.slice(0, toIncl + 1);
             return untilEnd.concat(from0);
-        }
-    }
-
-    isXAfterY(x: number, y: number) {
-        const nPlayers: number = this.playerCount();
-        if (x < 0 || y < 0) {
-            throw new Error('Negative player index not allowed.')
-        } else if (x >= nPlayers || y >= nPlayers) {
-            throw new Error(`Index larger than ${nPlayers} not allowed.`);
-        } else {
-            return y === nPlayers - 1 ? x === 0 : x === y + 1
         }
     }
 

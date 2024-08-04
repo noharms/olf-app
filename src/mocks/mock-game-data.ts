@@ -71,13 +71,13 @@ export function createMockInvitation(creator: User, invitees: User[], nComputers
 
 export function updateBackendGame(gameId: number, cardsPlayed: CardCombination): Observable<Game> {
     const gameIndex: number = MOCK_GAMES.findIndex(game => game.id === gameId);
-    MOCK_GAMES[gameIndex] = updateGame(MOCK_GAMES[gameIndex], cardsPlayed);
+    MOCK_GAMES[gameIndex] = finishPlayerTurn(MOCK_GAMES[gameIndex], cardsPlayed);
     return of(MOCK_GAMES[gameIndex]);
 }
 
 // TODO once we have a backend, this should be done in the backend
-export function updateGame(game: Game, currentPlayerMove: CardCombination): Game {
-    const currentPlayerIndex: number = game.currentPlayerIndex();
+export function finishPlayerTurn(game: Game, currentPlayerMove: CardCombination): Game {
+    const currentPlayerIndex: number = game.playerIndexOnTurn();
     const updatedCards: Card[][] = game.cardsPerPlayer;
     updatedCards[currentPlayerIndex] = game.getPlayerCardsAfterMove(currentPlayerIndex, currentPlayerMove);
     return new Game(

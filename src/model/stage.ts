@@ -14,8 +14,8 @@ export class Stage {
         return this._stagedCards;
     }
 
-    static empty(cards: Card[]): Stage {
-        return new Stage(cards);
+    static empty(): Stage {
+        return new Stage([]);
     }
 
     clear() {

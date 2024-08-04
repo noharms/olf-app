@@ -6,15 +6,19 @@ import { CardCombination } from 'src/model/card-combination';
 import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
+import { Player } from 'src/model/player';
 import { Stage } from 'src/model/stage';
 import { Tab } from 'src/model/tabs';
+import { User } from 'src/model/user';
+import { decrementOrWrapAround, incrementOrWrapAround } from 'src/utils/array-utils';
+import { concatWords } from 'src/utils/string-utils';
 import { Game } from '../../model/game';
 import { DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from '../app-routing.module';
+import { AuthenticationService } from '../authentication.service';
 import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { TabService } from '../tab.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
-import { Player } from 'src/model/player';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 
@@ -25,21 +29,22 @@ const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 })
 export class CurrentGameComponent implements OnInit {
 
-  userPlayerIndex: number = 0; // TODO currently we assume the user is the first player
-  focusedOpponentIndex: number = 1;
+  loggedInPlayerIndex: number = -1;
+  focusedOpponentIndex: number = -1;
   playersBeforeFocusedOpponent: Player[] = [];
   playersAfterFocusedOpponent: Player[] = [];
   gameId: number | undefined;
   game: Game = Game.EMPTY_GAME;
   cardViews: CardView[][] = [];
-  stage: Stage = Stage.empty([]);
-  isUsersTurn: boolean = false;
+  stage: Stage = Stage.empty();
+  isLoggedInPlayerOnTurn: boolean = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private gameService: GameService,
+    private authService: AuthenticationService,
     private tabService: TabService
   ) {
     this.tabService.selectWithoutRedirect(Tab.ARENA);
@@ -50,34 +55,61 @@ export class CurrentGameComponent implements OnInit {
       const substring: string | null = params.get(GAME_ID_URL_PARAMETER_NAME);
       this.gameId = substring ? Number(substring) : undefined;
       console.log("Path " + this.route.outlet + " was parsed to get gameId: " + this.gameId);
+      console.log("... now loading the game");
       if (this.gameId) {
-        this.loadGame(this.gameId);
+        this.loadGameThenUpdateView(this.gameId);
       }
     }
     );
   }
 
-  private loadGame(gameId: number): void {
+  private loadGameThenUpdateView(gameId: number): void {
     this.gameService.getGame(gameId).subscribe(
       game => {
         if (!game) {
           console.log(`Game id ${gameId} not found on server.`);
         } else {
-          this.game = game;
-          this.stage = Stage.empty(this.game.currentPlayerCards());
-          this.isUsersTurn = this.userPlayerIndex === game.currentPlayerIndex();
-          this.cardViews = this.createCardViews();
-          const isFocusNextAfterUser: boolean = this.game.isXAfterY(this.focusedOpponentIndex, this.userPlayerIndex);
-          this.playersBeforeFocusedOpponent = isFocusNextAfterUser
-            ? []
-            : game.slicePlayers(this.userPlayerIndex + 1, this.focusedOpponentIndex - 1);
-          this.playersAfterFocusedOpponent = game.slicePlayers(
-            this.focusedOpponentIndex + 1,
-            this.userPlayerIndex === 0 ? game.playerCount() - 1 : this.userPlayerIndex - 1
-          );
+          this.updateViewFields(game);
         }
       }
     );
+  }
+
+  private updateViewFields(game: Game): void {
+    // Caveat: below computations rely on order! e.g. many of them use this.game
+    this.game = game;
+
+    const loggedInUser: User | null = this.authService.currentUser;
+    this.loggedInPlayerIndex = game.playerIndex(loggedInUser as Player);
+
+    this.stage = Stage.empty();
+    this.isLoggedInPlayerOnTurn = this.loggedInPlayerIndex === game.playerIndexOnTurn();
+    this.cardViews = this.createCardViews();
+    this.focusedOpponentIndex = this.focusedOpponentIndex !== -1
+      ? this.focusedOpponentIndex
+      : this.initializeFocussedOpponent();
+    if (this.loggedInPlayerIndex >= 0 && this.focusedOpponentIndex >= 0) {
+      this.updateViewFieldsFocusChanged();
+    } else {
+      console.log(
+        `Could not retrieve logged in players index ${this.loggedInPlayerIndex} or focused opponent index ${this.focusedOpponentIndex}`
+      );
+    }
+  }
+
+  private initializeFocussedOpponent(): number {
+    return this.isLoggedInPlayerOnTurn
+      ? incrementOrWrapAround(this.loggedInPlayerIndex, this.game.playerCount())
+      : this.game.playerIndexOnTurn();
+  }
+
+  private updateViewFieldsFocusChanged() {
+    this.playersBeforeFocusedOpponent = this.game.players
+      .slice(0, this.focusedOpponentIndex)
+      .filter(p => p.playerName() !== this.authService.currentUser?.playerName());
+    this.playersAfterFocusedOpponent = this.game.players
+      .slice(this.focusedOpponentIndex + 1, this.game.playerCount())
+      .filter(p => p.playerName() !== this.authService.currentUser?.playerName());
   }
 
   // this creates "CardView" objects from the current game and stage;
@@ -89,7 +121,7 @@ export class CurrentGameComponent implements OnInit {
       cardViews[i] = this.game.cardsPerPlayer[i].map(
         c => {
           const isAlreadyStaged: boolean = this.stage.contains(c);
-          const canBeStaged: boolean = (i === this.userPlayerIndex) && this.isUsersTurn && this.stage.canStage(c, this.game.topOfDiscardPile());
+          const canBeStaged: boolean = (i === this.loggedInPlayerIndex) && this.isLoggedInPlayerOnTurn && this.stage.canStage(c, this.game.topOfDiscardPile());
           return new CardView(c, true, isAlreadyStaged, canBeStaged);
         }
       );
@@ -131,7 +163,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   pass(): void {
-    this.isUsersTurn = false;
+    this.isLoggedInPlayerOnTurn = false;
     this
       .gameService
       .commitStagedCards(
@@ -148,7 +180,7 @@ export class CurrentGameComponent implements OnInit {
 
   playStagedCards() {
     this.logIfInvalidState();
-    this.isUsersTurn = false;
+    this.isLoggedInPlayerOnTurn = false;
     this.gameService.commitStagedCards(
       this.game.id,
       new CardCombination(this.stage.stagedCards)
@@ -170,7 +202,7 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private doAfterPlayersTurn() {
-    const playerCards: Card[] = this.game.cardsPerPlayer[this.userPlayerIndex];
+    const playerCards: Card[] = this.game.cardsPerPlayer[this.loggedInPlayerIndex];
     if (playerCards.length === 0) {
       this.openGameVictoryModal(true);
     }
@@ -180,7 +212,7 @@ export class CurrentGameComponent implements OnInit {
   // TODO: it is not enough to check top of discard pile!
   // TODO: because imagine in 3 player game first player played, 2nd one passed!
   makeComputerTurn(): void {
-    const playerIndex: number = this.game.currentPlayerIndex();
+    const playerIndex: number = this.game.playerIndexOnTurn();
     const moveComputer: CardCombination = this.pickCardsComputer(playerIndex);
     this.gameService.commitStagedCards(this.game.id, moveComputer).subscribe(
       game => {
@@ -189,7 +221,7 @@ export class CurrentGameComponent implements OnInit {
         if (cardsAfterMove.length === 0) {
           this.openGameVictoryModal(false);
         }
-        this.isUsersTurn = this.game.currentPlayerIndex() === this.userPlayerIndex;
+        this.isLoggedInPlayerOnTurn = this.game.playerIndexOnTurn() === this.loggedInPlayerIndex;
         this.cardViews = this.createCardViews();
       }
     );
@@ -243,6 +275,32 @@ export class CurrentGameComponent implements OnInit {
     const stagedCardCombi: CardCombination = new CardCombination(this.stage.stagedCards);
     const cardCombiToBeat: CardCombination = this.game.topOfDiscardPile();
     return !this.stage.isEmpty() && stagedCardCombi.canBeat(cardCombiToBeat);
+  }
+
+  getPreviousPlayersNames(): string {
+    const prevNames: string[] = this.playersBeforeFocusedOpponent.map(p => p.playerName());
+    return prevNames.length === 0 ? "No other players" : concatWords(prevNames);
+  }
+
+  getNextPlayersNames(): string {
+    const nextNames: string[] = this.playersAfterFocusedOpponent.map(p => p.playerName());
+    return nextNames.length === 0 ? "No other players" : concatWords(nextNames);
+  }
+
+  onLeftArrowClick(): void {
+    this.focusedOpponentIndex = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    if (this.focusedOpponentIndex === this.loggedInPlayerIndex) {
+      this.focusedOpponentIndex = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    }
+    this.updateViewFieldsFocusChanged();
+  }
+
+  onRightArrowClick(): void {
+    this.focusedOpponentIndex = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    if (this.focusedOpponentIndex === this.loggedInPlayerIndex) {
+      this.focusedOpponentIndex = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    }
+    this.updateViewFieldsFocusChanged();
   }
 
 }

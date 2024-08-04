@@ -18,7 +18,7 @@ export function createGame(gameId: number, humans: User[], nComputer: number): G
     const cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
     const computerPlayers: Player[] = createComputerPlayers(nComputer);
     const players: Player[] = (humans as Player[]).concat(computerPlayers)
-    return new Game(gameId, players, cardsPerPlayer, [], 0, []);
+    return new Game(gameId, players, cardsPerPlayer, [], 1, []);
 }
 
 export function createComputerPlayers(nComputers: number): Player[] {
@@ -101,7 +101,7 @@ export function shuffleCards(cards: Card[]): void {
 export function createFinishedGame(gameId: number, players: User[], nComputers: number): Game {
     let gameToPlay: Game = createGame(gameId, players, nComputers);
     while (!gameToPlay.isFinished()) {
-        const currentPlayerIndex: number = gameToPlay.currentPlayerIndex();
+        const currentPlayerIndex: number = gameToPlay.playerIndexOnTurn();
         const cardsInHand: Card[] = gameToPlay.cardsPerPlayer[currentPlayerIndex];
         const cardsToBeat: CardCombination = gameToPlay.topOfDiscardPile();
         const cardsToPlay: CardCombination = ComputerAiService.chooseCards(cardsInHand, cardsToBeat);

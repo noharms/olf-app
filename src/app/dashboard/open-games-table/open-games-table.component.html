@@ -8,6 +8,6 @@
     <tr *ngFor="let game of openGames" (click)="onRowClicked(game)" class="clickableTableRow">
         <td>{{ game.id }}</td>
         <td>{{ game.getPlayersString() }}</td>
-        <td>{{ game.players[game.currentPlayerIndex()].playerName() }}</td>
+        <td>{{ game.players[game.playerIndexOnTurn()].playerName() }}</td>
     </tr>
 </table>
