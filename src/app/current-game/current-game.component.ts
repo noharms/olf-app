@@ -31,8 +31,8 @@ export class CurrentGameComponent implements OnInit {
 
   loggedInPlayerIndex: number = -1;
   focusedOpponentIndex: number = -1;
-  playersBeforeFocusedOpponent: Player[] = [];
-  playersAfterFocusedOpponent: Player[] = [];
+  opponentLeftFromFocused: Player | undefined;
+  opponentRightFromFocused: Player | undefined;
   gameId: number | undefined;
   game: Game = Game.EMPTY_GAME;
   cardViews: CardView[][] = [];
@@ -104,12 +104,10 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private updateViewFieldsFocusChanged() {
-    this.playersBeforeFocusedOpponent = this.game.players
-      .slice(0, this.focusedOpponentIndex)
-      .filter(p => p.playerName() !== this.authService.currentUser?.playerName());
-    this.playersAfterFocusedOpponent = this.game.players
-      .slice(this.focusedOpponentIndex + 1, this.game.playerCount())
-      .filter(p => p.playerName() !== this.authService.currentUser?.playerName());
+    const indexNextLeft: number = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    this.opponentLeftFromFocused = this.game.players[indexNextLeft];
+    const indexNextRight: number = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
+    this.opponentRightFromFocused = this.game.players[indexNextRight];
   }
 
   // this creates "CardView" objects from the current game and stage;
@@ -277,14 +275,12 @@ export class CurrentGameComponent implements OnInit {
     return !this.stage.isEmpty() && stagedCardCombi.canBeat(cardCombiToBeat);
   }
 
-  getPreviousPlayersNames(): string {
-    const prevNames: string[] = this.playersBeforeFocusedOpponent.map(p => p.playerName());
-    return prevNames.length === 0 ? "No other players" : concatWords(prevNames);
+  opponentLeftFromFocus(): string {
+    return this.opponentLeftFromFocused?.playerName() ?? "no player found";
   }
 
-  getNextPlayersNames(): string {
-    const nextNames: string[] = this.playersAfterFocusedOpponent.map(p => p.playerName());
-    return nextNames.length === 0 ? "No other players" : concatWords(nextNames);
+  nextOpponentName(): string {
+    return this.opponentRightFromFocused?.playerName() ?? "no player found";
   }
 
   onLeftArrowClick(): void {

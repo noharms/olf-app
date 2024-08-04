@@ -3,8 +3,7 @@
     <!-- TOP SECTION -->
     <div class="top-section">
         <!-- Left arrow with tooltip for previous players -->
-        <div class="arrow-container left-arrow" matTooltip="{{ getPreviousPlayersNames() }}"
-            (click)="onLeftArrowClick()">
+        <div class="arrow-container left-arrow" matTooltip="{{ opponentLeftFromFocus() }}" (click)="onLeftArrowClick()">
             <mat-icon>arrow_back_ios</mat-icon>
         </div>
 
@@ -17,7 +16,7 @@
         </div>
 
         <!-- Right arrow with tooltip for next players -->
-        <div class="arrow-container right-arrow" matTooltip="{{ getNextPlayersNames() }}" (click)="onRightArrowClick()">
+        <div class="arrow-container right-arrow" matTooltip="{{ nextOpponentName() }}" (click)="onRightArrowClick()">
             <mat-icon>arrow_forward_ios</mat-icon>
         </div>
     </div>
