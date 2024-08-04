@@ -19,6 +19,7 @@ import { ComputerAiService } from '../computer-ai.service';
 import { GameService } from '../game.service';
 import { TabService } from '../tab.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
+import { Move } from 'src/model/move';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 
@@ -264,9 +265,9 @@ export class CurrentGameComponent implements OnInit {
     return toCardViewCombinations(this.game?.history.map(move => move.cardCombi) ?? [], true, false);
   }
 
-  moveHistory(): string {
+  moveHistory(): Move[] {
     // TODO: rather show history here to include also player name
-    return this.game?.getHistoryString() ?? "";
+    return this.game?.history ?? [];
   }
 
   isStageValid(): boolean {

@@ -15,7 +15,6 @@
         flex-grow: 1;
 
         margin: 10px;
-        /* Add margin for spacing */
         border: solid 1px #c12baa;
         width: 100%;
     }
@@ -57,5 +56,9 @@
         font-size: 2em;
     }
 
+    .move-container {
+        display: block;
+        padding: 5px;
+    }
 
 }

@@ -23,9 +23,9 @@
 
     <!-- OTHER SECTIONS -->
     <div class="discard-stack">
-        <div class="card-container" *ngFor="let cardViewCombination of discardPileView()">
+        <div class="move-container" *ngFor="let move of moveHistory()">
             <!-- SHOW ONLY LAST FROM DISCARD PILE? <app-card [styledCard]="discardPile[discardPile.length - 1]"></app-card> -->
-            <app-card-combination [cardViewCombination]="cardViewCombination"></app-card-combination>
+            <app-player-move [playerMove]="move"></app-player-move>
         </div>
     </div>
 

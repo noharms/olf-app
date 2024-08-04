@@ -1,0 +1,13 @@
+<div>
+    <div>{{ playerMove.player.playerName() }}</div>
+    <!-- show cards contained in the played combi -->
+    <div *ngFor="let cardView of playerMove.cardCombi.toView(true, false).cardViews">
+        <div class="front" *ngIf="cardView?.faceUp">
+            <span>{{ cardView.card.rank }}</span>
+            <span>{{ cardView.card.suit[0] }}</span>
+        </div>
+        <div class="back" *ngIf="!cardView?.faceUp">
+            Olf
+        </div>
+    </div>
+</div>

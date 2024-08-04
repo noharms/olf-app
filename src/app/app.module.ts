@@ -31,6 +31,7 @@ import { UserTableComponent } from './dashboard/user-table/user-table.component'
 import { LoginComponent } from './login/login.component';
 import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.component';
 import { HomeComponent } from './home/home.component';
+import { PlayerMoveComponent } from './current-game/player-move/player-move.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { HomeComponent } from './home/home.component';
     FinishedGamesTableComponent,
     OpenGamesTableComponent,
     SignUpModalComponent,
-    HomeComponent
+    HomeComponent,
+    PlayerMoveComponent
   ],
   imports: [
     AppRoutingModule,
