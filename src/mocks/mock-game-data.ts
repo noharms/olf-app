@@ -84,7 +84,6 @@ export function finishPlayerTurn(game: Game, currentPlayerMove: CardCombination)
         game.id,
         game.players,
         updatedCards,
-        game.getUpdatedDiscardPile(currentPlayerMove),
         game.turnCount + 1,
         game.getUpdatedHistory(currentPlayerMove)
     );

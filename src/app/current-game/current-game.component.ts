@@ -261,7 +261,7 @@ export class CurrentGameComponent implements OnInit {
 
   discardPileView(): CardViewCombination[] {
     // TODO: rather show history here to include also player name
-    return toCardViewCombinations(this.game?.discardPile ?? [], true, false);
+    return toCardViewCombinations(this.game?.history.map(move => move.cardCombi) ?? [], true, false);
   }
 
   moveHistory(): string {

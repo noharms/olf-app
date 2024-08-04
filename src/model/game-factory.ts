@@ -3,10 +3,10 @@ import { Card } from "./card";
 import { CardCombination } from "./card-combination";
 import { Game } from "./game";
 import { Move } from "./move";
+import { Player } from "./player";
 import { Rank } from "./rank";
 import { Suit } from "./suit";
 import { User } from "./user";
-import { Player } from "./player";
 
 const COUNT_ONES_PER_PLAYER = 8;
 const RANKS_IN_GAME = [Rank.Two, Rank.Three, Rank.Four, Rank.Five]; //RANKS_2_TO_10;
@@ -18,7 +18,7 @@ export function createGame(gameId: number, humans: User[], nComputer: number): G
     const cardsPerPlayer: Card[][] = distributeCards(playerCount, allCards);
     const computerPlayers: Player[] = createComputerPlayers(nComputer);
     const players: Player[] = (humans as Player[]).concat(computerPlayers)
-    return new Game(gameId, players, cardsPerPlayer, [], 1, []);
+    return new Game(gameId, players, cardsPerPlayer, 1, []);
 }
 
 export function createComputerPlayers(nComputers: number): Player[] {
@@ -107,13 +107,11 @@ export function createFinishedGame(gameId: number, players: User[], nComputers: 
         const cardsToPlay: CardCombination = ComputerAiService.chooseCards(cardsInHand, cardsToBeat);
         const updatedCards: Card[][] = gameToPlay.cardsPerPlayer;
         updatedCards[currentPlayerIndex] = gameToPlay.getPlayerCardsAfterMove(currentPlayerIndex, cardsToPlay);
-        const updatedDiscardPile: CardCombination[] = gameToPlay.getUpdatedDiscardPile(cardsToPlay);
         const updatedHistory: Move[] = gameToPlay.getUpdatedHistory(cardsToPlay);
         gameToPlay = new Game(
             gameToPlay.id,
             gameToPlay.players,
             updatedCards,
-            updatedDiscardPile,
             gameToPlay.turnCount + 1,
             updatedHistory
         );

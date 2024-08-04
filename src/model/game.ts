@@ -2,14 +2,13 @@ import { concatPlayerNames } from "src/utils/user-utils";
 import { Card } from "./card";
 import { CardCombination } from "./card-combination";
 import { Move } from "./move";
-import { User } from "./user";
 import { Player } from "./player";
+import { User } from "./user";
 
 export class Game {
 
     static readonly EMPTY_GAME: Game = new Game(
         -1,
-        [],
         [],
         [],
         0,
@@ -22,7 +21,6 @@ export class Game {
         private _id: number,
         private _players: Player[], // both human and computer players contained
         private _cardsPerPlayer: Card[][],
-        private _discardPile: CardCombination[],
         private _turnCount: number,
         private _history: Move[]
     ) {
@@ -40,8 +38,9 @@ export class Game {
     public get cardsPerPlayer(): Card[][] {
         return this._cardsPerPlayer;
     }
+
     public get discardPile(): CardCombination[] {
-        return this._discardPile;
+        return this.history.map(move => move.cardCombi);
     }
 
     // at the beginning of a game the turn should be == 1
