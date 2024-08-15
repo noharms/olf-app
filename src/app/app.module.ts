@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -33,50 +33,44 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
 import { HomeComponent } from './home/home.component';
 import { PlayerMoveComponent } from './current-game/player-move/player-move.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    CurrentGameComponent,
-    CardComponent,
-    GameOverModalComponent,
-    DashboardComponent,
-    CardCombinationComponent,
-    LoginComponent,
-    NewGameModalComponent,
-    UserTableComponent,
-    UpcomingGamesTableComponent,
-    FinishedGamesTableComponent,
-    OpenGamesTableComponent,
-    SignUpModalComponent,
-    HomeComponent,
-    PlayerMoveComponent
-  ],
-  imports: [
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatCardModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
-    MatTableModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: MockHttpInterceptor,
-      multi: true,
-    }
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        CurrentGameComponent,
+        CardComponent,
+        GameOverModalComponent,
+        DashboardComponent,
+        CardCombinationComponent,
+        LoginComponent,
+        NewGameModalComponent,
+        UserTableComponent,
+        UpcomingGamesTableComponent,
+        FinishedGamesTableComponent,
+        OpenGamesTableComponent,
+        SignUpModalComponent,
+        HomeComponent,
+        PlayerMoveComponent
+    ],
+    bootstrap: [AppComponent], imports: [AppRoutingModule,
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatCardModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatTableModule,
+        MatTabsModule,
+        MatToolbarModule,
+        MatTooltipModule], providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: MockHttpInterceptor,
+            multi: true,
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
