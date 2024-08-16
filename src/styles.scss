@@ -1,10 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
-@import '@angular/material/theming';
-@include mat-core();
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
-// extract color from theme
-$primary: mat-palette($mat-indigo);
-
+// Custom styles for your app
 #holygrail {
     display: flex;
     flex-flow: column nowrap;
@@ -35,7 +32,7 @@ body {
 .custom-modal-container {
     mat-dialog-container {
         padding: 0;
-        border: 2px solid mat-color($primary);
+        border: 2px solid #3f51b5; /* Use a color from the Indigo theme */
         border-radius: 7px;
     }
 }

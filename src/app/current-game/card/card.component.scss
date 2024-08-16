@@ -1,4 +1,4 @@
-.card {    
+.card {
     height: 90%; // this refers to the size of the parent element
     // min-height: 100px;
     // max-height: 350px;
@@ -20,8 +20,10 @@
     }
 
 
-    cursor: pointer;
-    /* Add cursor pointer to indicate clickable */
+    & {
+        cursor: pointer;
+        /* Add cursor pointer to indicate clickable */
+    }
 
     // &.highlight-playable {        
     //     outline: 2px solid rgb(217, 255, 0);
