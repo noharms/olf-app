@@ -105,10 +105,24 @@ export class CurrentGameComponent implements OnInit {
   }
 
   private updateViewFieldsFocusChanged() {
-    const indexNextLeft: number = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    this.opponentLeftFromFocused = this.game.players[indexNextLeft];
-    const indexNextRight: number = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    this.opponentRightFromFocused = this.game.players[indexNextRight];
+    this.opponentLeftFromFocused = this.game.players[this.indexNextOpponentLeft()];
+    this.opponentRightFromFocused = this.game.players[this.indexNextOpponentRight()];
+  }
+
+  private indexNextOpponentLeft(): number {
+    const nPlayers: number = this.game.playerCount();
+    const indexNextLeft: number = decrementOrWrapAround(this.focusedOpponentIndex, nPlayers);
+    return indexNextLeft === this.loggedInPlayerIndex
+      ? decrementOrWrapAround(indexNextLeft, nPlayers)
+      : indexNextLeft;
+  }
+
+  private indexNextOpponentRight(): number {
+    const nPlayers: number = this.game.playerCount();
+    const indexNextRight: number = incrementOrWrapAround(this.focusedOpponentIndex, nPlayers);
+    return indexNextRight === this.loggedInPlayerIndex
+      ? incrementOrWrapAround(indexNextRight, nPlayers)
+      : indexNextRight;
   }
 
   // this creates "CardView" objects from the current game and stage;
@@ -285,18 +299,12 @@ export class CurrentGameComponent implements OnInit {
   }
 
   onLeftArrowClick(): void {
-    this.focusedOpponentIndex = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    if (this.focusedOpponentIndex === this.loggedInPlayerIndex) {
-      this.focusedOpponentIndex = decrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    }
+    this.focusedOpponentIndex = this.indexNextOpponentLeft()
     this.updateViewFieldsFocusChanged();
   }
 
   onRightArrowClick(): void {
-    this.focusedOpponentIndex = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    if (this.focusedOpponentIndex === this.loggedInPlayerIndex) {
-      this.focusedOpponentIndex = incrementOrWrapAround(this.focusedOpponentIndex, this.game.playerCount());
-    }
+    this.focusedOpponentIndex = this.indexNextOpponentRight();
     this.updateViewFieldsFocusChanged();
   }
 
