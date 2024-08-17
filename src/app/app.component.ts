@@ -43,6 +43,10 @@ export class AppComponent {
     return this.authService.currentUser !== null;
   }
 
+  loggedInUsername(): string {
+    return this.authService.currentUser?.name ?? "error: no user logged in";
+  }
+
   selectTab(tab: Tab) {
     this.tabService.selectTabAndRedirect(tab)
   }

@@ -15,6 +15,9 @@
         <button mat-button *ngIf="!isUserLoggedIn()" (click)="redirectToLogin()">Login</button>
     </nav>
     <nav class="toolbar">
+        <button mat-button *ngIf="isUserLoggedIn()" (click)="selectTab(tabsEnum.PERSONAL)" class="username-button">
+            {{ loggedInUsername() }}
+        </button>
         <button mat-button *ngIf="isUserLoggedIn()" (click)="logout()">Logout</button>
     </nav>
 </mat-toolbar>
