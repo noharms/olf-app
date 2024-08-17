@@ -1,0 +1,55 @@
+<div class="about-section">
+    <h2>The Story Behind</h2>
+    <p>
+        Almost twenty years ago, 2007, the physics students Niclas Moldenhauer, Moritz Feyerabend, Enno Harms and
+        Hinnrich Thehinnie founded the "Olfrat" in a constitutional assembly in the Web 2.0 tower in Braunschweig.
+        Inspired by the unwavering happiness and optimism of one of their co-students, Olf, especially in situations of
+        intense stress or great danger, the main objective of the newly founded organization was to spread the
+        philosophy of life that Olf demonstrated without knowing. In essence, this philosophy fosters conscious
+        gratitude about the good aspects of life and a stoic view on the challenges and hurdles to be taken by everyone.
+        This is mostly achieved by a mindset of steady learning and training of both body and soul, with the ultimate
+        goal to become a more conscious and capable human being.
+    </p>
+</div>
+
+<div class="about-section">
+    <h2>Today's Business</h2>
+    <p>
+        After the initial period of a community that gathered for fun and games, a business was formed that
+        professionalizes the effort on improving the lives of normal citizens by researching intelligent digital
+        solutions for day-to-day problems. The core values of our team still orient today on the philosophy shaped by
+        Olf 20 years ago: fun, growth, and happiness.
+    </p>
+</div>
+
+<div class="team-section">
+    <h2>Meet Our Team</h2>
+    <div class="team-grid">
+        <div class="team-tile" *ngFor="let member of teamMembers">
+            <img [src]="member.image" alt="{{ member.name }}" class="team-image">
+            <h3>{{ member.name }}</h3>
+            <p class="position">{{ member.position }}</p>
+            <p class="bio">{{ member.bio }}</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="values-section">
+    <h2>Company Values and Mission Statement</h2>
+    <p><!-- Add the company values and mission statement here --></p>
+    <h3>Awards and Recognitions</h3>
+    <p><!-- Add awards and recognitions here --></p>
+</div>
+
+<div class="contact-section">
+    <h2>Contact Information and Social Media Links</h2>
+    <p>Email: contact at olf-app.com</p>
+    <p>Phone: +1 234 567 8901</p>
+    <p>
+        Follow us on:
+        <a href="https://twitter.com/olfapp" target="_blank">Twitter</a> |
+        <a href="https://facebook.com/olfapp" target="_blank">Facebook</a> |
+        <a href="https://linkedin.com/company/olfapp" target="_blank">LinkedIn</a>
+    </p>
+</div>

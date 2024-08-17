@@ -6,10 +6,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { AboutComponent } from './about/about.component';
 
 
 export const TOP_LEVEL_DOMAIN_NAME: string = 'olf';
 export const HOME_PATH: string = TOP_LEVEL_DOMAIN_NAME + "/home";
+export const ABOUT_PATH: string = TOP_LEVEL_DOMAIN_NAME + "/about";
 export const LOGIN_PATH: string = TOP_LEVEL_DOMAIN_NAME + "/login";
 export const DASHBOARD_PATH: string = TOP_LEVEL_DOMAIN_NAME + "/personal/dashboard";
 export const CURRENT_GAME_PATH: string = TOP_LEVEL_DOMAIN_NAME + "/arena";
@@ -20,12 +22,13 @@ export const tabToRoute: Map<Tab, string> = new Map<Tab, string>(
     [Tab.HOME, HOME_PATH],
     [Tab.PERSONAL, DASHBOARD_PATH],
     [Tab.ARENA, CURRENT_GAME_PATH],
-    [Tab.ABOUT, HOME_PATH], // TODO
+    [Tab.ABOUT, ABOUT_PATH],
   ]
 );
 
 const routes: Routes = [
   { path: HOME_PATH, component: HomeComponent },
+  { path: ABOUT_PATH, component: AboutComponent },
   { path: LOGIN_PATH, component: LoginComponent },
   { path: DASHBOARD_PATH, component: DashboardComponent, canActivate: [authGuard] },
   { path: `${CURRENT_GAME_PATH}/:${GAME_ID_URL_PARAMETER_NAME}`, component: CurrentGameComponent, canActivate: [authGuard] },
