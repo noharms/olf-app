@@ -73,4 +73,11 @@ export class GameInvitationStatus {
     addResponse(newResponse: CompletedAction) {
         this.completedUserActions.push(newResponse);
     }
+
+}
+
+export function userToActionString(invitationStatus: GameInvitationStatus): string {
+    return Array.from(invitationStatus.requiredActions().entries()).map(
+        ([user, action]) => `${user.name}: ${action.toString()}`
+    ).join(', ');
 }

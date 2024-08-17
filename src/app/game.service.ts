@@ -73,7 +73,7 @@ export class GameService {
         if (invitationStatus) {
           invitationStatus.addResponse(
             {
-              registeredAt: new Date(),
+              recordedAt: new Date(),
               user: actingUser,
               action: action
             }

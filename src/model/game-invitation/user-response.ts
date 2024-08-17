@@ -9,7 +9,7 @@ export enum InvitationAction {
 }
 
 export interface CompletedAction {
-    registeredAt: Date,
+    recordedAt: Date,
     user: User,
     action: InvitationAction,
 }

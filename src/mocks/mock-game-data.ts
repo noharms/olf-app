@@ -38,12 +38,12 @@ export const MOCK_INVITATION_STATUS: GameInvitationStatus[] = [
         },
         [
             {
-                registeredAt: new Date(),
+                recordedAt: new Date(),
                 user: MOCK_USERS[1],
                 action: InvitationAction.ACCEPT
             },
             {
-                registeredAt: new Date(),
+                recordedAt: new Date(),
                 user: MOCK_USERS[2],
                 action: InvitationAction.ACCEPT
             }

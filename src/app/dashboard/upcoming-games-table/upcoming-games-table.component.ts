@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { GameService } from 'src/app/game.service';
-import { GameInvitationStatus } from 'src/model/game-invitation/game-invitation-status';
+import { GameInvitationStatus, userToActionString } from 'src/model/game-invitation/game-invitation-status';
 import { InvitationAction } from 'src/model/game-invitation/user-response';
 import { EMPTY_USER, User } from 'src/model/user';
 
@@ -44,11 +44,10 @@ export class UpcomingGamesTableComponent {
   }
 
   requiredActions(invitationStatus: GameInvitationStatus): string {
-    return this.canCurrentUserAct(invitationStatus)
+    const canUserAct: boolean = this.canCurrentUserAct(invitationStatus);
+    return canUserAct
       ? `${this.user.name}: ${this.requiredActionUser(invitationStatus, this.user)?.toString()}`
-      : Array.from(invitationStatus.requiredActions().entries()).map(
-        ([user, action]) => `${user.name}: ${action.toString()}`
-      ).join(', ');
+      : userToActionString(invitationStatus);
   }
 
   canCurrentUserAct(invitationStatus: GameInvitationStatus): boolean {
@@ -84,3 +83,4 @@ export class UpcomingGamesTableComponent {
   }
 
 }
+
