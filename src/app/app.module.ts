@@ -33,6 +33,7 @@ import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.compon
 import { HomeComponent } from './home/home.component';
 import { PlayerMoveComponent } from './current-game/player-move/player-move.component';
 import { AboutComponent } from './about/about.component';
+import { ArenaComponent } from './arena/arena.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -50,6 +51,7 @@ import { AboutComponent } from './about/about.component';
         SignUpModalComponent,
         HomeComponent,
         AboutComponent,
+        ArenaComponent,
         PlayerMoveComponent
     ],
     bootstrap: [AppComponent], imports: [AppRoutingModule,

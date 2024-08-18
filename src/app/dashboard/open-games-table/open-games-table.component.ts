@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { CURRENT_GAME_PATH } from 'src/app/app-routing.module';
+import { ARENA_PATH } from 'src/app/app-routing.module';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { Game } from 'src/model/game';
 import { EMPTY_USER, User } from 'src/model/user';
@@ -31,7 +31,7 @@ export class OpenGamesTableComponent {
   }
 
   onRowClicked(game: Game) {
-    const path: string = `${CURRENT_GAME_PATH}/${game.id}`;
+    const path: string = `${ARENA_PATH}/${game.id}`;
     this.router.navigateByUrl(path);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { CURRENT_GAME_PATH, DASHBOARD_PATH, HOME_PATH, LOGIN_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
+import { ARENA_PATH, DASHBOARD_PATH, HOME_PATH, LOGIN_PATH, TOP_LEVEL_DOMAIN_NAME } from './app-routing.module';
 import { AuthenticationService } from './authentication.service';
 import { TabService } from './tab.service';
 import { Tab } from 'src/model/tabs';
