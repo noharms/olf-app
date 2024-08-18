@@ -16,24 +16,24 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockHttpInterceptor } from 'src/mocks/mock-http-interceptor';
+import { AboutComponent } from './about/about.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CardCombinationComponent } from './current-game/card-combination/card-combination.component';
-import { CardComponent } from './current-game/card/card.component';
-import { CurrentGameComponent } from './current-game/current-game.component';
-import { GameOverModalComponent } from './current-game/game-over-modal/game-over-modal.component';
-import { FinishedGamesTableComponent } from './dashboard/finished-games-table/finished-games-table.component';
+import { ArenaComponent } from './arena/arena.component';
+import { CardCombinationComponent } from './arena/current-game/card-combination/card-combination.component';
+import { CardComponent } from './arena/current-game/card/card.component';
+import { CurrentGameComponent } from './arena/current-game/current-game.component';
+import { GameOverModalComponent } from './arena/current-game/game-over-modal/game-over-modal.component';
+import { PlayerMoveComponent } from './arena/current-game/player-move/player-move.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { FinishedGamesTableComponent } from './dashboard/finished-games-table/finished-games-table.component';
 import { NewGameModalComponent } from './dashboard/new-game-modal/new-game-modal.component';
 import { OpenGamesTableComponent } from './dashboard/open-games-table/open-games-table.component';
 import { UpcomingGamesTableComponent } from './dashboard/upcoming-games-table/upcoming-games-table.component';
 import { UserTableComponent } from './dashboard/user-table/user-table.component';
+import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignUpModalComponent } from './login/sign-up-modal/sign-up-modal.component';
-import { HomeComponent } from './home/home.component';
-import { PlayerMoveComponent } from './current-game/player-move/player-move.component';
-import { AboutComponent } from './about/about.component';
-import { ArenaComponent } from './arena/arena.component';
 
 @NgModule({ declarations: [
         AppComponent,

@@ -1,25 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from 'src/app/app-routing.module';
+import { AuthenticationService } from 'src/app/authentication.service';
+import { ComputerAiService } from 'src/app/computer-ai.service';
+import { GameService } from 'src/app/game.service';
+import { TabService } from 'src/app/tab.service';
 import { Card } from 'src/model/card';
 import { CardCombination } from 'src/model/card-combination';
 import { CardViewCombination } from 'src/model/card-combination-view';
 import { CardView } from 'src/model/card-view';
+import { Game } from 'src/model/game';
 import { toCardViewCombinations } from 'src/model/model-view-conversions';
+import { Move } from 'src/model/move';
 import { Player } from 'src/model/player';
 import { Stage } from 'src/model/stage';
 import { Tab } from 'src/model/tabs';
 import { User } from 'src/model/user';
 import { decrementOrWrapAround, incrementOrWrapAround } from 'src/utils/array-utils';
-import { concatWords } from 'src/utils/string-utils';
-import { Game } from '../../model/game';
-import { DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from '../app-routing.module';
-import { AuthenticationService } from '../authentication.service';
-import { ComputerAiService } from '../computer-ai.service';
-import { GameService } from '../game.service';
-import { TabService } from '../tab.service';
 import { GameOverModalComponent, NEW_GAME_KEY, REDIRECT_TO_STATS_KEY } from './game-over-modal/game-over-modal.component';
-import { Move } from 'src/model/move';
 
 const COMPUTER_TURN_TIME_IN_MILLISECONDS = 500;
 

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Tab } from 'src/model/tabs';
-import { CurrentGameComponent } from './current-game/current-game.component';
+import { AboutComponent } from './about/about.component';
+import { ArenaComponent } from './arena/arena.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
-import { AboutComponent } from './about/about.component';
-import { ArenaComponent } from './arena/arena.component';
+import { CurrentGameComponent } from './arena/current-game/current-game.component';
 
 
 export const TOP_LEVEL_DOMAIN_NAME: string = 'olf';

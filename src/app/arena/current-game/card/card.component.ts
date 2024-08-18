@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CardView } from '../../../model/card-view';
-import { trigger, state, style, transition, animate, keyframes } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { Component, Input, OnInit } from '@angular/core';
+import { CardView } from 'src/model/card-view';
 
 
 const PULSATION_PERIOD_IN_MILLISECONDS = 4000; // cf. with scss to align
