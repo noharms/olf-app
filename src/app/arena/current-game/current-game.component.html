@@ -1,5 +1,12 @@
 <div class="current-game" *ngIf="gameId">
 
+     <!-- BACK TO GAMES BUTTON -->
+     <div class="back-button-container">
+        <button mat-button class="back-button" (click)="onBackToArenaClick()">
+            <mat-icon>arrow_upward</mat-icon> Back to open games overview
+        </button>
+    </div>
+
     <!-- TOP SECTION -->
     <div class="top-section">
         <!-- Left arrow with tooltip for previous players -->
@@ -45,5 +52,3 @@
         </div>
     </div>
 </div>
-
-<div>The following games are available: TODO</div>

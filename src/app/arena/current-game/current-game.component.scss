@@ -6,6 +6,35 @@
     height: calc(100vh - 200px);
     /* Subtract the header and footer height */
 
+    .back-button-container {
+        align-self: flex-start;
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    .back-button {
+        font-size: 16px;
+        background-color: #007BFF;
+        color: white;
+        text-transform: none;
+        display: flex;
+        align-items: center;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 8px 16px;
+        margin-bottom: 20px;
+
+        mat-icon {
+            margin-right: 8px;
+        }
+
+        &:hover {
+            background-color: #0056b3;
+        }
+    }
+
+
     .focused-opponent-cards,
     .player-cards,
     .discard-stack {
@@ -13,19 +42,20 @@
         justify-content: center;
         align-items: center;
         flex-grow: 1;
-
         margin: 10px;
         border: solid 1px #c12baa;
         width: 100%;
     }
+
 
     // note that we assume player-cards to be a flexbox container
     // and "card-container" a flexbox item of this container
     // (meaning it must be on a direct child element)
     .player-cards .card-container {
         align-self: stretch;
-        flex-basis: 7%; // maximum is 13 cards, 100%/13 ~ 7.7%
-        border: solid 1px #c12baa
+        flex-basis: 7%;
+        /* maximum is 13 cards, 100%/13 ~ 7.7% */
+        border: solid 1px #c12baa;
     }
 
     .discard-stack {
@@ -41,7 +71,6 @@
 
     .top-section {
         display: flex;
-        /* Align children elements horizontally */
         justify-content: center;
         /* Center the items horizontally */
         align-items: center;
@@ -60,5 +89,4 @@
         display: block;
         padding: 5px;
     }
-
 }

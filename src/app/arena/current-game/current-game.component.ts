@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from 'src/app/app-routing.module';
+import { ARENA_PATH, DASHBOARD_PATH, GAME_ID_URL_PARAMETER_NAME } from 'src/app/app-routing.module';
 import { AuthenticationService } from 'src/app/authentication.service';
 import { ComputerAiService } from 'src/app/computer-ai.service';
 import { GameService } from 'src/app/game.service';
@@ -305,6 +305,10 @@ export class CurrentGameComponent implements OnInit {
   onRightArrowClick(): void {
     this.focusedOpponentIndex = this.indexNextOpponentRight();
     this.updateViewFieldsFocusChanged();
+  }
+
+  onBackToArenaClick() {
+    this.router.navigate([ARENA_PATH]);
   }
 
 }
